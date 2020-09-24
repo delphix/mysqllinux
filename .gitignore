@@ -1,0 +1,14 @@
+.dvp-gen-output/
+.idea/
+build/
+venv/
+*.unsaved
+*.tmp
+lib/*
+local/*
+*idea*
+src/generated/*
+*.pyc
+*generated*
+.DS_Store
+__pycache__/ 
