@@ -111,7 +111,7 @@
             "type": "string",
             "prettyName": "VDB Server ID",
             "description": "Server ID for the MySQL VDB",
-            "default": "201"
+            "default": "200"
          },
          "config_settings_prov" : {
             "type" : "array",

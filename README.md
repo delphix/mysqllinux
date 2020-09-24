@@ -1,2 +1,3 @@
 # msyql_sdk_plugin
-MySQL SDK Plugin for Delphix
+
+Description: Delphix Virtualization SDK based plugin for MySQL datasources. 
