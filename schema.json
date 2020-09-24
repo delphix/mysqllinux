@@ -1,0 +1,354 @@
+{
+    "repositoryDefinition": {
+        "type": "object",
+        "additionalProperties": false,
+        "manualrepositoryDiscovery" : true,
+        "properties": {
+            "name": {
+                "type": "string",
+                "prettyName": "Name",
+                "description": "Displayable Name for the MySQL Binary"
+            },
+            "version": {
+                "type": "string",
+                "prettyName": "Version",
+                "description": "The version of the MySQL DB binaries"
+             },
+            "installPath": { 
+                "type": "string",
+                "prettyName": "Location",
+                "description": "This is the path to MySQL executables"
+            }
+        },
+        "nameField": "name",
+        "identityFields": ["installPath"]
+    },
+    "sourceConfigDefinition": {
+        "type": "object",
+        "ordering": ["dataDir","port","baseDir","dbName"],
+        "required": ["dataDir","port","baseDir","dbName"],
+        "additionalProperties": false,
+        "properties": {
+            "dataDir": {
+                "type": "string",
+                "prettyName": "Data Directory",
+                "description": "Full path of the MySQL DB data directory (include the data directory)"
+              },
+             "port": {
+                "type": "string",
+                "prettyName": "Port",
+                "description": "Port for the MySQL database"
+             }, 
+             "baseDir": {
+                "type": "string",
+                "prettyName": "Base Directory",
+                "description": "Path of the MySQL Installation, where binaries (/bin) is located "
+             },
+             "dbName": {
+                "type": "string",
+                "prettyName": "MySQL Instance Name",
+                "description": "Name of the MySQL Instance."
+             }
+        },
+        "nameField": "dbName",
+        "identityFields": ["dataDir","port"]
+    },
+    "virtualSourceDefinition": {
+        "type": "object",
+        "additionalProperties" : false,
+        "ordering": [
+           "vdbHost",
+           "vdbUser",
+           "vdbPass",
+           "baseDir",
+           "port",
+           "serverId",
+           "mPath",
+           "config_settings_prov"
+         ],
+        "required": [
+           "vdbHost",
+           "vdbUser",
+           "vdbPass",
+           "baseDir",
+           "port",
+           "serverId",
+           "mPath"
+         ],
+        "properties" : {
+         "vdbHost": {
+            "type": "string",
+            "prettyName": "HostName or IP",
+            "description": "HostName or IP Address of Target Host for VDBs",
+            "default": "localhost"
+         },
+         "vdbUser": {
+            "type": "string",
+            "prettyName": "DB User",
+            "description": "DB user for the virtual database",
+            "default": "delphix1"
+         },         
+         "vdbPass": {
+            "type": "string",
+            "format": "password",
+            "prettyName": "DB Password",
+            "description": "DB user password for the virtual database",
+            "default": "delphix"
+         },
+         "baseDir": {
+            "type": "string",
+            "prettyName": "BaseDir",
+            "description": "Path of the MySQL Installation, where binaries (./bin) exists",
+            "default": "/opt/mysql57/mysql57d"
+         },
+         "port": {
+            "type": "string",
+            "prettyName": "VDB Port",
+            "description": "Port for the MySQL VDB",
+            "default": "3308"
+         },
+         "serverId": {
+            "type": "string",
+            "prettyName": "VDB Server ID",
+            "description": "Server ID for the MySQL VDB",
+            "default": "201"
+         },
+         "config_settings_prov" : {
+            "type" : "array",
+            "prettyName" : "my.cnf Config Settings",
+            "description" : "Custom Database-Level config settings",
+            "items": {
+               "type": "object",
+               "required": ["propertyName","value"],
+               "ordering": ["propertyName", "value"],
+               "properties": {
+                  "propertyName" : {
+                     "type" : "string",
+                     "prettyName": "Property Name",
+                     "pattern": "^$|^[_a-zA-Z0-9]*$",
+                     "default": "",
+                     "maxLength": 40
+                  },
+                  "value": {
+                     "type": "string",
+                     "prettyName": "Value",
+                     "pattern": "^$|^[_a-zA-Z0-9]*$",
+                     "default": "",
+                     "maxLength": 40
+                  }
+               }
+            }
+         },
+         "mPath": {
+            "type": "string",
+            "prettyName": "Mount Location",
+            "description": "NFS Mount folder for Delphix",
+            "default": "/home/mysql/delphix/mount3"
+         }
+      }
+    },
+    "linkedSourceDefinition": {
+        "type": "object",
+        "additionalProperties" : false,
+        "required": [
+          "dSourceType",
+          "serverId",
+          "stagingPort",
+          "mountPath",
+          "stagingip"
+        ],
+        "ordering" : [
+          "dSourceType",
+          "stagingip",          
+          "stagingUser",
+          "stagingPass",
+          "stagingBasedir",
+          "serverId",
+          "stagingPort",
+          "mountPath",
+          "sourceip",          
+          "backupPath",
+          "sourceUser",
+          "sourcePass",
+          "logSync",
+          "replicationUser",
+          "replicationPass",
+          "sourceDatabase",
+          "sourceTables",
+          "scpUser",
+          "scpPass"
+        ],
+        "properties" : {
+          "dSourceType": {
+            "type": "string",
+            "prettyName": "dSource Type",
+            "description": "",
+            "enum": ["Manual Backup Ingestion", "Replication","Simple (Tablespace Backup)"],
+            "default": "Replication"
+          },
+          "backupPath": {
+             "type": "string",
+             "prettyName": "Full path (including filename) to MySQL backup.",
+             "description": "* Leave blank if Delphix is taking backups",
+             "default": ""
+          },
+          "stagingip": {
+            "type": "string",
+            "prettyName": "MySQL Staging Server IP address",
+            "description": "HostName or IP address of the staging server",
+            "default": "localhost"
+         },
+         "sourceip": {
+            "type": "string",
+            "prettyName": "Source DB Host IP address",
+            "description": "* Required if using Replication Method",
+            "default": "neomysqlsrc.dlpxdc.co"
+         },
+          "mountPath": {
+            "type": "string",
+            "prettyName": "Mount Location on Staging Host",
+            "description": "NFS mount directory on the Staging Host",
+            "default": "/home/mysql/delphix/mount"
+         },
+         "sourceUser": {
+             "type": "string",
+             "prettyName": "Source DB UserName",
+             "description": "* Required if Delphix is taking backups",
+             "default": "delphix1"
+          },
+          "sourcePass": {
+             "type": "string",
+             "format": "password",
+             "prettyName": "Source Connection Password",
+             "description": "* Required if Delphix is taking backups",
+             "default": "delphix"
+          },
+          "logSync": {
+             "default": true,
+             "prettyName": "LogSync",
+             "type": "boolean",
+             "description": "LogSync needs to be enabled if using Replication Method."
+          },
+          "replicationUser": {
+             "type": "string",
+             "prettyName": "Replication UserName",
+             "description": "* Required if using Replication Method with LogSync",
+             "default": "delphixdb"
+          },
+          "replicationPass": {
+             "type": "string",
+             "format": "password",
+             "prettyName": "Replication User's Password",
+             "description": "* Required if using Replication Method with LogSync",
+             "default": "delphix"
+          },
+          "stagingUser": {
+             "type": "string",
+             "prettyName": "Staging DB User Name",
+             "description": "MySQL Staging DB User Name",
+             "default": "root"
+          },
+          "stagingPass": {
+             "type": "string",
+             "format": "password",
+             "prettyName": "Staging DB Password",
+             "description": "Staging DB User's Password",
+             "default": "sailboat"
+          },
+          "serverId": {
+             "type": "string",
+             "prettyName": "Staging DB Server ID",
+             "description": "ServerID for the Stagine DB. Must be different from Source DB Server ID",
+             "default": "102"
+          },
+          "sourceDatabase": {
+             "type": "string",
+             "prettyName": "Source DB",
+             "description": "* Name of the Source DB to backup. Required for Simple Tablespace Backup Method",
+             "default": ""
+          },
+          "sourceTables": {
+             "type": "string",
+             "prettyName": "Source Tables to backup",
+             "description": "* ALL or table names separated by comma. Required for Simple Tablespace Backup Method",
+             "default": "ALL"
+          },
+          "scpUser": {
+             "type": "string",
+             "prettyName": "Source scp Username",
+             "description": "* Required for Simple Tablespace Backup Method",
+             "default": "mysql"
+          },
+          "scpPass": {
+             "type": "string",
+             "prettyName": "Source scp Password",
+             "description": "* Required for Simple Tablespace Backup Method",
+             "default": "mysql"
+          },
+          "stagingPort": {
+             "type": "string",
+             "prettyName": "Staging DB Port",
+             "description": "Staging Database Port",
+             "default": "3307"
+          },
+          "stagingBasedir": {
+             "type": "string",
+             "prettyName": "MySQL Base Directory",
+             "description": "Base Directory of MySQL Installation (Location of /bin/mysql)",
+             "default": "/opt/mysql57/mysql57d"
+          }
+        }
+      },
+    "snapshotDefinition": {
+        "type" : "object",
+        "additionalProperties" : false,
+        "properties" : {
+         "snapshotId": {
+            "type": "string",
+            "prettyName": "Snapshot ID",
+            "description": "A unique ID for this snapshot"
+         },
+         "snapHost": {
+            "type": "string",
+            "prettyName": "Snapshot Host",
+            "description": ""
+         },
+         "snapPort": {
+            "type": "string",
+            "prettyName": "Snapshot Port",
+            "description": ""
+         },
+         "snapDataDir": {
+            "type": "string",
+            "prettyName": "Snapshot --datadir",
+            "description": ""
+         },
+         "snapBaseDir": {
+            "type": "string",
+            "prettyName": "Snapshot --basedir",
+            "description": ""
+         },
+         "snapConn": {
+            "type": "string",
+            "prettyName": "Snapshot Connection String",
+            "description": ""
+         },
+         "snapPass": {
+            "type": "string",
+            "format": "password",
+            "prettyName": "Snapshot Connection Password",
+            "description": ""
+         },
+         "snapBackupPath": {
+            "type": "string",
+            "prettyName": "Snapshot Backup Path",
+            "description": ""
+         },
+         "snapTime": {
+            "type": "string",
+            "prettyName": "Snapshot Timestamp",
+            "description": "Time when the snapshot was taken."
+         }
+      }
+    }
+}
