@@ -7,4 +7,4 @@ pluginType: STAGED
 entryPoint: plugin_runner:plugin
 srcDir: src
 schemaFile: schema.json
-buildNumber: 1.66.0
+buildNumber: 1.00.0
