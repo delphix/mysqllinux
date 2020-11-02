@@ -26,6 +26,9 @@ MySQL plugin is developed to virtualize MySQL data source leveraging the followi
 
 
 ### <a id="requirements-plugin"></a>Prerequisites
+**Software Requirements**
+1. jq - This toolkit requires jq to be configured on Staging and Target Hosts. 
+
 **MySQL instance requirements**
 1. Binary logging must be enabled on MySQL source instance.
 2. Server ID for the source must be greater than 0.
