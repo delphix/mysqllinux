@@ -119,13 +119,14 @@ Download the plugin logs using below command:
 
 
 ### <a id="tested-versions"></a>Tested Versions
-- Delphix Engine: 6.0.2 and above
+- Delphix Engine: 6.0.4.0 and above
 - MySQL Version: 5.7.7, 5.7.9, 5.7.10, 5.7.12   
 - Linux Version: RHEL 6.x
 
 ### <a id="support-features"></a>Supported Features
 - MySQL Replication
 - MySQL Tablespace Hotbackup
+- MySQL Manual Backup Ingestion
 
 ### <a id="unsupported-features"></a>Unsupported Features
 - MySQL Clusters
