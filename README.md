@@ -66,6 +66,7 @@ Example sudoers file entry
 Defaults:delphix_os !requiretty
 delphix_os ALL=NOPASSWD: \ 
 /bin/mount, /bin/umount, /bin/mkdir, /bin/rmdir, /bin/ps
+```
 
 **Other Staging Host Requirements**
 
@@ -87,6 +88,7 @@ Example sudoers file entry
 Defaults:delphix_os !requiretty
 delphix_os ALL=NOPASSWD: \ 
 /bin/mount, /bin/umount, /bin/mkdir, /bin/rmdir, /bin/ps
+```
 
 **Other Staging Host Requirements**
 
