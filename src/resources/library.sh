@@ -170,7 +170,7 @@ function purgeLogs {
 #
 # Usage:
 #   RESULTS=$( portStatus "${PORT}" )
-#   echo "${RESULTS}" | jq --raw-output ".status"
+#   echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"
 #
 portStatus () {
 
@@ -444,7 +444,7 @@ startDatabase() {
 #
 # Usage:
 #   RESULTS=$( buildConnectionString "${CONN}" "${PASS}" "${PORT}" "${IP}" )
-#   echo "${RESULTS}" | jq --raw-output ".results"
+#   echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".results"
 #
 buildConnectionString () {
 

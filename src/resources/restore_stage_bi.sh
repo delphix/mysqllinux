@@ -48,8 +48,8 @@ log "Staging Port: ${TARGET_PORT}"
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${STAGING_CONN}"
 
 #
@@ -106,8 +106,8 @@ TMP_PWD=`echo "'"$TMP_PWD"'"`
 log "Temporary Password: ${TMP_PWD}"
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${STAGING_CONN}"
 log "Creation Results: ${RESULTS}"
 
@@ -120,20 +120,39 @@ mkdir -p ${NEW_LOG_DIR}
 mkdir -p ${NEW_TMP_DIR}
 
 #
-# This snippet creates a config file if one has not been provided.
-# This plugin assumes that the customer will provide a my.cnf file under the toolkit directory.
-# If this is not the case, change the condition.
-if [[ "0" == "1" ]]
+# my.cnf ...
+#
+log "my.cnf file location >  ${NEW_MY_CNF}"
+
+if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
 then
+
+   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
+   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
+   log "Copying Customer Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
+   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
+
+   CMD=`ls -ll "${NEW_MY_CNF}"`
+   log "Was my.cnf copy successful?  ${CMD}"
+
+else
+
+   log "WARNING: Missing Customer Configuration file ${DLPX_TOOLKIT}/my.cnf"
+   #die "ERROR: Missing Customer Configuration file ${DLPX_TOOLKIT}/my.cnf_replication "
+   #
+   # This snippet creates a config file if one has not been provided.
+   # This plugin assumes that the customer will provide a my.cnf file under the toolkit directory.
+   # If this is not the case ...
+   #
    log "Creating my.cnf file ..."
    echo "[mysql]" > ${NEW_MY_CNF}
-   echo "server-id               = ${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
-   echo "binlog-format           = mixed" >> ${NEW_MY_CNF}
-   echo "log_bin                 = ${NEW_LOG_DIR}/mysql-bin" >> ${NEW_MY_CNF}
-   echo "relay-log               = ${NEW_LOG_DIR}/mysql-relay-bin" >> ${NEW_MY_CNF}
-   echo "log-slave-updates       = 1" >> ${NEW_MY_CNF}
-   echo "read-only               = 1" >> ${NEW_MY_CNF}
-   echo "" >> ${NEW_MY_CNF}
+   #echo "server-id               = ${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
+   #echo "binlog-format           = mixed" >> ${NEW_MY_CNF}
+   #echo "log_bin                 = ${NEW_LOG_DIR}/mysql-bin" >> ${NEW_MY_CNF}
+   #echo "relay-log               = ${NEW_LOG_DIR}/mysql-relay-bin" >> ${NEW_MY_CNF}
+   #echo "log-slave-updates       = 1" >> ${NEW_MY_CNF}
+   #echo "read-only               = 1" >> ${NEW_MY_CNF}
+   #echo "" >> ${NEW_MY_CNF}
    echo "basedir=${SOURCEBASEDIR}" >> ${NEW_MY_CNF}
    echo "datadir=${NEW_DATA_DIR}" >> ${NEW_MY_CNF}
    echo "tmpdir=${NEW_TMP_DIR}" >> ${NEW_MY_CNF}
@@ -147,22 +166,6 @@ then
    echo "pid-file=${NEW_MOUNT_DIR}/mysqld.pid" >> ${NEW_MY_CNF}
    echo "" >> ${NEW_MY_CNF}
 fi
-
-log "my.cnf file location >  ${NEW_MY_CNF}"
-
-if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
-then
-   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
-   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
-   log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
-   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
-else
-   log "WARNING: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf"
-   #die "ERROR: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf_replication "
-fi
-
-CMD=`ls -ll "${NEW_MY_CNF}"`
-log "Was my.cnf copy successful?  ${CMD}"
 
 if [[ -f "${NEW_MY_CNF}" ]]
 then
@@ -309,6 +312,9 @@ else
    die "Error: Missing Customer Config File ${NEW_MY_CNF} ... see log messages above for possible errors"
 fi
 
+CMD=`ls -ll "${NEW_MY_CNF}"`
+log "Does my.cnf exist?  ${CMD}"
+
 CMD=`ls -ll ${NEW_MOUNT_DIR}`
 log "Mount Directory Contents: ${CMD}"
 
@@ -375,8 +381,8 @@ eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 #
 log "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "============================================================"
 log "Staging Connection after updating password: ${STAGING_CONN}"
 

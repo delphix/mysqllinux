@@ -26,7 +26,7 @@ TMP2="/usr/local/mysql"
 repoList='[]'
 
 repo='{}'
-#repo=$(jq ".snapshotID = $(quote "$recId")" <<< "$repo")
+#repo=$($DLPX_BIN_JQ ".snapshotID = $(quote "$recId")" <<< "$repo")
 repo=$($DLPX_BIN_JQ ".snapshotID = \"$ID\" " <<< "$repo")
 repo=$($DLPX_BIN_JQ ".snapHost = \"$HOSTIP\" " <<< "$repo")
 repo=$($DLPX_BIN_JQ ".snapPort = \"$PORT\" " <<< "$repo")
@@ -50,7 +50,7 @@ repo1=$($DLPX_BIN_JQ ".snapBackup = \"\" " <<< "$repo1")
 log "Output: $repo1"
 
 
-#repoList=$(jq ". + [$repo]" <<< "$repoList")
+#repoList=$($DLPX_BIN_JQ ". + [$repo]" <<< "$repoList")
 #echo "$repoList" > "$DLPX_OUTPUT_FILE"
 
 #log "Environment: "

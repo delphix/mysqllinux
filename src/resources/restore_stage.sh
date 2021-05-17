@@ -61,8 +61,8 @@ STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${STAGING_CONN}"
 
 #
@@ -163,8 +163,8 @@ log "Source --datadir=${SOURCEDATADIR}"
 
    log "Staging Connection: ${STAGINGCONN}"
    RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-   echo "${RESULTS}" | jq --raw-output ".string"
-   STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+   echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+   STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
    log "Staging Connection: ${STAGING_CONN}"
 
 # fi      # end if customer install_db.zip ...
@@ -181,11 +181,18 @@ mkdir -p ${NEW_TMP_DIR}
 
 #
 # This snippet creates a config file if one has not been provided.
-# This plugin assumes that the customer will provide a my.cnf file under the toolkit directory.
-# If this is not the case, change the condition.
-if [[ "0" == "1" ]]
+# 
+log "my.cnf file location >  ${NEW_MY_CNF}"
+
+if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
 then
-   log "Creating my.cnf file ..."
+   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
+   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
+   log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
+   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
+else
+   log "Note: Customer can create own Replication Configuration file ${DLPX_TOOLKIT}/my.cnf"
+   log "Since the above file was missing, Creating my.cnf file ..."
    echo "[mysql]" > ${NEW_MY_CNF}
    echo "server-id               = ${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
    echo "binlog-format           = mixed" >> ${NEW_MY_CNF}
@@ -208,21 +215,8 @@ then
    echo "" >> ${NEW_MY_CNF}
 fi
 
-log "my.cnf file location >  ${NEW_MY_CNF}"
-
-if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
-then
-   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
-   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
-   log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
-   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
-else
-   log "WARNING: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf"
-   #die "ERROR: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf_replication "
-fi
-
 CMD=`ls -ll "${NEW_MY_CNF}"`
-log "Was my.cnf copy successful?  ${CMD}"
+log "my.cnf exists?  ${CMD}"
 
 if [[ -f "${NEW_MY_CNF}" ]]
 then
@@ -443,8 +437,8 @@ eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 #
 log "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "============================================================"
 log "Staging Connection after updating password: ${STAGING_CONN}"
 
@@ -517,9 +511,9 @@ log "Source DB Password is ${SOURCEPASS}"
 log "============================================================"
 if [[ "${SOURCEPASS}" != "" ]]
 then
-   STAGING_CONN="-udelphix1 -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
+   STAGING_CONN="-u${SOURCEUSER} -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
 else
-   STAGING_CONN="-uroot -pLandshark00! --protocol=TCP --port=${TARGET_PORT}"
+   STAGING_CONN="-uroot --protocol=TCP --port=${TARGET_PORT}"
 fi
 log "============================================================"
 log "New Connection String to Staging DB >> ${STAGING_CONN}"
@@ -599,14 +593,14 @@ then
    RESULTS=`cat ${TMPLOG}.out | tr '\n' '|'`
    log "Starting Slave Results: ${RESULTS}"
 
-   #if [[ -f "${TMPLOG}.sql" ]] 
-   #then
-   #   rm "${TMPLOG}.sql" 2>/dev/null
-   #fi
-   #if [[ -f "${TMPLOG}.out" ]] 
-   #then
-   #   rm "${TMPLOG}.out" 2>/dev/null
-   #fi
+   if [[ -f "${TMPLOG}.sql" ]] 
+   then
+      rm "${TMPLOG}.sql" 2>/dev/null
+   fi
+   if [[ -f "${TMPLOG}.out" ]] 
+   then
+      rm "${TMPLOG}.out" 2>/dev/null
+   fi
 
    log "Checking Slave Status ..."
    log "${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"SHOW SLAVE STATUS\G\""

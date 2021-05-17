@@ -94,7 +94,7 @@ def start_staging(staged_source, repository, source_config):
     if staged_source.parameters.d_source_type == "Replication": 
         logger.debug("dSourceType is Replication")
         library_script=pkgutil.get_data('resources','library.sh')
-        mount_path=staged_source.parameters.mount_path+"/dSource3307"
+        mount_path=staged_source.parameters.mount_path
         if staged_source.parameters.log_sync == True:
             log_sync = "true"
         else:
@@ -127,7 +127,7 @@ def start_staging(staged_source, repository, source_config):
     else:
         logger.debug("dSourceType is Manual Backup Ingestion.")
         library_script=pkgutil.get_data('resources','library.sh')
-        mount_path=staged_source.parameters.mount_path+"/dSource3307"
+        mount_path=staged_source.parameters.mount_path
         environment_vars={
             "DLPX_LIBRARY_SOURCE" : library_script,
             "DLPX_BIN" : binary_path,
@@ -162,9 +162,9 @@ def stop_staging(staged_source, repository, source_config):
         library_script=pkgutil.get_data('resources','library.sh')
         binary_path=staged_source.staged_connection.environment.host.binary_path
         environment_vars={
-            "DLPX_LIBRARY_SOURCE" : library_script,
-            "DLPX_BIN" : binary_path,
-            "DLPX_LIBRARY_SOURCE" : library_script,
+            "DLPX_LIBRARY_SOURCE": library_script,
+            "DLPX_BIN": binary_path,
+            "MYSQLD": repository.install_path,
             "STAGINGPORT":staged_source.parameters.staging_port,
             "STAGINGCONN":stagingConn,
             "STAGINGPASS":staged_source.parameters.staging_pass
@@ -184,9 +184,9 @@ def stop_staging(staged_source, repository, source_config):
         library_script=pkgutil.get_data('resources','library.sh')
         binary_path=staged_source.staged_connection.environment.host.binary_path
         environment_vars={
-            "DLPX_LIBRARY_SOURCE" : library_script,
-            "DLPX_BIN" : binary_path,
-            "DLPX_LIBRARY_SOURCE" : library_script,
+            "DLPX_LIBRARY_SOURCE":library_script,
+            "DLPX_BIN":binary_path,
+            "MYSQLD":repository.install_path,
             "STAGINGPORT":staged_source.parameters.staging_port,
             "STAGINGCONN":stagingConn,
             "STAGINGPASS":staged_source.parameters.staging_pass,
@@ -203,6 +203,26 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Stop Staging - Successful: "+output)   
     else :
         logger.debug("dSourceType is Simple Tablespace Backup. ")
+        library_script=pkgutil.get_data('resources','library.sh')
+        binary_path=staged_source.staged_connection.environment.host.binary_path
+        environment_vars={
+            "DLPX_LIBRARY_SOURCE":library_script,
+            "DLPX_BIN":binary_path,
+            "MYSQLD":repository.install_path,
+            "STAGINGPORT":staged_source.parameters.staging_port,
+            "STAGINGCONN":stagingConn,
+            "STAGINGPASS":staged_source.parameters.staging_pass
+        }
+        stop_staging_script = pkgutil.get_data('resources', 'stopStagedDB.sh')
+        result = libs.run_bash(staged_source.staged_connection, stop_staging_script,environment_vars,check=True)
+        output = result.stdout.strip()
+        error = result.stderr.strip()
+        exit_code = result.exit_code
+        if exit_code !=0:
+            logger.debug("Error is : "+error)
+            raise LinkingException("Exception while stopping staging:"+error)
+        else:
+            logger.debug("Stop Staging - Successful: "+output)
         #TODO: Integration
 
 ##################################################
@@ -214,6 +234,9 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
     logger.debug("plugin_operations.linked_pre_snapshot > Start ")
     # Start Staing if not already running.
     #start_staging(staged_source,repository,source_config)
+
+    dSourceType = staged_source.parameters.d_source_type
+
     # Check if performing re-sync
     if int(snapshot_parameters.resync) == 1:
         # Create & Copy Backup file to staging host
@@ -223,7 +246,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         logsync="true"
         #mount_path=staged_source.parameters.mount_path+"/{}"
         #mount_path = mount_path.format(staged_source.guid)
-        mount_path=staged_source.parameters.mount_path+"/dSource3307"
+        mount_path=staged_source.parameters.mount_path
 
         # Buiding Connection Strings for Hybrid Code
         sourceConn=build_lua_connect_string(staged_source.parameters.source_user,staged_source.parameters.sourceip)
@@ -233,8 +256,6 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
 
         logger.debug("source_conection > "+sourceConn)
         logger.debug("staging_conection > "+stagingConn)
-
-        dSourceType = staged_source.parameters.d_source_type
 
         if dSourceType == "Replication": 
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
@@ -249,6 +270,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "SOURCEIP":staged_source.parameters.sourceip,
                 "BACKUP_PATH":staged_source.parameters.backup_path,
                 "SOURCECONN":sourceConn,
+                "SOURCEUSER":staged_source.parameters.source_user,
                 "SOURCEPASS":staged_source.parameters.source_pass,
                 "REPLICATION_USER":staged_source.parameters.replication_user,
                 "REPLICATION_PASS":staged_source.parameters.replication_pass,
@@ -290,6 +312,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "DLPX_BIN" : binary_path,
                 "MYSQLD":repository.install_path,
                 "MYSQLVER":repository.version,
+                "SOURCEUSER":staged_source.parameters.source_user,
                 "SOURCEPASS":staged_source.parameters.source_pass,
                 "STAGINGSERVERID":staged_source.parameters.server_id,
                 "STAGINGPORT":staged_source.parameters.staging_port,
@@ -322,6 +345,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "SOURCEPORT":source_config.port,
                 "SOURCEIP":staged_source.parameters.sourceip,
                 "SOURCECONN":sourceConn,
+                "SOURCEUSER":staged_source.parameters.source_user,
                 "SOURCEPASS":staged_source.parameters.source_pass,
                 "SOURCEDATABASE":staged_source.parameters.source_database,
                 "SOURCETABLES":staged_source.parameters.source_tables,
@@ -347,6 +371,14 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.debug("Pre-Snapshot/Restore_DB successful "+output)   
 
     if dSourceType == "Simple (Tablespace Backup)":
+        library_script=pkgutil.get_data('resources','library.sh')
+        binary_path=staged_source.staged_connection.environment.host.binary_path
+        mount_path=staged_source.parameters.mount_path
+        # Buiding Connection Strings for Hybrid Code
+        sourceConn=build_lua_connect_string(staged_source.parameters.source_user,staged_source.parameters.sourceip)
+        stagingConn=build_lua_connect_string(staged_source.parameters.staging_user,staged_source.parameters.stagingip)
+        #sourceConn = staged_source.parameters.source_conn
+        #stagingConn = staged_source.parameters.staging_conn
         logger.debug("PreSnapshot for Simple Tablespace Copy") 
         environment_vars={
             "DLPX_LIBRARY_SOURCE" : library_script,
@@ -358,6 +390,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
             "SOURCEPORT":source_config.port,
             "SOURCEIP":staged_source.parameters.sourceip,
             "SOURCECONN":sourceConn,
+            "SOURCEUSER":staged_source.parameters.source_user,
             "SOURCEPASS":staged_source.parameters.source_pass,
             "SOURCEDATABASE":staged_source.parameters.source_database,
             "SOURCETABLES":staged_source.parameters.source_tables,
@@ -401,10 +434,10 @@ def linked_post_snapshot(staged_source,repository,source_config,snapshot_paramet
         start_staging(staged_source,repository,source_config)
     else:
         logger.debug("dSourceType is Simple Tablespace Copy") 
-        #stop_staging(staged_source,repository,source_config)
+        start_staging(staged_source,repository,source_config)
 
     logger.debug(snapshot_parameters)
-    mount_path=staged_source.parameters.mount_path+"/dSource3307"
+    mount_path=staged_source.parameters.mount_path
     snapshot = SnapshotDefinition(validate=False)
     snapshot.snapshot_id= str(utils.get_snapshot_id())
     snapshot.snap_host=staged_source.parameters.stagingip

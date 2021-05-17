@@ -14,7 +14,7 @@ VDBPASS=`echo "'"${VDBPASS}"'"`
 log "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
-VDB_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${VDB_CONN}"
 
 #
@@ -22,7 +22,7 @@ log "Staging Connection: ${VDB_CONN}"
 #
 log "Database Port: ${PORT}"
 RESULTS=$( portStatus "${PORT}" )
-#echo "${RESULTS}" | jq --raw-output ".status"
+#echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 
 NEW_MOUNT_DIR="${DLPX_DATA_DIRECTORY}"
