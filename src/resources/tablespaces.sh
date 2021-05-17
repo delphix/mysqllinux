@@ -42,7 +42,7 @@ SOURCEPASS=`echo "'"${SOURCEPASS}"'"`
 log "Source Connection: ${SOURCECONN}"
 RESULTS=$( buildConnectionString "${SOURCECONN}" "${SOURCEPASS}" "${SOURCEPORT}" )
 #log "${RESULTS}"
-SOURCE_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+SOURCE_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Source Connection: ${SOURCE_CONN}"
 
 SOURCE_DATA_DIR="${SOURCEDATADIR}" 				# "/usr/local/mysql/data"
@@ -59,7 +59,7 @@ STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
-TARGET_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+TARGET_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${TARGET_CONN}"
 
 #TARGET_DATA_DIR="/mnt/provision/my_stage/data"

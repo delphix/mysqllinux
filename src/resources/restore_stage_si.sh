@@ -106,7 +106,7 @@ log "Temporary Password: ${TMP_PWD}"
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" )
 #log "${RESULTS}"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${STAGING_CONN}"
 
 ############################################################
@@ -222,7 +222,7 @@ eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${STAGING_CONN}"
 
 log "Validating Restore Databases ..."

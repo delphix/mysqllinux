@@ -65,8 +65,8 @@ then
    #
    log "Source Connection: ${SOURCECONN}"
    RESULTS=$( buildConnectionString "${SOURCECONN}" "${SOURCEPASS}" "${SOURCEPORT}" "${SOURCEIP}" )
-   log "${RESULTS}" | jq --raw-output ".string"
-   SOURCE_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+   log "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+   SOURCE_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
    log "New Conn: ${SOURCE_CONN}"
 
    log "Source Backup Host: ${SOURCEIP}"
