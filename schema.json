@@ -214,7 +214,7 @@
              "type": "string",
              "prettyName": "Source DB UserName",
              "description": "* Required if Delphix is taking backups",
-             "default": "delphixdb"
+             "default": "root"
           },
           "sourcePass": {
              "type": "string",
