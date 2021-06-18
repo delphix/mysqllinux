@@ -202,7 +202,7 @@
             "type": "string",
             "prettyName": "Source DB Host IP address",
             "description": "* Required if using Replication Method",
-            "default": "localhost"
+            "default": "10.0.1.20"
          },
           "mountPath": {
             "type": "string",
@@ -221,7 +221,7 @@
              "format": "password",
              "prettyName": "Source Connection Password",
              "description": "* Required if Delphix is taking backups",
-             "default": "Delphix_123"
+             "default": "Delphix@123"
           },
           "logSync": {
              "default": true,
@@ -240,20 +240,20 @@
              "format": "password",
              "prettyName": "Replication User's Password",
              "description": "* Required if using Replication Method with LogSync",
-             "default": "Delphix_123"
+             "default": "Delphix@123"
           },
           "stagingUser": {
              "type": "string",
              "prettyName": "Staging DB User Name",
              "description": "MySQL Staging DB User Name",
-             "default": "root"
+             "default": "delphixdb"
           },
           "stagingPass": {
              "type": "string",
              "format": "password",
              "prettyName": "Staging DB Password",
              "description": "Staging DB User's Password",
-             "default": "Delphix_123"
+             "default": "Delphix@123"
           },
           "serverId": {
              "type": "string",
@@ -289,7 +289,7 @@
              "type": "string",
              "prettyName": "Staging DB Port",
              "description": "Staging Database Port",
-             "default": "3307"
+             "default": "3308"
           },
           "stagingBasedir": {
              "type": "string",
