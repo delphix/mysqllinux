@@ -8,9 +8,9 @@ PGM_NAME='stopStagedDB.sh'
 
 #Loading library.sh
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "-- Start --"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 #
 # Confirm Port ...

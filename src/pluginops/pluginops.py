@@ -459,10 +459,12 @@ def linked_post_snapshot(staged_source,repository,source_config,snapshot_paramet
 def linked_status(staged_source, repository, source_config):
     logger.debug("Checking status of Staging DB")
     library_script=pkgutil.get_data('resources','library.sh')
+    binary_path=staged_source.staged_connection.environment.host.binary_path
     logger.debug(" Staging Port >>: "+staged_source.parameters.staging_port)
     environment_vars={
         "DLPX_LIBRARY_SOURCE" : library_script,
-        "STAGINGPORT":staged_source.parameters.staging_port
+        "STAGINGPORT":staged_source.parameters.staging_port,
+        "DLPX_BIN" : binary_path
     }
     status_script = pkgutil.get_data('resources', 'statusStaged.sh')
     result = libs.run_bash(staged_source.staged_connection, status_script,environment_vars,check=True)
