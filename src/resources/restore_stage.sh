@@ -40,11 +40,12 @@ log "Backup File: ${BKUP_FILE}"
 # Staging Connection for Install/Configuration ...
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 
-log "Staging Connection: ${STAGINGCONN}"
+
+masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+masklog "Staging Connection: ${STAGING_CONN}"
 
 # Replication Variables ...
 log "========= Replication Variables ==========="
@@ -106,11 +107,11 @@ TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 TMP_PWD=`echo "'"$TMP_PWD"'"`
 log "Temporary Password: ${TMP_PWD}"
-log "Staging Connection: ${STAGINGCONN}"
+masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+masklog "Staging Connection: ${STAGING_CONN}"
 log "Creation Results: ${RESULTS}"
 
 ############################################################
@@ -297,9 +298,7 @@ fi
 CMD=`ls -ll ${NEW_MOUNT_DIR}`
 log "Mount Directory Contents: ${CMD}"
 
-#
-# Initial Startup ...
-#
+# Initial Startup
 RESULTS=$( portStatus "${TARGET_PORT}" )
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 JSON="{
@@ -350,16 +349,16 @@ then
 fi
 
 # Setting up symbolic link to mysql.sock # NEO
-SOCKLN="${NEW_MOUNT_DIR}/mysql.sock"
-REMOVE=`rm /tmp/mysql.sock`   # ignore errors
-SOCK_SYM_LINK=`ln -s $SOCKLN /tmp/mysql.sock`
+#SOCKLN="${NEW_MOUNT_DIR}/mysql.sock"
+#REMOVE=`rm /tmp/mysql.sock`   # ignore errors
+#SOCK_SYM_LINK=`ln -s $SOCKLN /tmp/mysql.sock`
 
 ########################################################################
 #
 # Change Password for Staging Conn ...
 #
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
-log "Final Command to Change Password is : ${CMD}"
+masklog "Final Command to Change Password is : ${CMD}"
 
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
@@ -370,18 +369,14 @@ log "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "============================================================"
-log "Staging Connection after updating password: ${STAGING_CONN}"
+masklog "Staging Connection after updating password: ${STAGING_CONN}"
 
 ########################################################################
-#
 # Load Source Database Export ...
-#
 log "============================================================"
 log "Restoring Backup File "
 log "============================================================"
-log "${INSTALL_BIN}/mysql ******* < ${BKUP_FILE}"
-log "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
+masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 #RESULTS=$( ${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE} )
 #log "Restore Results: ${RESULTS}"
 
@@ -389,22 +384,20 @@ log "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 ##RESET_MASTER="${DLPX_TOOLKIT}/reset_master.sql"
 ##echo "RESET MASTER;" > ${RESET_MASTER}
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"RESET MASTER;\""
-log "Reset Master Command:  ${CMD}"       # TODO REMOVE
+masklog "Reset Master Command:  ${CMD}"
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 ## Ingest Backup File
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
-log "====== Validating Restored Databases ======"
+log "Validating Restored Databases"
 #RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "show databases;"`
 #log "show databases: ${RESULTS}"
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"show databases;\""
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
-#
 # Shutting down after the backup has been ingested.
-#
 log "============================================================"
 log "Shutdown after restoring data ..."
 log "============================================================"
@@ -420,9 +413,7 @@ else
    log "Database is Already Shut Down ..."
 fi
 
-#
 # Verify Database is Shutdown ...
-#
 PSEF=$( ps -ef | grep -E "[m]ysqld.*--port=${TARGET_PORT}" )
 log "Process Status: ${PSEF}"
 
@@ -434,12 +425,7 @@ then
    die "ERROR: Database is not shutdown, please investigate ..."
 fi
 
-#
 # Use Restored Database Password ...
-#
-log "============================================================"
-log "Source DB Password is ${SOURCEPASS}"
-log "============================================================"
 if [[ "${SOURCEPASS}" != "" ]]
 then
    STAGING_CONN="-u${SOURCEUSER} -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
@@ -447,7 +433,7 @@ else
    STAGING_CONN="-uroot --protocol=TCP --port=${TARGET_PORT}"
 fi
 log "============================================================"
-log "New Connection String to Staging DB >> ${STAGING_CONN}"
+masklog "New Connection String to Staging DB >> ${STAGING_CONN}"
 
 #
 # Start Database ...
@@ -467,13 +453,10 @@ JSON="{
   \"logSync\": \"\",
   \"status\": \"\"
 }"
-##   \"logSync\": \"${LOGSYNC}\",
 
 startDatabase "${JSON}" "${STAGING_CONN}" "" ""
 
-#
 # Validate if Staging is started.
-#
 PSEF=$( ps -ef | grep -E "[m]ysqld.*--port=${TARGET_PORT}" )
 log "Process Status: ${PSEF}"
 PSID=`echo "${PSEF}" | ${AWK} -F" " '{print $2}' | xargs`
@@ -484,7 +467,7 @@ then
    die "ERROR: Database did not start after password change ..."
 fi
 
-log "Validating new connection string ..."
+log "Validating new connection string"
 RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "SELECT @@BASEDIR;"`
 log "Connection Test: ${RESULTS}"
 
@@ -495,9 +478,7 @@ log "Connection Test: ${RESULTS}"
 log "LogSync Enabled: ${LOGSYNC}"
 if [[ "${LOGSYNC}" == "true" ]]
 then
-   #
-   # Setup Slave SQL ...
-   #
+   # Setup Slave SQL
    TMPLOG="${DLPX_TOOLKIT}/tmp4"
    echo "STOP SLAVE;" > ${TMPLOG}.sql
    echo "RESET SLAVE;" > ${TMPLOG}.sql
@@ -516,9 +497,7 @@ then
    ##log "Slave Master SQL: ${TMP}"
    ##log "${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql > ${TMPLOG}.out"
 
-   #
-   # Start Slave ...
-   #
+   # Start Slave
    log "Starting Slave ..."
    RESULTS=$(${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql)
    RESULTS=`cat ${TMPLOG}.out | tr '\n' '|'`
@@ -532,19 +511,16 @@ then
    then
       rm "${TMPLOG}.out" 2>/dev/null
    fi
-
-   log "Checking Slave Status ..."
-   log "${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"SHOW SLAVE STATUS\G\""
+   log "Checking Slave Status"
+   masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"SHOW SLAVE STATUS\G\""
    RESULTS=$(${INSTALL_BIN}/mysql ${STAGING_CONN} -se "SHOW SLAVE STATUS\G")
    log "Slave Status: ${RESULTS}"
 
    # A parting tip: Sometimes errors occur in replication. 
    # For example, if you accidentally change a row of data on your slave. 
    # If this happens, fix the data, then run:
-
    #STOP SLAVE;SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;START SLAVE;
-
-fi    		# end if $LOGSYNC ...
+fi
 
  
 # This section has been commented to enable Staging Target run 
