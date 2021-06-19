@@ -358,14 +358,15 @@ fi
 # Change Password for Staging Conn ...
 #
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
-masklog "Final Command to Change Password is : ${CMD}"
+CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+masklog "Final Command to Change Password is : ${CMDFORLOG}"
 
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 #
 # Update Staging Connection with supplied password ...
 #
-log "Staging Connection Prior to updaging password : ${STAGINGCONN}"
+masklog "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
@@ -546,6 +547,7 @@ log "Environment: "
 export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
+export SOURCEPASS=""
 env | sort  >>$DEBUG_LOG
 log " <<<End"
 exit 0

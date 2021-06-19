@@ -22,11 +22,11 @@ printParams
 
 # These passwords contain special characters so need to wrap in single / literal quotes ...
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
-log "Staging Connection: ${STAGINGCONN}"
+masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+masklog "Staging Connection: ${STAGING_CONN}"
 
 #
 # Process Status ...
