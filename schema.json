@@ -93,7 +93,7 @@
             "format": "password",
             "prettyName": "DB Password",
             "description": "DB user password for the virtual database",
-            "default": "Delphix_123"
+            "default": "Delphix@123"
          },
          "baseDir": {
             "type": "string",
