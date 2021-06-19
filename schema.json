@@ -214,7 +214,7 @@
              "type": "string",
              "prettyName": "Source DB UserName",
              "description": "* Required if Delphix is taking backups",
-             "default": "root"
+             "default": "delphixdb"
           },
           "sourcePass": {
              "type": "string",
@@ -246,7 +246,7 @@
              "type": "string",
              "prettyName": "Staging DB User Name",
              "description": "MySQL Staging DB User Name",
-             "default": "delphixdb"
+             "default": "root"
           },
           "stagingPass": {
              "type": "string",
