@@ -13,9 +13,9 @@ PGM_NAME='stopVirtual.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 #
 # Get Port Status ...
@@ -26,11 +26,11 @@ VDBPASS=`echo "'"${VDBPASS}"'"`
 log "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
-VDB_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
+VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "Staging Connection: ${VDB_CONN}"
 
 RESULTS=$( portStatus "${PORT}" )
-#echo "${RESULTS}" | jq --raw-output ".status"
+#echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"
 ##log "Results: ${RESULTS}"
 
 RESULTS=$($DLPX_BIN_JQ ".logSync = \"\"" <<< $RESULTS)

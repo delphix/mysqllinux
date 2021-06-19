@@ -4,9 +4,9 @@ PGM_NAME="statusStaged.sh"             # used in log and errorLog
 
 #Loading library.sh
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "-- Start --"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 # Read Staging Database Port
 TARGET_PORT="${STAGINGPORT}"
