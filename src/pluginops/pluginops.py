@@ -428,14 +428,12 @@ def linked_post_snapshot(staged_source,repository,source_config,snapshot_paramet
     dSourceType = staged_source.parameters.d_source_type
     if dSourceType == "Replication": 
         logger.debug("dSourceType is Replication. We will leave the Staging Host running")
-        start_staging(staged_source,repository,source_config)
     elif dSourceType == "Manual Backup Ingestion":
-        logger.debug("dSourceType is Manual Backup Ingestion") 
-        start_staging(staged_source,repository,source_config)
+        logger.debug("dSourceType is Manual Backup Ingestion")
     else:
-        logger.debug("dSourceType is Simple Tablespace Copy") 
-        start_staging(staged_source,repository,source_config)
+        logger.debug("dSourceType is Simple Tablespace Copy")
 
+    start_staging(staged_source,repository,source_config)
     logger.debug(snapshot_parameters)
     mount_path=staged_source.parameters.mount_path
     snapshot = SnapshotDefinition(validate=False)
