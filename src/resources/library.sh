@@ -485,8 +485,8 @@ buildConnectionString () {
 #
 # Keep for Library Verification ...
 #
-function hey {
-   echo "there"
+function library_load {
+   echo "LOADED"
 }
 
 ###########################################################

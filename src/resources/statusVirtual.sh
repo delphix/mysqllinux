@@ -16,9 +16,9 @@ PGM_NAME="statusVirtual.sh"             # used in log and errorLog
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 #
 # Get Database Port ...
