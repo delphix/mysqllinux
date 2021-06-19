@@ -1,23 +1,12 @@
 #!/bin/sh
-#
 # Copyright (c) 2018 by Delphix. All rights reserved.
-#
-
-##DEBUG## In Delphix debug.log
-#set -x
-
-#
-# Program Name ...
-#
 PGM_NAME='restore_stage.sh'
 
-#
 # Load Library ...
-#
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 who=`whoami`
 log "whoami: $who"
@@ -29,23 +18,17 @@ log "awk: ${AWK}"
 
 DT=`date '+%Y%m%d%H%M%S'`
 
-#
-# Software Binaries ...
-#
+# Software Binaries
 INSTALL_BIN="${SOURCEBASEDIR}/bin"
 log "Binaries: ${INSTALL_BIN}"
 
-#
-# Ports ...
-#
+# Ports
 SOURCE_PORT=${SOURCEPORT}
 TARGET_PORT=${STAGINGPORT}
 log "Source Port: ${SOURCE_PORT}"
 log "Staging Port: ${TARGET_PORT}"
 
-#
 # Backup File Location ...
-#
 if [[ "${BACKUP_PATH}" == "" ]]
 then
    BKUP_FILE="/tmp/dump_${SOURCE_PORT}.sql"
@@ -54,20 +37,17 @@ else
 fi 
 log "Backup File: ${BKUP_FILE}"
 
-#
 # Staging Connection for Install/Configuration ...
-#
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 
-log "Staging Connection: ${STAGINGCONN}"
-RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
 
-#
+masklog "Staging Connection: ${STAGINGCONN}"
+RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection: ${STAGING_CONN}"
+
 # Replication Variables ...
-#
 log "========= Replication Variables ==========="
 log "Staging Host: ${STAGINGHOSTIP}"
 MASTER_HOST="${SOURCEIP}"
@@ -78,9 +58,7 @@ MASTER_PORT="${SOURCEPORT}"
 log "MASTER_PORT: ${MASTER_PORT}"
 MASTER_PASS="${REPLICATION_PASS}"
 
-#
 # Directory Paths ...
-#
 NEW_MOUNT_DIR="${STAGINGDATADIR}"
 log "Staging Base Directory: ${NEW_MOUNT_DIR}" 
 
@@ -93,99 +71,67 @@ NEW_SERVER_ID="${STAGINGSERVERID}"
 
 ###########################################################
 ## On Staging Server ...
-
 # scp from source server the ${BKUP_FILE}
-
-#
 # Get master log file and position ...
 #
 log "LogSync Enabled: ${LOGSYNC}"
 if [[ "${LOGSYNC}" == "true" ]]
 then
-
    #head ${BKUP_FILE} -n80 | grep "MASTER_LOG_POS"
    STR=$( head ${BKUP_FILE} -n80 | grep "MASTER_LOG_POS" )
-   ##echo "${STR}" 
    BINLOG_FILENAME=`echo "${STR}" | ${AWK} -F"=" '{print $2}' | cut -d"," -f1 | tr -d \'`
    BINLOG_POSITION=`echo "${STR}" | ${AWK} -F"=" '{print $3}' | cut -d";" -f1`
    log "BackupFile: ${BKUP_FILE}"
    log "MasterLogFile: ${BINLOG_FILENAME}"
    log "MasterLogPosition: ${BINLOG_POSITION}"
-
 fi 
 
-#
 # Create Initial Database ...
-#
 log "MySQL Version: ${MYSQLVER}"
-#MYSQLVER="5.7.20"
-#MYSQLVER="5.6.28-76.1"
-#10.1.32-MariaDB 
-#echo ${MYSQLVER:0:3}
-#5.6
-
 log "Source --basedir=${SOURCEBASEDIR}"
 log "Source --datadir=${SOURCEDATADIR}"
+log "Creating Initial Database"
 
-#
-# Change MySQL Database Tables ...
-#
-#log "Checking for Customer Initial Database ..."
-#if [[ -f "${DLPX_TOOLKIT}/install_db.zip" ]]
-#then
-#   log "Installing ${DLPX_TOOLKIT}/install_db.zip into ${NEW_MOUNT_DIR}"
-#   unzip ${DLPX_TOOLKIT}/install_db.zip -d ${NEW_MOUNT_DIR}
-#else 
-#   #die "Error: Missing Initial Database zip file ... ${DLPX_TOOLKIT}/install_db.zip"
-#   log "Missing Initial Database zip file ... ${DLPX_TOOLKIT}/install_db.zip"
+# Create Initial Database 5.7 or later ...
+log "Using mysqld --initialize"
 
-   log "Creating Initial Database ..."
+log "${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error=${NEW_DATA_DIR}/mysqld.log"
+${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error=${NEW_DATA_DIR}/mysqld.log 1>>${DEBUG_LOG} 2>&1
 
-   #
-   # Create Initial Database 5.7 or later ...
-   #
-   log "Using mysqld --initialize ..."
+PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
+# sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
+# 2019-04-11T14:40:34.032576Z 1 [Note] A temporary password is generated for root@localhost: L0qXNZ8?C3Us
+log "init temporary password: ${PWD_LINE}"
 
-   log "${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error=${NEW_DATA_DIR}/mysqld.log"
-   ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error=${NEW_DATA_DIR}/mysqld.log 1>>${DEBUG_LOG} 2>&1
-
-   PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
-   # sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
-   # 2019-04-11T14:40:34.032576Z 1 [Note] A temporary password is generated for root@localhost: L0qXNZ8?C3Us
-   log "init temporary password: ${PWD_LINE}"
-
-   TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
-   #
-   # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
-   #
-   TMP_PWD=`echo "'"$TMP_PWD"'"`
-   log "Temporary Password: ${TMP_PWD}"
-
-   log "Staging Connection: ${STAGINGCONN}"
-   RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-   echo "${RESULTS}" | jq --raw-output ".string"
-   STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-   log "Staging Connection: ${STAGING_CONN}"
-
-# fi      # end if customer install_db.zip ...
-
+TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
+# These temporary passwords contain special characters so need to wrap in single / literal quotes ...
+TMP_PWD=`echo "'"$TMP_PWD"'"`
+log "Temporary Password: ${TMP_PWD}"
+masklog "Staging Connection: ${STAGINGCONN}"
+RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection: ${STAGING_CONN}"
 log "Creation Results: ${RESULTS}"
 
 ############################################################
-##
-log "Creating Staging Directories on NFS Mounted Path from Delphix ..."
-
+log "Creating Staging Directories on NFS Mounted Path from Delphix"
 mkdir -p ${NEW_DATA_DIR}
 mkdir -p ${NEW_LOG_DIR}
 mkdir -p ${NEW_TMP_DIR}
 
-#
 # This snippet creates a config file if one has not been provided.
-# This plugin assumes that the customer will provide a my.cnf file under the toolkit directory.
-# If this is not the case, change the condition.
-if [[ "0" == "1" ]]
+log "my.cnf file location >  ${NEW_MY_CNF}"
+
+if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
 then
-   log "Creating my.cnf file ..."
+   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
+   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
+   log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
+   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
+else
+   log "Note: Customer can create own Replication Configuration file ${DLPX_TOOLKIT}/my.cnf"
+   log "Since the above file was missing, Creating my.cnf file ..."
    echo "[mysql]" > ${NEW_MY_CNF}
    echo "server-id               = ${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
    echo "binlog-format           = mixed" >> ${NEW_MY_CNF}
@@ -208,33 +154,14 @@ then
    echo "" >> ${NEW_MY_CNF}
 fi
 
-log "my.cnf file location >  ${NEW_MY_CNF}"
-
-if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
-then
-   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
-   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
-   log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
-   cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
-else
-   log "WARNING: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf"
-   #die "ERROR: Missing Replication Configuration file ${DLPX_TOOLKIT}/my.cnf_replication "
-fi
-
 CMD=`ls -ll "${NEW_MY_CNF}"`
-log "Was my.cnf copy successful?  ${CMD}"
+log "my.cnf exists?  ${CMD}"
 
 if [[ -f "${NEW_MY_CNF}" ]]
 then
-   # 
    # Replace all tabs with spaces ...
-   #
    sed -i 's/\t/     /g' ${NEW_MY_CNF}
-
-   #
    # Update Parameters ...
-   #
-
    log "Parameter port = $TARGET_PORT" 
    CHK=`cat ${NEW_MY_CNF} | grep "^port"`
    if [[ "${CHK}" != "" ]] 
@@ -244,7 +171,6 @@ then
    else
       echo "port = ${TARGET_PORT}" >> ${NEW_MY_CNF}
    fi
-
    log "Parameter server-id = ${NEW_SERVER_ID}"
    CHK=`cat ${NEW_MY_CNF} | grep "^server-id"`
    if [[ "${CHK}" != "" ]]
@@ -372,9 +298,7 @@ fi
 CMD=`ls -ll ${NEW_MOUNT_DIR}`
 log "Mount Directory Contents: ${CMD}"
 
-#
-# Initial Startup ...
-#
+# Initial Startup
 RESULTS=$( portStatus "${TARGET_PORT}" )
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 JSON="{
@@ -425,38 +349,35 @@ then
 fi
 
 # Setting up symbolic link to mysql.sock # NEO
-SOCKLN="${NEW_MOUNT_DIR}/mysql.sock"
-REMOVE=`rm /tmp/mysql.sock`   # ignore errors
-SOCK_SYM_LINK=`ln -s $SOCKLN /tmp/mysql.sock`
+#SOCKLN="${NEW_MOUNT_DIR}/mysql.sock"
+#REMOVE=`rm /tmp/mysql.sock`   # ignore errors
+#SOCK_SYM_LINK=`ln -s $SOCKLN /tmp/mysql.sock`
 
 ########################################################################
 #
 # Change Password for Staging Conn ...
 #
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
-log "Final Command to Change Password is : ${CMD}"
+CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+masklog "Final Command to Change Password is : ${CMDFORLOG}"
 
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 #
 # Update Staging Connection with supplied password ...
 #
-log "Staging Connection Prior to updaging password : ${STAGINGCONN}"
+masklog "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | jq --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "============================================================"
-log "Staging Connection after updating password: ${STAGING_CONN}"
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection after updating password: ${STAGING_CONN}"
 
 ########################################################################
-#
 # Load Source Database Export ...
-#
 log "============================================================"
 log "Restoring Backup File "
 log "============================================================"
-log "${INSTALL_BIN}/mysql ******* < ${BKUP_FILE}"
-log "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
+masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 #RESULTS=$( ${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE} )
 #log "Restore Results: ${RESULTS}"
 
@@ -464,22 +385,20 @@ log "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 ##RESET_MASTER="${DLPX_TOOLKIT}/reset_master.sql"
 ##echo "RESET MASTER;" > ${RESET_MASTER}
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"RESET MASTER;\""
-log "Reset Master Command:  ${CMD}"       # TODO REMOVE
+masklog "Reset Master Command:  ${CMD}"
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 ## Ingest Backup File
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
-log "====== Validating Restored Databases ======"
+log "Validating Restored Databases"
 #RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "show databases;"`
 #log "show databases: ${RESULTS}"
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"show databases;\""
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
-#
 # Shutting down after the backup has been ingested.
-#
 log "============================================================"
 log "Shutdown after restoring data ..."
 log "============================================================"
@@ -495,9 +414,7 @@ else
    log "Database is Already Shut Down ..."
 fi
 
-#
 # Verify Database is Shutdown ...
-#
 PSEF=$( ps -ef | grep -E "[m]ysqld.*--port=${TARGET_PORT}" )
 log "Process Status: ${PSEF}"
 
@@ -509,20 +426,15 @@ then
    die "ERROR: Database is not shutdown, please investigate ..."
 fi
 
-#
 # Use Restored Database Password ...
-#
-log "============================================================"
-log "Source DB Password is ${SOURCEPASS}"
-log "============================================================"
 if [[ "${SOURCEPASS}" != "" ]]
 then
-   STAGING_CONN="-udelphix1 -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
+   STAGING_CONN="-u${SOURCEUSER} -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
 else
-   STAGING_CONN="-uroot -pLandshark00! --protocol=TCP --port=${TARGET_PORT}"
+   STAGING_CONN="-uroot --protocol=TCP --port=${TARGET_PORT}"
 fi
 log "============================================================"
-log "New Connection String to Staging DB >> ${STAGING_CONN}"
+masklog "New Connection String to Staging DB >> ${STAGING_CONN}"
 
 #
 # Start Database ...
@@ -542,13 +454,10 @@ JSON="{
   \"logSync\": \"\",
   \"status\": \"\"
 }"
-##   \"logSync\": \"${LOGSYNC}\",
 
 startDatabase "${JSON}" "${STAGING_CONN}" "" ""
 
-#
 # Validate if Staging is started.
-#
 PSEF=$( ps -ef | grep -E "[m]ysqld.*--port=${TARGET_PORT}" )
 log "Process Status: ${PSEF}"
 PSID=`echo "${PSEF}" | ${AWK} -F" " '{print $2}' | xargs`
@@ -559,7 +468,7 @@ then
    die "ERROR: Database did not start after password change ..."
 fi
 
-log "Validating new connection string ..."
+log "Validating new connection string"
 RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "SELECT @@BASEDIR;"`
 log "Connection Test: ${RESULTS}"
 
@@ -570,9 +479,7 @@ log "Connection Test: ${RESULTS}"
 log "LogSync Enabled: ${LOGSYNC}"
 if [[ "${LOGSYNC}" == "true" ]]
 then
-   #
-   # Setup Slave SQL ...
-   #
+   # Setup Slave SQL
    TMPLOG="${DLPX_TOOLKIT}/tmp4"
    echo "STOP SLAVE;" > ${TMPLOG}.sql
    echo "RESET SLAVE;" > ${TMPLOG}.sql
@@ -591,35 +498,30 @@ then
    ##log "Slave Master SQL: ${TMP}"
    ##log "${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql > ${TMPLOG}.out"
 
-   #
-   # Start Slave ...
-   #
+   # Start Slave
    log "Starting Slave ..."
    RESULTS=$(${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql)
    RESULTS=`cat ${TMPLOG}.out | tr '\n' '|'`
    log "Starting Slave Results: ${RESULTS}"
 
-   #if [[ -f "${TMPLOG}.sql" ]] 
-   #then
-   #   rm "${TMPLOG}.sql" 2>/dev/null
-   #fi
-   #if [[ -f "${TMPLOG}.out" ]] 
-   #then
-   #   rm "${TMPLOG}.out" 2>/dev/null
-   #fi
-
-   log "Checking Slave Status ..."
-   log "${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"SHOW SLAVE STATUS\G\""
+   if [[ -f "${TMPLOG}.sql" ]] 
+   then
+      rm "${TMPLOG}.sql" 2>/dev/null
+   fi
+   if [[ -f "${TMPLOG}.out" ]] 
+   then
+      rm "${TMPLOG}.out" 2>/dev/null
+   fi
+   log "Checking Slave Status"
+   masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"SHOW SLAVE STATUS\G\""
    RESULTS=$(${INSTALL_BIN}/mysql ${STAGING_CONN} -se "SHOW SLAVE STATUS\G")
    log "Slave Status: ${RESULTS}"
 
    # A parting tip: Sometimes errors occur in replication. 
    # For example, if you accidentally change a row of data on your slave. 
    # If this happens, fix the data, then run:
-
    #STOP SLAVE;SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;START SLAVE;
-
-fi    		# end if $LOGSYNC ...
+fi
 
  
 # This section has been commented to enable Staging Target run 
@@ -645,6 +547,7 @@ log "Environment: "
 export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
+export SOURCEPASS=""
 env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log " <<<End"
 exit 0

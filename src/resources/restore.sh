@@ -15,9 +15,9 @@ PGM_NAME='restore.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 who=`whoami`
 log "whoami: $who"
@@ -57,35 +57,30 @@ then
    BKUP_FILE="/tmp/dump_${SOURCEPORT}.sql"
    if [[ -f "${BKUP_FILE}" ]]
    then
-      mv ${BKUP_FILE} ${BKUP_FILE}_${DT}
+      #mv ${BKUP_FILE} ${BKUP_FILE}_${DT}
+      rm ${BKUP_FILE}
    fi
 
    # 
    # Source Connection for Backup ...
    #
-   log "Source Connection: ${SOURCECONN}"
+   masklog "Source Connection: ${SOURCECONN}"
    RESULTS=$( buildConnectionString "${SOURCECONN}" "${SOURCEPASS}" "${SOURCEPORT}" "${SOURCEIP}" )
-   log "${RESULTS}" | jq --raw-output ".string"
-   SOURCE_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-   log "New Conn: ${SOURCE_CONN}"
-
+   #log "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+   SOURCE_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+   masklog "New Conn: ${SOURCE_CONN}"
    log "Source Backup Host: ${SOURCEIP}"
 
    ###########################################################
    ## On Source Server ...
-
-   #
    # Backup ...
-   #
-   log "Starting Backup ..."
+   log "Starting Backup"
 
    if [[ "1" == "0" ]] 
    then
-
       #
       # No Replication Backup ...
       #
-
       SQL="SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN"
       SQL="${SQL} ('mysql','information_schema','performance_schema')"
  
@@ -102,27 +97,24 @@ then
       log "${INSTALL_BIN}/mysqldump ***** ${MYSQLDUMP_OPTIONS} --databases ${DBLIST}"
       ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} ${MYSQLDUMP_OPTIONS} --databases ${DBLIST} > ${BKUP_FILE}
 
-   else 
-
+   else
       #
       # Create Backup File for Replication ...
       #
-
       log "LogSync Enabled: ${LOGSYNC}"
       if [[ "${LOGSYNC}" == "true" ]]
       then 
-         log "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A"
+         masklog "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A"
          ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A > ${BKUP_FILE}"
          ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A  > ${BKUP_FILE}
       else 
-         log "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob"
+         masklog "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob"
          ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob > ${BKUP_FILE}"
          ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob > ${BKUP_FILE}
       fi 
 
    fi
 
-   #
    # Verify Backup File Exists ...
    #
    FS=`du -s ${BKUP_FILE} 2>/dev/null`
@@ -138,8 +130,6 @@ then
    echo "Delphix Backup File: ${STAT}"
 
 else	# else if ${BACKUP_PATH} ...
-
-
    #
    # Customer Provided Backup File ...
    #
@@ -165,6 +155,7 @@ log "Environment: "
 export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
+export SOURCEPASS=""
 env | sort  >>$DEBUG_LOG
 log "-- End --"
 exit 0

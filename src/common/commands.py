@@ -24,7 +24,7 @@ class OSCommand(object):
 
     @staticmethod
     def find_binary_path():
-        return "find / -not \( -path /etc -prune \) -name mysqld -type f -print 2>&1 | grep -v 'Permission denied'"
+        return "find / ! -path \"/etc/*\" ! -path \"/var/lock/*\" -name mysqld -type f -print 2>&1 | grep -v 'Permission denied'"
 
     @staticmethod
     def find_install_path(binary_path):

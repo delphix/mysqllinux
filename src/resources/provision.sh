@@ -14,9 +14,9 @@ PGM_NAME='provision.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 DT=`date '+%Y%m%d%H%M%S'`
 
@@ -78,8 +78,8 @@ VDBPASS=`echo "'"${VDBPASS}"'"`
 log "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
-VDB_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "Staging Connection: ${VDB_CONN}"
+VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+log "VDB Connection: ${VDB_CONN}"
 
 NEW_MOUNT_DIR="${DLPX_DATA_DIRECTORY}"
 NEW_DATA_DIR="${NEW_MOUNT_DIR}/data"
@@ -90,8 +90,6 @@ NEW_MY_CNF="${NEW_MOUNT_DIR}/my.cnf"
 log "Mount Directory: ${NEW_MOUNT_DIR}"
 log "ServerId: ${SERVERID}"
 
-###########################################################
-## On Staging Server ...
 ###########################################################
 ## On Target Server ...
 
@@ -196,9 +194,15 @@ else
 fi
 
 # Resetting Slave
+#         CMD="${INSTALL_BIN}/mysqladmin ${ZCONN} start-slave"
+#         log "Command to start Slave> ${CMD}"
+#         eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+
 log "Reset Slave Status for VDB"
-CMD="${INSTALL_BIN}/mysql ${VDB_CONN} -e \"stop slave;reset slave all;\""
+log "Reset Command: stop slave;CHANGE MASTER TO MASTER_HOST=' ';reset slave all;"
+CMD="${INSTALL_BIN}/mysql ${VDB_CONN} -e \"stop slave;CHANGE MASTER TO MASTER_HOST=' ';reset slave all;\""
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+sleep 4
 
 #
 # Stop ...

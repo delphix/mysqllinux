@@ -19,8 +19,6 @@
 #
 # ? DLPX_TMP_DIRECTORY
 #
-
-# 
 # Toolkit Specific ...
 # 
 DLPX_TOOLKIT_NAME="mysql" 
@@ -170,7 +168,7 @@ function purgeLogs {
 #
 # Usage:
 #   RESULTS=$( portStatus "${PORT}" )
-#   echo "${RESULTS}" | jq --raw-output ".status"
+#   echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"
 #
 portStatus () {
 
@@ -208,16 +206,11 @@ portStatus () {
    ZBASEDIR=""
    ZDATADIR=""
 
-   #
    # Process Exist, get data values from process ...
-   #
    if [[ "${ZPSID}" != "" ]]
    then
       zstr=`echo "$ZPSEF" | ${AWK} '{ s = ""; for (i = 8; i <= NF; i++) s = s $i " "; print s }'`
       log "$zstr"
-
-###/usr/local/mysql/bin/mysqld --defaults-file=/mnt/provision/mytest/my.cnf --basedir=/usr/local/mysql --datadir=/mnt/provision/mytest/data --pid-file=/mnt/provision/mytest/clone.pid --port=3309 --server-id=201 --socket=/mnt/provision/mytest/mysql.sock --tmpdir=/mnt/provision/mytest/tmp
-
       ZPGCMD=`echo $zstr | ${AWK} -F" " '{print $1}' | xargs`
       ZPGBIN=`dirname "${ZPGCMD}"`
 
@@ -244,44 +237,35 @@ portStatus () {
 
       ZTMPDIR=`echo "${ZPSEF}" | ${AWK} 'BEGIN {RS=" "}; /--tmpdir/' | cut -d"=" -f2 | tr '\n' ' ' | xargs`
       #log "--tmpdir: ${ZTMPDIR}"
-
    else
-      #
       # If port IS NOT included in the process command, read from my.cnf file if specified ...
-      #
       #zinstances=$( ps -ef | grep -E "[m]ysqld .*--defaults-file=" | grep -v grep )
-
       log "Warning: Missing Process Id for Specified Port ${ZPORT}"
-
    fi
 
-   #
    # Found valid process ...
-   #
    ZSTATUS="INACTIVE"
    if [[ "${ZPSID}" != "" ]] && [[ "${ZPSCMD}" != "" ]] && [[ "${ZDATADIR}" != "" ]]
    then
       ZSTATUS="ACTIVE"
    fi
    echo "{
-  \"port\": \"${ZPORT}\",
-  \"processId\": \"${ZPSID}\",
-  \"processCmd\": \"${ZPSCMD}\",
-  \"socket\": \"${ZSOCKET}\",
-  \"baseDir\": \"${ZBASEDIR}\",
-  \"dataDir\": \"${ZDATADIR}\",
-  \"myCnf\": \"${ZMYCNF}\",
-  \"serverId\": \"${ZSERVERID}\",
-  \"pidFile\": \"${ZPIDFILE}\",
-  \"tmpDir\": \"${ZTMPDIR}\",
-  \"status\": \"${ZSTATUS}\"
-}"
-
+      \"port\": \"${ZPORT}\",
+      \"processId\": \"${ZPSID}\",
+      \"processCmd\": \"${ZPSCMD}\",
+      \"socket\": \"${ZSOCKET}\",
+      \"baseDir\": \"${ZBASEDIR}\",
+      \"dataDir\": \"${ZDATADIR}\",
+      \"myCnf\": \"${ZMYCNF}\",
+      \"serverId\": \"${ZSERVERID}\",
+      \"pidFile\": \"${ZPIDFILE}\",
+      \"tmpDir\": \"${ZTMPDIR}\",
+      \"status\": \"${ZSTATUS}\"
+    }"
 }
 
 #
 # Stop Database ...
-#
 # Usage:
 #  stopDatabase "${RESULTS_JSON}" "${SOURCE_CONN}"
 #
@@ -299,34 +283,27 @@ stopDatabase() {
    ZBASEDIR=`echo "${ZRESULTS}" | $DLPX_BIN_JQ --raw-output ".baseDir"`
    ZLOGSYNC=`echo "${ZRESULTS}" | $DLPX_BIN_JQ --raw-output ".logSync"`
 
-   echo "========ZCONN========"
+   echo "ZCONN:"
    echo "$ZCONN"
-   #
+
    # Found valid process ...
-   #
    if [[ "${ZPORT}" != "" ]] && [[ "${ZPSID}" != "" ]]
    then
-
       if [[ -f "${ZBASEDIR}/bin/mysqladmin" ]] && [[ "${ZPORT}" != "" ]]
-      then 
-
+      then
          if [[ "${ZLOGSYNC}" == "true" ]]
          then
-            log "Shutdown Slave: ${ZBASEDIR}/bin/mysqladmin ${ZCONN} stop-slave"
+            masklog "Shutdown Slave: ${ZBASEDIR}/bin/mysqladmin ${ZCONN} stop-slave"
             CMD="${ZBASEDIR}/bin/mysqladmin ${ZCONN} stop-slave"
             ##eval ${CMD} </dev/null >/dev/null 2>&1 & disown "$!"
             eval ${CMD} 1>>${DEBUG_LOG} 2>&1
          fi
-
-         #
          # Shutdown Database ...
-         #
-         log "Shutdown: ${ZBASEDIR}/bin/mysqladmin ${ZCONN} shutdown"
+         masklog "Shutdown: ${ZBASEDIR}/bin/mysqladmin ${ZCONN} shutdown"
          CMD="${ZBASEDIR}/bin/mysqladmin ${ZCONN} shutdown" 
-         log "Executing shutdown ... "
+         log "Executing shutdown"
          #eval ${CMD} </dev/null >/dev/null 2>&1 & disown "$!"
          eval ${CMD} 1>>${DEBUG_LOG} 2>&1
-
          sleep 4
 
       else
@@ -337,14 +314,12 @@ stopDatabase() {
       ZPSID2=`echo "${ZPSEF2}" | ${AWK} -F" " '{print $2}'`
       if [[ "${ZPSID}" == "${ZPSID2}" ]]
       then
-      log "Killing ${ZPSID} ..."
-         kill -9 ${ZPSID}
-         sleep 4
+        log "Killing ${ZPSID}"
+        kill -9 ${ZPSID}
+        sleep 10
       fi
 
-      #
       # Verify ...
-      #
       ZPSEF2=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
       ZPSID2=`echo "${ZPSEF2}" | ${AWK} -F" " '{print $2}'`
       if [[ "${ZPSID2}" == "" ]]
@@ -353,11 +328,8 @@ stopDatabase() {
       else
          log "Warning: Unknown Database Status ..."
       fi
-
-   else 
-
+   else
       log "Warning: Shutdown aborted since port/process id does not exist or was not specified ..."
-
    fi 
    # return status?
 }  
@@ -395,26 +367,20 @@ startDatabase() {
    then
       ZCMD="${ZPSCMD}"
    fi
-
-   #
    # Start Database ...
-   #
    if [[ "${ZSTATUS}" != "ACTIVE" ]] 
    then 
 
       ZMOUNTDIR=`${DIRNAME} ${ZDATADIR}`
       CMD="${ZCMD} ${ZOPTIONS} --defaults-file=${ZMYCNF} --basedir=${ZBASEDIR} --datadir=${ZDATADIR} --pid-file=${ZPIDFILE} --port=${ZPORT} --server-id=${ZSERVERID} --socket=${ZSOCKET} --tmpdir=${ZTMPDIR}"
-      log "Startup Command: ${CMD} "
+      masklog "Startup Command: ${CMD} "
 
-      #
       # Shoutout to Tom Walsh for the independent shell params !!!
-      #
       ${CMD} </dev/null >/dev/null 2>&1 & disown "$!"
 
       ZPSEF=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
       log "Process Status: ${ZPSEF}"
-
-      sleep 4
+      sleep 10
 
       ZPSID=`echo "${ZPSEF}" | ${AWK} -F" " '{print $2}'`
       log "Database Started on ProcessId: ${ZPSID}"
@@ -426,16 +392,13 @@ startDatabase() {
       log "====== Start Slave Check ======"
       if [[ "${LOGSYNC}" == "true" && "${ZSTARTSLAVE}" != "NO" ]]
       then
-         log "ZCONN value for: ${ZCONN}"
+         masklog "ZCONN value for: ${ZCONN}"
          CMD="${INSTALL_BIN}/mysqladmin ${ZCONN} start-slave"
-         log "Command to start Slave> ${CMD}"
+         masklog "Command to start Slave> ${CMD}"
          eval ${CMD} 1>>${DEBUG_LOG} 2>&1
       fi              # end if $LOGSYNC ...
-
-   else 
-
+   else
       log "Warning: Start Database aborted since status is ACTIVE ..."
-
    fi
 }
 
@@ -444,19 +407,15 @@ startDatabase() {
 #
 # Usage:
 #   RESULTS=$( buildConnectionString "${CONN}" "${PASS}" "${PORT}" "${IP}" )
-#   echo "${RESULTS}" | jq --raw-output ".results"
+#   echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".results"
 #
 buildConnectionString () {
-
    ZCONN=${1}
    ZPASS=${2}
    ZPORT=${3}
    ZIP=${4}
-
-   #
    # Source Connection for Backup ...
-   #
-   log "Connection Input: ${ZCONN}"
+   masklog "Connection Input: ${ZCONN}"
    ZSTRING="${ZCONN} --protocol=TCP --port=${ZPORT}  --host=${ZIP}"  
    if [[ "${ZCONN}" = *" -p"* ]] && [[ "${ZPASS}" != "" ]]
    then
@@ -473,21 +432,37 @@ buildConnectionString () {
    then
       ZSTRING="-u${ZCONN} -p${ZPASS} --protocol=TCP --port=${ZPORT} --host=${ZIP}"
    fi
-   log "Updated Connection: ${ZSTRING}"
+   masklog "Updated Connection: ${ZSTRING}"
    echo "{
-  \"conn\": \"${ZCONN}\",
-  \"pass\": \"${ZPASS}\",
-  \"string\": \"${ZSTRING}\"
-}"
-
+    \"conn\": \"${ZCONN}\",
+    \"pass\": \"${ZPASS}\",
+    \"string\": \"${ZSTRING}\"
+    }"
 }
 
-#
-# Keep for Library Verification ...
-#
-function hey {
-   echo "there"
+# Keep for Library Verification
+function library_load {
+   echo "LOADED"
 }
+
+# mask passwords and log into debug
+function masklog {
+  param=$1
+  arr=(${param// / })
+  i=0
+  for val in "${arr[@]}"
+  do
+  	if [[ "$val" == --pass* ]]; then
+  		arr[i+1]="M******"
+  	elif [[ "$val" == -p* ]]; then
+  		arr[i]="-p*****"
+  	fi
+  	let "i=i+1"
+  done
+  masked="${arr[@]}"
+  log $masked
+}
+
 
 ###########################################################
 ## Test/Debug ...
@@ -505,5 +480,5 @@ function hey {
 #log "Delphix Bin: ${DLPX_BIN}"
 #log "Delphix Toolkit: ${DLPX_TOOLKIT}"
 
-errorLog "Error Log Test ..."
+errorLog "Error Log Test"
 purgeLogs
