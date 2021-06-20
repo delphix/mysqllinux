@@ -3,7 +3,8 @@ import random
 import time
 from datetime import datetime
 from dlpx.virtualization import libs
-
+import constants as const
+from dlpx.virtualization.platform.exceptions import UserError
 
 def _setup_logger():
     # This will log the time, level, filename, line number, and log message.
@@ -28,3 +29,31 @@ def get_current_time():
     curr_time = datetime.now()
     return curr_time.strftime('%Y%m%d%H%M%S')
 
+def process_exit_codes(exit_code,operation,std_err=None):
+    '''
+    Processes exit code and returns a UserError
+    Args:
+        exit_code: Exit code from run_bash
+        operation: The operation that was performed.
+    Returns:
+        UserError
+    '''
+    err_out=const.ERR_GENERAL_OUT
+    if std_err:
+        err_out=std_err
+    if exit_code == 3:  # Unable to start MySQL
+        err_msg=const.ERR_START_MSG
+        err_action=const.ERR_START_ACTION
+    elif exit_code == 10: # Invalid Binary Path
+        err_msg=const.ERR_INVALID_BINARY_MSG
+        err_action=const.ERR_INVALID_BINARY_ACTION
+    elif exit_code == 2:
+        err_msg=const.ERR_GENERAL_MSG
+        err_action=const.ERR_GENERAL_ACTION
+
+    user_error= UserError(
+      err_msg,
+      err_action,
+      "ExitCode:{} \n {}".format(exit_code,err_out)
+    )
+    return user_error

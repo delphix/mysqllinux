@@ -21,6 +21,7 @@ from common import utils,constants
 from common.commands import CommandFactory
 from dlpx.virtualization.platform import Status
 from dlpx.virtualization import libs
+from dlpx.virtualization.platform.exceptions import UserError
 from customexceptions.plugin_exceptions import RepositoryDiscoveryError,LinkingException,VirtualException
 from customexceptions.database_exceptions import (
     StagingStartupException,
@@ -536,17 +537,24 @@ def configure(virtual_source, snapshot, repository):
         "STAGED_BACKUP":snapshot.snap_backup_path
     }
     configure_script = pkgutil.get_data('resources', 'provision.sh')
-    result = libs.run_bash(virtual_source.connection, configure_script,environment_vars,check=True)
+    result = libs.run_bash(virtual_source.connection, configure_script,environment_vars,check=False)
     logger.debug(result)
     output = result.stdout.strip()
+    std_err=result.stderr.strip()
     exit_code = result.exit_code
-    error = result.stderr.strip()
-    if exit_code !=0:
-        logger.debug("Configure --> Error is : "+error)
-        raise VirtualException("Exception in virtual.configure:"+error)
+    if exit_code == 0:
+        logger.debug("Pre-Snapshot/Restore_DB successful "+output)
     else:
-        logger.debug("Pre-Snapshot/Restore_DB successful "+output)       
-    return SourceConfigDefinition(db_name=output,base_dir=virtual_source.parameters.base_dir, port=virtual_source.parameters.port,data_dir=mount_path)
+        err = utils.process_exit_codes(exit_code,"PROVISION",std_err)
+        logger.debug("There was an error while provisioning.Check error.log for details.")
+        logger.error(err)
+        raise err
+    return SourceConfigDefinition(
+        db_name=output,
+        base_dir=virtual_source.parameters.base_dir,
+        port=virtual_source.parameters.port,
+        data_dir=mount_path
+    )
 
 
 ##################################################
@@ -571,15 +579,15 @@ def stop_mysql(port,connection,baseDir,user,pwd,host):
         exit_code = result.exit_code
         if exit_code !=0:
             logger.debug("There was an error trying to shutdown the database : "+error)
-            raise MySQLShutdownException(error)
+            #raise MySQLShutdownException(error)
         else:
             logger.debug("Output: "+output)
-        time.sleep(25)
+        time.sleep(20)
         if(Status.ACTIVE == get_port_status(port,connection)):
-            logger.debug("KILL")  
+            logger.debug("MySQL has not shutdown after 20 seconds. Killing process.")
             kill_process(connection,port)
     else:
-        logger.debug(" DB is already down.")
+        logger.debug(" MySQL database is already shutdown.")
 
 ##################################################
 # Function to Kill a Process
@@ -675,10 +683,14 @@ def start_mysql(installPath,baseDir,mountPath,port,serverId,connection):
         exit_code = result.exit_code
         if exit_code !=0:
             logger.debug("There was an error trying to start the DB : "+error)
-            raise MySQLStartupException(error)
+            raise UserError(
+                constants.ERR_START_MSG,
+                constants.ERR_START_ACTION,
+                "ExitCode:{} \n {}".format(exit_code,error)
+            )
         else:
             logger.debug("Output: "+output)
-        time.sleep(25)
+        time.sleep(30)
         if(Status.ACTIVE == get_port_status(port,connection)):
             logger.debug("DB Started Successfully")
         else:

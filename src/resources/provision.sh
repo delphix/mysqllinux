@@ -22,13 +22,10 @@ DT=`date '+%Y%m%d%H%M%S'`
 
 printParams
 
-
 TARGET_PORT=${PORT}
 log "Target Port: ${TARGET_PORT}"
 
-#
 # Customer Config File Parameters ...
-#
 log "Customer my.cnf Parameters: ${MYCONFIG}"
 LINES=""
 if [[ "${MYCONFIG}" != "" ]]
@@ -39,9 +36,7 @@ fi
 log "my.cnf lines: ${LINES}"
 
 #
-# Get from Snapshot ...
-#
-#
+# Get from Snapshot
 # Staging Details from snapshot data ...
 #
 log "======== Logging Snapshot Information:=========="
@@ -71,15 +66,14 @@ log "Binaries: ${INSTALL_BIN}"
 
 if [[ ! -f "${INSTALL_BIN}"/mysql ]]
 then
-   die "Error: ${INSTALL_BIN}/mysql is invalid ..."
+   terminate "Error: ${INSTALL_BIN}/mysql is invalid" 10
 fi
-
 VDBPASS=`echo "'"${VDBPASS}"'"`
-log "VDB Connection: ${VDBCONN}"
+masklog "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
 VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "VDB Connection: ${VDB_CONN}"
+masklog "VDB Connection: ${VDB_CONN}"
 
 NEW_MOUNT_DIR="${DLPX_DATA_DIRECTORY}"
 NEW_DATA_DIR="${NEW_MOUNT_DIR}/data"
@@ -92,27 +86,15 @@ log "ServerId: ${SERVERID}"
 
 ###########################################################
 ## On Target Server ...
-
 log "Source --basedir=${CONFIG_BASEDIR}"
-
-#
 # Create Initial Database ...
-#
 log "MySQL Version: ${MYSQLVER}"
-#MYSQLVER="5.7.20"
-#MYSQLVER="5.6.28-76.1"
-#10.1.32-MariaDB
-#echo ${MYSQLVER:0:3}
-#5.6
-
 if [[ "${MYSQLVER:0:3}" == "5.6" ]]
 then
-   die "MySQL ${MYSQLVER} is not supported ..."
+   die "MySQL ${MYSQLVER} is not supported."
 fi
 
-#
-# Create my.cnf file ...
-#
+# Create my.cnf file
 #NEW_MY_CNF="my.cnf"
 log "Creating my.cnf file ..."
 echo "[mysqld]" > ${NEW_MY_CNF}
@@ -140,9 +122,7 @@ CMD=`ls -llR ${NEW_MOUNT_DIR}`
 log "${NEW_MOUNT_DIR}"
 log "${CMD}"
 
-#
 # Change MySQL Database Tables ...
-#
 log "Checking for Customer Security ..."
 if [[ -f "${DLPX_TOOLKIT}/mysql_db_tables.zip" ]]
 then
@@ -157,12 +137,9 @@ then
    log "Restoring Security Done"
 fi
 
-# 
 # Initial Instance Startup ...
-#
 log "Initial Instance Startup ..."
 RESULTS=$( portStatus "${PORT}" )
-####log "Results: ${RESULTS}"
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 
 JSON="{
@@ -180,14 +157,11 @@ JSON="{
   \"status\": \"${zSTATUS}\"
 }"
 
-#log "JSON: ${JSON}"
-
-#
 #  Start the Database
 #  DO NOT Start Slave
 if [[ "${zSTATUS}" != "ACTIVE" ]]
 then
-   log "Startup ..."
+   log "Starting up VDB"
    startDatabase "${JSON}" "${VDB_CONN}" " " "NO"
 else
    log "Database is Already Started ..."
@@ -251,5 +225,5 @@ echo "${prettyName}"
 #export SNAPSHOT_METADATA=""
 #export STAGINGPASS=""
 #env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log "End"
 exit 0

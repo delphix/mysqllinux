@@ -378,18 +378,26 @@ startDatabase() {
       # Shoutout to Tom Walsh for the independent shell params !!!
       ${CMD} </dev/null >/dev/null 2>&1 & disown "$!"
 
-      ZPSEF=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
-      log "Process Status: ${ZPSEF}"
+      masklog "Waiting before checking status: ${CMD} "
       sleep 10
+
+      ZPSEF=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
+      log "Running process Status: ${ZPSEF}"
 
       ZPSID=`echo "${ZPSEF}" | ${AWK} -F" " '{print $2}'`
       log "Database Started on ProcessId: ${ZPSID}"
-      
+
+      if [[ -z "$ZPSID" ]]
+      then
+        log "MySQL Database could not be started."
+        terminate "MySQL Database could not be started.No process running." 3
+      fi
+
       INSTALL_BIN="${ZBASEDIR}/bin"
       log "Install bin: ${INSTALL_BIN}"
 
       # Start Slave 
-      log "====== Start Slave Check ======"
+      log "Starting Slave"
       if [[ "${LOGSYNC}" == "true" && "${ZSTARTSLAVE}" != "NO" ]]
       then
          masklog "ZCONN value for: ${ZCONN}"
@@ -398,7 +406,7 @@ startDatabase() {
          eval ${CMD} 1>>${DEBUG_LOG} 2>&1
       fi              # end if $LOGSYNC ...
    else
-      log "Warning: Start Database aborted since status is ACTIVE ..."
+      log "Warning: MySQL is already running. ABORTING start operation."
    fi
 }
 
@@ -461,6 +469,13 @@ function masklog {
   done
   masked="${arr[@]}"
   log $masked
+}
+
+# Terminate with exit codes
+function terminate {
+   errorLog "$1"
+   echo "$1" >>/dev/stderr
+   exit $2
 }
 
 
