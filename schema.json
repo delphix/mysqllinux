@@ -57,7 +57,6 @@
         "type": "object",
         "additionalProperties" : false,
         "ordering": [
-           "vdbHost",
            "vdbUser",
            "vdbPass",
            "baseDir",
@@ -67,7 +66,6 @@
            "config_settings_prov"
          ],
         "required": [
-           "vdbHost",
            "vdbUser",
            "vdbPass",
            "baseDir",
@@ -154,13 +152,10 @@
           "dSourceType",
           "serverId",
           "stagingPort",
-          "mountPath",
-          "stagingip"
+          "mountPath"
         ],
         "ordering" : [
           "dSourceType",
-          "stagingip",          
-          "stagingUser",
           "stagingPass",
           "stagingBasedir",
           "serverId",
@@ -172,18 +167,14 @@
           "sourcePass",
           "logSync",
           "replicationUser",
-          "replicationPass",
-          "sourceDatabase",
-          "sourceTables",
-          "scpUser",
-          "scpPass"
+          "replicationPass"
         ],
         "properties" : {
           "dSourceType": {
             "type": "string",
             "prettyName": "dSource Type",
             "description": "",
-            "enum": ["Manual Backup Ingestion", "Replication","Simple (Tablespace Backup)"],
+            "enum": ["Manual Backup Ingestion", "Replication"],
             "default": "Replication"
           },
           "backupPath": {
@@ -192,12 +183,6 @@
              "description": "* Leave blank if Delphix is taking backups",
              "default": ""
           },
-          "stagingip": {
-            "type": "string",
-            "prettyName": "MySQL Staging Server IP address",
-            "description": "HostName or IP address of the staging server",
-            "default": "localhost"
-         },
          "sourceip": {
             "type": "string",
             "prettyName": "Source DB Host IP address",
@@ -242,17 +227,11 @@
              "description": "* Required if using Replication Method with LogSync",
              "default": "Delphix@123"
           },
-          "stagingUser": {
-             "type": "string",
-             "prettyName": "Staging DB User Name",
-             "description": "MySQL Staging DB User Name",
-             "default": "root"
-          },
           "stagingPass": {
              "type": "string",
              "format": "password",
-             "prettyName": "Staging DB Password",
-             "description": "Staging DB User's Password",
+             "prettyName": "Staging Initialization Password",
+             "description": "root user password to use while initializing Staging DB.",
              "default": "Delphix@123"
           },
           "serverId": {
@@ -260,30 +239,6 @@
              "prettyName": "Staging DB Server ID",
              "description": "ServerID for the Stagine DB. Must be different from Source DB Server ID",
              "default": "102"
-          },
-          "sourceDatabase": {
-             "type": "string",
-             "prettyName": "Source DB",
-             "description": "* Name of the Source DB to backup. Required for Simple Tablespace Backup Method",
-             "default": "delphixdb"
-          },
-          "sourceTables": {
-             "type": "string",
-             "prettyName": "Source Tables to backup",
-             "description": "* ALL or table names separated by comma. Required for Simple Tablespace Backup Method",
-             "default": "ALL"
-          },
-          "scpUser": {
-             "type": "string",
-             "prettyName": "Source scp Username",
-             "description": "* Required for Simple Tablespace Backup Method",
-             "default": "delphix"
-          },
-          "scpPass": {
-             "type": "string",
-             "prettyName": "Source scp Password",
-             "description": "* Required for Simple Tablespace Backup Method",
-             "default": "delphix"
           },
           "stagingPort": {
              "type": "string",
@@ -307,11 +262,6 @@
             "type": "string",
             "prettyName": "Snapshot ID",
             "description": "A unique ID for this snapshot"
-         },
-         "snapHost": {
-            "type": "string",
-            "prettyName": "Snapshot Host",
-            "description": ""
          },
          "snapPort": {
             "type": "string",

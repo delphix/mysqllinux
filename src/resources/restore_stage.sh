@@ -460,6 +460,7 @@ if [[ "${SOURCEPASS}" != "" ]]
 then
    STAGING_CONN="-u${SOURCEUSER} -p${SOURCEPASS} --protocol=TCP --port=${TARGET_PORT}"
 else
+   errorLog "Error: Source user password not found. Using root user."
    STAGING_CONN="-uroot --protocol=TCP --port=${TARGET_PORT}"
 fi
 log "============================================================"

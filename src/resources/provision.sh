@@ -48,7 +48,6 @@ log "======== Logging Snapshot Information:=========="
 #STAGED_ROOT_PASS=`echo "${SNAPSHOT_METADATA}" | $DLPX_BIN_JQ --raw-output '.snapPass'`
 #STAGED_BACKUP=`echo "${SNAPSHOT_METADATA}" | $DLPX_BIN_JQ --raw-output '.snapBackup'`
 
-log "Snap Staging Host: ${STAGED_HOST}"
 log "Snap Staging Port: ${STAGED_PORT}"
 log "Snap Staging DataDir: ${STAGED_DATADIR}"
 log "Snap Config BaseDir: ${CONFIG_BASEDIR}"
