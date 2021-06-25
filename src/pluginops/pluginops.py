@@ -296,15 +296,18 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.debug("Pre-Snapshot/Restore successful "+output)   
             logger.debug("Restoring Backup to Stage")
             restore_script = pkgutil.get_data('resources', 'restore_stage.sh')
-            result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=True)
+            result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
+            logger.debug(result)
             output = result.stdout.strip()
-            error = result.stderr.strip()
+            std_err=result.stderr.strip()
             exit_code = result.exit_code
-            if exit_code !=0:
-                logger.debug("Error is : "+error)
-                raise LinkingException("Exception in pre-snapshot/restore_db:"+error)
+            if exit_code == 0:
+                logger.debug("Creation of Staging DB(Pre-Snapshot) successful."+output)
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful "+output)   
+                err = utils.process_exit_codes(exit_code,"DBLINK",std_err)
+                logger.debug("There was an error while creating the staging DB.Check error.log for details.")
+                logger.error(err)
+                raise err
         elif dSourceType == "Manual Backup Ingestion":
             logger.debug("dSourceType is Manual Backup Ingestion") 
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")

@@ -44,6 +44,18 @@ def process_exit_codes(exit_code,operation,std_err=None):
     if exit_code == 3:  # Unable to start MySQL
         err_msg=const.ERR_START_MSG
         err_action=const.ERR_START_ACTION
+    elif exit_code == 4:  # Could not find my.cnf
+        err_msg=const.ERR_MYCNF_MSG
+        err_action=const.ERR_MYCNF_ACTION
+    elif exit_code == 5:  # Unable to change password
+        err_msg=const.ERR_PWD_MSG
+        err_action=const.ERR_PWD_ACTION
+    elif exit_code == 6:  # Unable restore backup
+        err_msg=const.ERR_RESTORE_MSG
+        err_action=const.ERR_RESTORE_ACTION
+    elif exit_code == 7:  # Unable to connect after backup
+        err_msg=const.ERR_CONNECT_MSG
+        err_action=const.ERR_CONNECT_ACTION
     elif exit_code == 10: # Invalid Binary Path
         err_msg=const.ERR_INVALID_BINARY_MSG
         err_action=const.ERR_INVALID_BINARY_ACTION

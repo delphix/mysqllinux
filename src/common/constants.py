@@ -20,6 +20,25 @@ ERR_START_ACTION="Please make sure that" \
 
 ERR_INVALID_BINARY_MSG="An invalid path to mysql binary was passed wile provisioning."
 ERR_INVALID_BINARY_ACTION="mysql was not found under the provided installation directory \n" \
+                          "Please verify the MySQL directory and retry the operation."
+
+ERR_MYCNF_MSG="MySQL configuration file (my.cnf) not found on host."
+ERR_MYCNF_ACTION="Please provide a my.cnf file in the Delphix Toolkit folder on host."
+
+ERR_PWD_MSG="An error occurred while changing password for the MySQL Staging database."
+ERR_PWD_ACTION="Please check logs for further information on the error."
+
+ERR_RESTORE_MSG="An error occurred while restoring the Staging database from Source backup."
+ERR_RESTORE_ACTION="Please check logs for further information on the error."
+
+ERR_CONNECT_MSG="Unable to connect to MySQL database."
+ERR_CONNECT_ACTION="Please verify and confirm that " \
+                   "1. The DB username and password are accurate " \
+                   "2. The MySQL Database is running on the Host. " \
+                   "Check logs for further information on the error."
+
+ERR_INVALID_BINARY_MSG="An invalid path to mysql binary was passed wile provisioning."
+ERR_INVALID_BINARY_ACTION="mysql was not found under the provided installation directory \n" \
                          "Please verify the MySQL directory and retry the operation."
 
 

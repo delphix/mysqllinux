@@ -38,6 +38,7 @@ TIMESTAMP=$(date +%Y-%m-%dT%H:%M:%S)
 CONFIG_OUTPUT_FILE="delphix_${DLPX_TOOLKIT_NAME}_config.dat"
 ERROR_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_error.log"
 DEBUG_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_debug.log"
+INFO_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_info.log"
 
 AWK=`which awk`
 DIRNAME=`which dirname`
@@ -58,10 +59,7 @@ function printParams {
    log "==== PRINT PARAMS ====="
 }
 
-
-#
 # Log infomation and die if option -d is used.
-#
 function log {
    Parms=$@
    die='no'
@@ -72,6 +70,21 @@ function log {
    fi
    ##printf "[${DLPX_GUID}][${TIMESTAMP}][DEBUG][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$DEBUG_LOG
    printf "[${TIMESTAMP}][DEBUG][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$DEBUG_LOG
+   if [[ $die = 'yes' ]]; then
+      exit 2
+   fi
+}
+
+# Log infomation and die if option -d is used.
+function infolog {
+   Parms=$@
+   die='no'
+   if [[ $1 = '-d' ]]; then
+      shift
+      die='yes'
+      Parms=$@
+   fi
+   printf "[${TIMESTAMP}][INFO][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$INFO_LOG
    if [[ $die = 'yes' ]]; then
       exit 2
    fi
@@ -89,6 +102,7 @@ function errorLog {
 # Write to log and errorlog before exiting with an error code
 #
 function die {
+   log "die"
    errorLog "$@"
    exit 2
 }
@@ -469,10 +483,13 @@ function masklog {
   done
   masked="${arr[@]}"
   log $masked
+  infolog $masked
 }
 
 # Terminate with exit codes
 function terminate {
+   log "Error Message: $1"
+   log "Exit Code: $2"
    errorLog "$1"
    echo "$1" >>/dev/stderr
    exit $2

@@ -100,7 +100,6 @@ ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error
 
 PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
 # sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
-# 2019-04-11T14:40:34.032576Z 1 [Note] A temporary password is generated for root@localhost: L0qXNZ8?C3Us
 log "init temporary password: ${PWD_LINE}"
 
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
@@ -125,8 +124,6 @@ log "my.cnf file location >  ${NEW_MY_CNF}"
 
 if [[ -f "${DLPX_TOOLKIT}/my.cnf" ]]
 then
-   #log "Copying Config File ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}"
-   #cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MY_CNF}
    log "Copying Config File from ${DLPX_TOOLKIT}/my.cnf to ${NEW_MOUNT_DIR}"
    cp ${DLPX_TOOLKIT}/my.cnf ${NEW_MOUNT_DIR}
 else
@@ -159,140 +156,156 @@ log "my.cnf exists?  ${CMD}"
 
 if [[ -f "${NEW_MY_CNF}" ]]
 then
-   # Replace all tabs with spaces ...
+   echo "Replace all tabs with spaces"
    sed -i 's/\t/     /g' ${NEW_MY_CNF}
-   # Update Parameters ...
-   log "Parameter port = $TARGET_PORT" 
+
+   echo "Parameter port = $TARGET_PORT"
    CHK=`cat ${NEW_MY_CNF} | grep "^port"`
-   if [[ "${CHK}" != "" ]] 
+   if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^port /s/port /##dlpx##port /' ${NEW_MY_CNF}
-      sed -i "0,/^##dlpx##port /s/##dlpx##port /port = ${TARGET_PORT} ##dlpx##/" ${NEW_MY_CNF}
+         sed -i "/^port/s;port;##dlpx##port;" ${NEW_MY_CNF}
+         sed -i "/^##dlpx##port/s;##dlpx##port;port=${TARGET_PORT} ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "port = ${TARGET_PORT}" >> ${NEW_MY_CNF}
+         echo "port=${TARGET_PORT}" >> ${NEW_MY_CNF}
    fi
-   log "Parameter server-id = ${NEW_SERVER_ID}"
+   echo "Port updated"
+
+   echo "Parameter server-id = ${NEW_SERVER_ID}"
    CHK=`cat ${NEW_MY_CNF} | grep "^server-id"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^server-id /s/server-id /##dlpx##server-id /' ${NEW_MY_CNF}
-      sed -i "0,/^##dlpx##server-id /s/##dlpx##server-id /server-id = ${NEW_SERVER_ID} ##dlpx##/" ${NEW_MY_CNF}
+ 		   sed -i "/^server-id/s;server-id;##dlpx##server-id;" ${NEW_MY_CNF}
+         sed -i "/^##dlpx##server-id/s;##dlpx##server-id;server-id=${NEW_SERVER_ID} ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "server-id = ${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
+         echo "server-id=${NEW_SERVER_ID}" >> ${NEW_MY_CNF}
    fi
+   echo "Server-Id updated"
 
-   log "Parameter binlog-format = mixed"
+   echo "Parameter binlog-format = mixed"
    CHK=`cat ${NEW_MY_CNF} | grep "^binlog-format"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^binlog-format /s/binlog-format /##dlpx##binlog-format /' ${NEW_MY_CNF}
-      sed -i "0,/^##dlpx##binlog-format /s/##dlpx##binlog-format /binlog-format = mixed ##dlpx##/" ${NEW_MY_CNF}
+ 		   sed -i "/^binlog-format/s;binlog-format;##dlpx##binlog-format;" ${NEW_MY_CNF}
+         sed -i "/^##dlpx##binlog-format/s;##dlpx##binlog-format;binlog-format=mixed ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "binlog-format = mixed" >> ${NEW_MY_CNF}
+         echo "binlog-format=mixed" >> ${NEW_MY_CNF}
    fi
+   echo "Bin-Log-Format updated"
 
-   log "Parameter log_bin"
+   echo "Parameter log_bin"
    CHK=`cat ${NEW_MY_CNF} | grep "^log_bin"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i ';^log_bin ;s;log_bin ;##dlpx##log_bin ;' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##log_bin ;s;##dlpx##log_bin ;log_bin = ${NEW_LOG_DIR}/mysql-bin ##dlpx##;" ${NEW_MY_CNF}
+      	sed -i "/^log_bin/s;log_bin;##dlpx##log_bin;" ${NEW_MY_CNF}
+      	sed -i "/^##dlpx##log_bin/s;##dlpx##log_bin;log_bin=${NEW_LOG_DIR}/mysql-bin ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "log_bin = ${NEW_LOG_DIR}/mysql-bin" >> ${NEW_MY_CNF}
+      	echo "log_bin=${NEW_LOG_DIR}/mysql-bin" >> ${NEW_MY_CNF}
    fi
+   echo "Log-Bin updated"
 
-   log "Parameter relay-log = ${NEW_LOG_DIR}/mysql-relay-bin"
+   echo "Parameter relay-log = ${NEW_LOG_DIR}/mysql-relay-bin"
    CHK=`cat ${NEW_MY_CNF} | grep "^relay-log"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i ';^relay-log ;s;relay-log ;##dlpx##relay-log ;' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##relay-log ;s;##dlpx##relay-log ;relay-log = ${NEW_LOG_DIR}/mysql-relay-bin ##dlpx##;" ${NEW_MY_CNF}
-   else
-      echo "relay-log = ${NEW_LOG_DIR}/mysql-relay-bin" >> ${NEW_MY_CNF}
-   fi
+   		sed -i "/^relay-log/s;relay-log;##dlpx##relay-log;" ${NEW_MY_CNF}
 
-   log "Parameter log-slave-update = 1"
+       	sed -i "/^##dlpx##relay-log/s;##dlpx##relay-log;relay-log=${NEW_LOG_DIR}/mysql-relay-bin ##dlpx##;" ${NEW_MY_CNF}
+   else
+      	echo "relay-log=${NEW_LOG_DIR}/mysql-relay-bin" >> ${NEW_MY_CNF}
+   fi
+   echo "Relay-Log updated"
+
+   echo "Parameter log-slave-update = 1"
    CHK=`cat ${NEW_MY_CNF} | grep "^log-slave-updates"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^log-slave-updates /s/log-slave-updates /##dlpx##log-slave-updates /' ${NEW_MY_CNF}
-      sed -i "0,/^##dlpx##log-slave-updates /s/##dlpx##log-slave-updates /log-slave-updates = 1 ##dlpx##/" ${NEW_MY_CNF}
-   else
-      echo "log-slave-updates = 1" >> ${NEW_MY_CNF}
-   fi
+   		sed -i "/^log-slave-updates/s;log-slave-updates;##dlpx##log-slave-updates;" ${NEW_MY_CNF}
 
-   log "Parameter read-only = 1"
+       	sed -i "/^##dlpx##log-slave-updates/s;##dlpx##log-slave-updates;log-slave-updates=1 ##dlpx##;" ${NEW_MY_CNF}
+   else
+      	echo "log-slave-updates=1" >> ${NEW_MY_CNF}
+   fi
+   echo "Log-slave-update updated"
+
+   echo "Parameter read-only = 1"
    CHK=`cat ${NEW_MY_CNF} | grep "^read-only"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^read-only /s/read-only /##dlpx##read-only /' ${NEW_MY_CNF}
-      sed -i "0,/^##dlpx##read-only /s/##dlpx##read-only /read-only = 1 ##dlpx##/" ${NEW_MY_CNF}
+   		sed -i "/^read-only/s;read-only;##dlpx##read-only;" ${NEW_MY_CNF}
+       	sed -i "/^##dlpx##read-only/s;##dlpx##read-only;read-only=1 ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "read-only = 1" >> ${NEW_MY_CNF}
+      echo "read-only=1" >> ${NEW_MY_CNF}
    fi
+   echo "Read-Only updated"
 
-   log "Parameter basedir = ${SOURCEBASEDIR}"
+   echo "Parameter basedir = ${SOURCEBASEDIR}"
    CHK=`cat ${NEW_MY_CNF} | grep "^basedir"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i ';^basedir ;s;basedir ;##dlpx##basedir ;' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##basedir ;s;##dlpx##basedir ;basedir = ${SOURCEBASEDIR} ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^basedir/s;basedir;##dlpx##basedir;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##basedir/s;##dlpx##basedir;basedir=${SOURCEBASEDIR} ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "basedir = ${SOURCEBASEDIR}" >> ${NEW_MY_CNF}
+      echo "basedir=${SOURCEBASEDIR}" >> ${NEW_MY_CNF}
    fi
+   echo "BaseDir updated"
 
-   log "Parameter datadir = ${NEW_DATA_DIR}"
+   echo "Parameter datadir = ${NEW_DATA_DIR}"
    CHK=`cat ${NEW_MY_CNF} | grep "^datadir"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^datadir /s/datadir /##dlpx##datadir /' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##datadir ;s;##dlpx##datadir ;datadir = ${NEW_DATA_DIR} ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^datadir/s;datadir;##dlpx##datadir;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##datadir/s;##dlpx##datadir;datadir=${NEW_DATA_DIR} ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "datadir = ${NEW_DATA_DIR}" >> ${NEW_MY_CNF}
+      echo "datadir=${NEW_DATA_DIR}" >> ${NEW_MY_CNF}
    fi
+   echo "DataDir updated "
 
-   log "Parameter tmpdir = ${NEW_TMP_DIR}"
+   echo "Parameter tmpdir = ${NEW_TMP_DIR}"
    CHK=`cat ${NEW_MY_CNF} | grep "^tmpdir"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^tmpdir /s/tmpdir /##dlpx##tmpdir /' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##tmpdir ;s;##dlpx##tmpdir ;tmpdir = ${NEW_TMP_DIR} ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^tmpdir/s;tmpdir;##dlpx##tmpdir;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##tmpdir/s;##dlpx##tmpdir;tmpdir=${NEW_TMP_DIR} ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "tmpdir = ${NEW_TMP_DIR}" >> ${NEW_MY_CNF}
+      echo "tmpdir=${NEW_TMP_DIR}" >> ${NEW_MY_CNF}
    fi
+   echo "TmpDir updated"
 
-   log "Parameter socket = ${NEW_MOUNT_DIR}/mysql.sock"
+   echo "Parameter socket = ${NEW_MOUNT_DIR}/mysql.sock"
    CHK=`cat ${NEW_MY_CNF} | grep "^socket"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^socket /s/socket /##dlpx##socket /' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##socket ;s;##dlpx##socket ;socket = ${NEW_MOUNT_DIR}/mysql.sock ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^socket/s;socket;##dlpx##socket;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##socket/s;##dlpx##socket;socket=${NEW_MOUNT_DIR}/mysql.sock ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "socket = ${NEW_MOUNT_DIR}/mysql.sock" >> ${NEW_MY_CNF}
+      echo "socket=${NEW_MOUNT_DIR}/mysql.sock" >> ${NEW_MY_CNF}
    fi
+   echo "Socket file updated"
 
-   log "Parameter log-error = ${NEW_MOUNT_DIR}/mysqld_error.log" 
+   echo "Parameter log-error = ${NEW_MOUNT_DIR}/mysqld_error.log"
    CHK=`cat ${NEW_MY_CNF} | grep "^log-error"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^log-error /s/log-error /##dlpx##log-error /' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##log-error ;s;##dlpx##log-error ;log-error = ${NEW_MOUNT_DIR}/mysqld_error.log ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^log-error/s;log-error;##dlpx##log-error;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##log-error/s;##dlpx##log-error;log-error=${NEW_MOUNT_DIR}/mysqld_error.log ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "log-error = ${NEW_MOUNT_DIR}/mysqld_error.log" >> ${NEW_MY_CNF}
+      echo "log-error=${NEW_MOUNT_DIR}/mysqld_error.log" >> ${NEW_MY_CNF}
    fi
+   echo "LogError updated"
 
-   log "Parameter pid-file = ${NEW_MOUNT_DIR}/mysqld.pid"
+   echo "Parameter pid-file = ${NEW_MOUNT_DIR}/mysqld.pid"
    CHK=`cat ${NEW_MY_CNF} | grep "^pid-file"`
    if [[ "${CHK}" != "" ]]
    then
-      sed -i '/^pid-file /s/pid-file /##dlpx##pid-file /' ${NEW_MY_CNF}
-      sed -i "0,;^##dlpx##pid-file ;s;##dlpx##pid-file ;pid-file = ${NEW_MOUNT_DIR}/mysql.pid ##dlpx##;" ${NEW_MY_CNF}
+		sed -i "/^pid-file/s;pid-file;##dlpx##pid-file;" ${NEW_MY_CNF}
+		sed -i "/^##dlpx##pid-file/s;##dlpx##pid-file;pid-file=${NEW_MOUNT_DIR}/mysql.pid ##dlpx##;" ${NEW_MY_CNF}
    else
-      echo "pid-file = ${NEW_MOUNT_DIR}/mysql.pid" >> ${NEW_MY_CNF}
+      echo "pid-file=${NEW_MOUNT_DIR}/mysql.pid" >> ${NEW_MY_CNF}
    fi
+   echo "PID Updated"
 
-else 
-   die "Error: Missing Customer Config File ${NEW_MY_CNF} ... see log messages above for possible errors"
+else
+   terminate "ERROR:Missing Customer Config File ${NEW_MY_CNF}. Delphix was unable to create a config file. Check log messages under toolkit directory for possible errors." 4
 fi
 
 CMD=`ls -ll ${NEW_MOUNT_DIR}`
@@ -345,7 +358,8 @@ log "Process Id: ${PSID}"
 #
 if [[ "${PSID}" == "" ]] 
 then
-   die "Error: New Instance appears to not have stared, please verify ... "
+    log "MySQL Database could not be started."
+    terminate "MySQL Database could not be started.No process running." 3
 fi
 
 # Setting up symbolic link to mysql.sock # NEO
@@ -361,8 +375,14 @@ CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER
 CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
 masklog "Final Command to Change Password is : ${CMDFORLOG}"
 
-eval ${CMD} 1>>${DEBUG_LOG} 2>&1
-
+#eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
+return_code=$?
+log "Return Status for change password: ${return_code}"
+log "Return message for change password:${return_msg}"
+if [ $return_code != 0 ]; then
+  terminate "${return_msg}" 5
+fi
 #
 # Update Staging Connection with supplied password ...
 #
@@ -388,9 +408,18 @@ CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"RESET MASTER;\""
 masklog "Reset Master Command:  ${CMD}"
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
+
+
 ## Ingest Backup File
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
-eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+#eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
+return_code=$?
+log "Return Status for ingest backup: ${return_code}"
+log "Return message for ingest backup:${return_msg}"
+if [ $return_code != 0 ]; then
+  terminate "${return_msg}" 6
+fi
 
 log "Validating Restored Databases"
 #RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "show databases;"`
@@ -465,13 +494,17 @@ log "Process Id: ${PSID}"
 
 if [[ "${PSID}" == "" ]]
 then
-   die "ERROR: Database did not start after password change ..."
+   terminate "ERROR: Staging DB did not start after password change and backup ingestion.Cannot continue." 3
 fi
 
 log "Validating new connection string"
 RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "SELECT @@BASEDIR;"`
+return_code=$?
+log "Return Status for post ingestion startup: ${return_code}"
+if [ $return_code != 0 ]; then
+  terminate "Unable to connect to MySQL Staging DB after backup ingestion." 7
+fi
 log "Connection Test: ${RESULTS}"
-
 
 # Setup SLAVE REPLICATION. 
 # At this point, slave should have already started.
@@ -499,8 +532,13 @@ then
    ##log "${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql > ${TMPLOG}.out"
 
    # Start Slave
-   log "Starting Slave ..."
+   log "Starting Slave"
    RESULTS=$(${INSTALL_BIN}/mysql ${STAGING_CONN} -vvv < ${TMPLOG}.sql)
+   return_code=$?
+   log "Return Status for starting slave: ${return_code}"
+   if [ $return_code != 0 ]; then
+     log "Unable to Start Slave. "
+   fi
    RESULTS=`cat ${TMPLOG}.out | tr '\n' '|'`
    log "Starting Slave Results: ${RESULTS}"
 
