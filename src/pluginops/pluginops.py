@@ -358,13 +358,16 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
             }  
             logger.debug("Initializing Seed DB")
             restore_script = pkgutil.get_data('resources', 'restore_stage_bi.sh')
-            result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=True)
+            result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
             output = result.stdout.strip()
-            error = result.stderr.strip()
+            std_err = result.stderr.strip()
             exit_code = result.exit_code
             if exit_code !=0:
-                logger.debug("Error is : "+error)
-                raise LinkingException("Exception in pre-snapshot/restore_db:"+error)
+                logger.debug("There was an error while creating the seed database. Check error logs for more info.")
+                logger.error("Error is : "+std_err)
+                err = utils.process_exit_codes(exit_code,"DBLINK",std_err)
+                logger.error(err)
+                raise err
             else:
                 logger.debug("Pre-Snapshot/Restore_DB successful "+output)  
         else:

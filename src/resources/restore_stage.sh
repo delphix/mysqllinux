@@ -375,16 +375,17 @@ fi
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
 CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
 masklog "Final Command to Change Password is : ${CMDFORLOG}"
+command_runner "${CMD}" 5
 
-#eval ${CMD} 1>>${DEBUG_LOG} 2>&1
-return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
-return_code=$?
-log "Return Status for change password: ${return_code}"
-log "Return message for change password:${return_msg}"
-if [ $return_code != 0 ]; then
-  terminate "${return_msg}" 5
-fi
-#
+  #eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+  #return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
+  #return_code=$?
+  #log "Return Status for change password: ${return_code}"
+  #log "Return message for change password:${return_msg}"
+  #if [ $return_code != 0 ]; then
+  #  terminate "${return_msg}" 5
+  #fi
+
 # Update Staging Connection with supplied password ...
 #
 masklog "Staging Connection Prior to updaging password : ${STAGINGCONN}"
@@ -411,14 +412,15 @@ eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 ## Ingest Backup File
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
-#eval ${CMD} 1>>${DEBUG_LOG} 2>&1
-return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
-return_code=$?
-log "Return Status for ingest backup: ${return_code}"
-log "Return message for ingest backup:${return_msg}"
-if [ $return_code != 0 ]; then
-  terminate "${return_msg}" 6
-fi
+command_runner "${CMD}" 5
+  #eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+  #return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
+  #return_code=$?
+  #log "Return Status for ingest backup: ${return_code}"
+  #log "Return message for ingest backup:${return_msg}"
+  #if [ $return_code != 0 ]; then
+  #  terminate "${return_msg}" 6
+  #fi
 
 log "Validating Restored Databases"
 #RESULTS=`${INSTALL_BIN}/mysql ${STAGING_CONN} -e "show databases;"`

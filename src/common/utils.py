@@ -65,6 +65,12 @@ def process_exit_codes(exit_code,operation,std_err=None):
     elif exit_code == 10: # Invalid Binary Path
         err_msg=const.ERR_INVALID_BINARY_MSG
         err_action=const.ERR_INVALID_BINARY_ACTION
+    elif exit_code == 11: # Connection Test Failure / Backup INgestion
+        err_msg=const.ERR_BI_CONNECT_MSG
+        err_action=const.ERR_BI_CONNECT_ACTION
+    elif exit_code == 12: # User creation issue/ Backup Ingestion
+        err_msg=const.ERR_BI_USERCREATE_MSG
+        err_action=const.ERR_BI_USERCREATE_ACTION
     elif exit_code == 2:
         err_msg=const.ERR_GENERAL_MSG
         err_action=const.ERR_GENERAL_ACTION
