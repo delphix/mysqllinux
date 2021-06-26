@@ -52,6 +52,13 @@ ERR_INVALID_BINARY_MSG="An invalid path to mysql binary was passed wile provisio
 ERR_INVALID_BINARY_ACTION="mysql was not found under the provided installation directory \n" \
                          "Please verify the MySQL directory and retry the operation."
 
+ERR_BI_CONNECT_MSG="Unable to connect to MySQL database after restart."
+ERR_BI_CONNECT_ACTION="There may have been an error while initializing or creating the staging DB user." \
+                      "Please check plugin and server host logs for additional details. "
+
+ERR_BI_USERCREATE_MSG="Unable to create a new MySQL user in staging database."
+ERR_BI_USERCREATE_ACTION="Please check plugin and server host logs for additional details."
+
 ERR_GENERAL_MSG="An error occurred while provisioning the MySQL VDB."
 ERR_GENERAL_ACTION="This could be due to an unsupported version of MySQL."
 ERR_GENERAL_OUT="For additional details, check the log " \

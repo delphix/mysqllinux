@@ -498,13 +498,14 @@ function command_runner {
     masklog "command_runner: CMD : $1"
     return_msg=$(eval $1 2>&1 1>&2 > /dev/null)
     return_code=$?
-    log "Return Status for source backup: ${return_code}"
-    log "Return message for source backup:${return_msg}"
+    log "Return Status: ${return_code}"
+    log "Return message:${return_msg}"
     if [ $return_code != 0 ]; then
       masklog "command_runnder: exitcode : $2"
       terminate "${return_msg}" $2
     fi
 }
+
 
 
 
