@@ -132,16 +132,16 @@ def virtual_post_snapshot(virtual_source, repository, source_config):
     logger.debug("Started VDB")
     snapshot = SnapshotDefinition(validate=False)
     snapshot.snapshot_id= str(utils.get_snapshot_id())
-    snapshot.snap_host=virtual_source.parameters.vdb_host
+    snapshot.snap_host=virtual_source.connection.environment.host.name
     snapshot.snap_port=virtual_source.parameters.port
-    snapshot.snap_data_dir=virtual_source.mounts[0].mount_path
+    snapshot.snap_data_dir=virtual_source.mounts[0].mount_path+"/data"
     snapshot.snap_base_dir=virtual_source.parameters.base_dir
     snapshot.snap_pass=virtual_source.parameters.vdb_pass
-    snapshot.snap_backup_path="" # Review this with Ajay
+    snapshot.snap_backup_path=""
     snapshot.snap_time=utils.get_current_time()
     logger.debug("SnapShot Definition Created")
     logger.debug(snapshot)
-    return SnapshotDefinition()
+    return snapshot
 
 @plugin.virtual.start()
 def start(virtual_source, repository, source_config):
@@ -153,7 +153,14 @@ def start(virtual_source, repository, source_config):
 @plugin.virtual.stop()
 def stop(virtual_source, repository, source_config):
     logger.debug("virtual.stop > Start")
-    pluginops.stop_mysql(virtual_source.parameters.port,virtual_source.connection,virtual_source.parameters.base_dir,virtual_source.parameters.vdb_user,virtual_source.parameters.vdb_pass,virtual_source.parameters.vdb_host)
+    pluginops.stop_mysql(
+            virtual_source.parameters.port,
+            virtual_source.connection,
+            virtual_source.parameters.base_dir,
+            virtual_source.parameters.vdb_user,
+            virtual_source.parameters.vdb_pass,
+            "localhost"
+    )
     logger.debug("virtual.stop > End")
     virtual_status(virtual_source, repository, source_config)
 

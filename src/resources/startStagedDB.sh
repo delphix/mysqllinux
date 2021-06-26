@@ -57,10 +57,10 @@ log "JSON: ${JSON}"
 #
 if [[ "${zSTATUS}" != "ACTIVE" ]]
 then
-   log "Startup ..."
+   log "Starting Database"
    startDatabase "${JSON}" "${STAGING_CONN}" ""
 else
-   log "Database is Already Started ..."
+   log "Database is Already Started"
 fi
 
 #log "Environment: "
@@ -68,5 +68,5 @@ fi
 #export REPLICATION_PASS=""
 #export STAGINGPASS=""
 #env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log "End"
 exit 0
