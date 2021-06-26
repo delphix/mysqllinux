@@ -52,24 +52,27 @@ def find_mysql_binaries(connection):
     dirName=""
     prettyName=""
     try:
-        _bashresult = runbash(connection,CommandFactory.find_binary_path(),None)
-        _repoList=_bashresult.stdout.strip()
-        _bashErrMsg=_bashresult.stderr.strip()
-        _bashErrCode=_bashresult.exit_code
-        logger.debug("find_mysql_binaries>_repoList > \n "+_repoList)
+        bashresult = runbash(connection,CommandFactory.find_binary_path(),None)
+        repoList=bashresult.stdout.strip()
+        stderr=bashresult.stderr.strip()
+        exitcode=bashresult.exit_code
+        logger.debug("find_mysql_binaries>_repoList > \n "+repoList)
         repositories=[]
-        if _bashErrCode !=0:
-            logger.debug("find_mysql_binaries > exit code> "+str(_bashErrCode))
-            raise RepositoryDiscoveryError(_bashErrMsg)
-        elif (_repoList =="" or _repoList is None ):
+        if exitcode !=0:
+            logger.debug("find_mysql_binaries > exit code > "+str(exitcode))
+            raise RepositoryDiscoveryError(stderr)
+        elif (repoList =="" or repoList is None ):
             logger.debug("find_mysql_binaries > No MySQL repositories found")
         else:
-            for repoPath in _repoList.splitlines():
+            for repoPath in repoList.splitlines():
                 logger.debug("Parsing repository at "+repoPath)
+                if not utils.validate_repository(repoPath):
+                    logger.debug("Invalid repository path. Skipping")
+                    continue
                 baseName=os.path.basename(repoPath)
                 dirName=os.path.dirname(repoPath)
-                _bashresult=runbash(connection,CommandFactory.get_version(repoPath),None)
-                versionStr=_bashresult.stdout.strip()
+                bashresult=runbash(connection,CommandFactory.get_version(repoPath),None)
+                versionStr=bashresult.stdout.strip()
                 versionArr=versionStr.split(" ")
                 version=versionArr[3]
                 if (version !="" and baseName =="mysqld"):
@@ -513,7 +516,7 @@ def configure(virtual_source, snapshot, repository):
             logger.debug("Value")
             logger.debug(config_setting['value'])
             config_params+=config_setting['propertyName']
-            config_params+=" = "
+            config_params+="="
             config_params+=config_setting['value']
             config_params+="\n"
             logger.debug("config_params:"+config_params)
@@ -531,7 +534,7 @@ def configure(virtual_source, snapshot, repository):
         "MYBASEDIR":virtual_source.parameters.base_dir,
         "PORT":virtual_source.parameters.port,
         "SERVERID":virtual_source.parameters.server_id,
-        "MYCONFIG":"",
+        "MYCONFIG":config_params,
         "STAGED_PORT":snapshot.snap_port,
         "STAGED_DATADIR":snapshot.snap_data_dir,
         "CONFIG_BASEDIR":snapshot.snap_base_dir,

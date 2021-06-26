@@ -24,7 +24,7 @@ printParams
 
 TARGET_PORT=${PORT}
 log "Target Port: ${TARGET_PORT}"
-
+log "Config Params: ${MYCONFIG}"
 # Customer Config File Parameters ...
 log "Customer my.cnf Parameters: ${MYCONFIG}"
 LINES=""

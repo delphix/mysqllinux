@@ -30,14 +30,14 @@ def get_current_time():
     return curr_time.strftime('%Y%m%d%H%M%S')
 
 def process_exit_codes(exit_code,operation,std_err=None):
-    '''
+    """
     Processes exit code and returns a UserError
     Args:
         exit_code: Exit code from run_bash
         operation: The operation that was performed.
     Returns:
         UserError
-    '''
+    """
     err_out=const.ERR_GENERAL_OUT
     if std_err:
         err_out=std_err
@@ -69,3 +69,17 @@ def process_exit_codes(exit_code,operation,std_err=None):
       "ExitCode:{} \n {}".format(exit_code,err_out)
     )
     return user_error
+
+
+def validate_repository(repo):
+    """
+    Sanity check to validate the repositoy string.
+    Args:
+        repo (string): Repository path
+    Returns:
+        isvalid (bool): Indicates if a repository is valid or not.
+    """
+    if (repo is None or repo.strip()=="" or not repo.strip().startswith("/")):
+        return False
+    else:
+        return True
