@@ -5,7 +5,6 @@
 #
 # Library of common MySQL toolkit functions ... 
 #
-
 ###########################################################
 ## Required Environment Variables ...
 
@@ -21,8 +20,7 @@
 #
 # Toolkit Specific ...
 # 
-DLPX_TOOLKIT_NAME="mysql" 
-#${DLPX_BIN}="/var/opt/delphix/toolkit/Delphix_COMMON_564d1a3e_4dee_b451_14d5_9bfc5ccf1dc5_delphix_host/scripts/bin"
+DLPX_TOOLKIT_NAME="mysql"
 dlpx_db_exec_script="$DLPX_BIN/dlpx_db_exec"
 DLPX_TOOLKIT=$( dirname "${DLPX_BIN}" )
 DLPX_TOOLKIT=$( dirname "${DLPX_TOOLKIT}" )
@@ -38,6 +36,7 @@ TIMESTAMP=$(date +%Y-%m-%dT%H:%M:%S)
 CONFIG_OUTPUT_FILE="delphix_${DLPX_TOOLKIT_NAME}_config.dat"
 ERROR_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_error.log"
 DEBUG_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_debug.log"
+INFO_LOG=${DLPX_LOG_DIRECTORY}/"delphix_${DLPX_TOOLKIT_NAME}_info.log"
 
 AWK=`which awk`
 DIRNAME=`which dirname`
@@ -58,10 +57,7 @@ function printParams {
    log "==== PRINT PARAMS ====="
 }
 
-
-#
 # Log infomation and die if option -d is used.
-#
 function log {
    Parms=$@
    die='no'
@@ -72,6 +68,21 @@ function log {
    fi
    ##printf "[${DLPX_GUID}][${TIMESTAMP}][DEBUG][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$DEBUG_LOG
    printf "[${TIMESTAMP}][DEBUG][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$DEBUG_LOG
+   if [[ $die = 'yes' ]]; then
+      exit 2
+   fi
+}
+
+# Log infomation and die if option -d is used.
+function infolog {
+   Parms=$@
+   die='no'
+   if [[ $1 = '-d' ]]; then
+      shift
+      die='yes'
+      Parms=$@
+   fi
+   printf "[${TIMESTAMP}][INFO][%s][%s]:[$Parms]\n" $DLPX_TOOLKIT_WORKFLOW $PGM_NAME >>$INFO_LOG
    if [[ $die = 'yes' ]]; then
       exit 2
    fi
@@ -89,6 +100,7 @@ function errorLog {
 # Write to log and errorlog before exiting with an error code
 #
 function die {
+   log "die"
    errorLog "$@"
    exit 2
 }
@@ -378,18 +390,26 @@ startDatabase() {
       # Shoutout to Tom Walsh for the independent shell params !!!
       ${CMD} </dev/null >/dev/null 2>&1 & disown "$!"
 
-      ZPSEF=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
-      log "Process Status: ${ZPSEF}"
+      masklog "Waiting before checking status: ${CMD} "
       sleep 10
+
+      ZPSEF=$( ps -ef | grep -E "[m]ysqld .*--port=${ZPORT}" )
+      log "Running process Status: ${ZPSEF}"
 
       ZPSID=`echo "${ZPSEF}" | ${AWK} -F" " '{print $2}'`
       log "Database Started on ProcessId: ${ZPSID}"
       
+      if [[ -z "$ZPSID" ]]
+      then
+        log "MySQL Database could not be started."
+        terminate "MySQL Database could not be started.No process running." 3
+      fi
+
       INSTALL_BIN="${ZBASEDIR}/bin"
       log "Install bin: ${INSTALL_BIN}"
 
       # Start Slave 
-      log "====== Start Slave Check ======"
+      log "Starting Slave"
       if [[ "${LOGSYNC}" == "true" && "${ZSTARTSLAVE}" != "NO" ]]
       then
          masklog "ZCONN value for: ${ZCONN}"
@@ -398,7 +418,7 @@ startDatabase() {
          eval ${CMD} 1>>${DEBUG_LOG} 2>&1
       fi              # end if $LOGSYNC ...
    else
-      log "Warning: Start Database aborted since status is ACTIVE ..."
+      log "Warning: MySQL is already running. ABORTING start operation."
    fi
 }
 
@@ -461,7 +481,31 @@ function masklog {
   done
   masked="${arr[@]}"
   log $masked
+  infolog $masked
 }
+
+# Terminate with exit codes
+function terminate {
+   log "Error Message: $1"
+   log "Exit Code: $2"
+   errorLog "$1"
+   echo "$1" >>/dev/stderr
+   exit $2
+}
+
+# Runs a given command and exits with code if error
+function command_runner {
+    masklog "command_runner: CMD : $1"
+    return_msg=$(eval $1 2>&1 1>&2 > /dev/null)
+    return_code=$?
+    log "Return Status for source backup: ${return_code}"
+    log "Return message for source backup:${return_msg}"
+    if [ $return_code != 0 ]; then
+      masklog "command_runnder: exitcode : $2"
+      terminate "${return_msg}" $2
+    fi
+}
+
 
 
 ###########################################################

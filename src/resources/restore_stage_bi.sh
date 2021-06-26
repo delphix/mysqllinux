@@ -56,7 +56,7 @@ log "Staging Connection: ${STAGING_CONN}"
 # Directory Paths ...
 #
 NEW_MOUNT_DIR="${STAGINGDATADIR}"
-log "Staging Base Directory: ${NEW_MOUNT_DIR}" 
+log "Staging Base Directory: ${NEW_MOUNT_DIR}"
 NEW_DATA_DIR="${NEW_MOUNT_DIR}/data"
 NEW_LOG_DIR="${NEW_MOUNT_DIR}/log"
 NEW_TMP_DIR="${NEW_MOUNT_DIR}/tmp"
@@ -69,7 +69,7 @@ NEW_SERVER_ID="${STAGINGSERVERID}"
 log "MySQL Version: ${MYSQLVER}"
 #MYSQLVER="5.7.20"
 #MYSQLVER="5.6.28-76.1"
-#10.1.32-MariaDB 
+#10.1.32-MariaDB
 #echo ${MYSQLVER:0:3}
 #5.6
 
@@ -84,7 +84,7 @@ log "Source --datadir=${SOURCEDATADIR}"
 #then
 #   log "Installing ${DLPX_TOOLKIT}/install_db.zip into ${NEW_MOUNT_DIR}"
 #   unzip ${DLPX_TOOLKIT}/install_db.zip -d ${NEW_MOUNT_DIR}
-#else 
+#else
 #   #die "Error: Missing Initial Database zip file ... ${DLPX_TOOLKIT}/install_db.zip"
 #   log "Missing Initial Database zip file ... ${DLPX_TOOLKIT}/install_db.zip"
 
@@ -169,7 +169,7 @@ fi
 
 if [[ -f "${NEW_MY_CNF}" ]]
 then
-   # 
+   #
    # Replace all tabs with spaces ...
    #
    sed -i 's/\t/     /g' ${NEW_MY_CNF}
@@ -178,9 +178,9 @@ then
    # Update Parameters ...
    #
 
-   log "Parameter port = $TARGET_PORT" 
+   log "Parameter port = $TARGET_PORT"
    CHK=`cat ${NEW_MY_CNF} | grep "^port"`
-   if [[ "${CHK}" != "" ]] 
+   if [[ "${CHK}" != "" ]]
    then
       sed -i '/^port /s/port /##dlpx##port /' ${NEW_MY_CNF}
       sed -i "0,/^##dlpx##port /s/##dlpx##port /port = ${TARGET_PORT} ##dlpx##/" ${NEW_MY_CNF}
@@ -288,7 +288,7 @@ then
       echo "socket = ${NEW_MOUNT_DIR}/mysql.sock" >> ${NEW_MY_CNF}
    fi
 
-   log "Parameter log-error = ${NEW_MOUNT_DIR}/mysqld_error.log" 
+   log "Parameter log-error = ${NEW_MOUNT_DIR}/mysqld_error.log"
    CHK=`cat ${NEW_MY_CNF} | grep "^log-error"`
    if [[ "${CHK}" != "" ]]
    then
@@ -308,7 +308,7 @@ then
       echo "pid-file = ${NEW_MOUNT_DIR}/mysql.pid" >> ${NEW_MY_CNF}
    fi
 
-else 
+else
    die "Error: Missing Customer Config File ${NEW_MY_CNF} ... see log messages above for possible errors"
 fi
 
@@ -359,7 +359,7 @@ log "Process Id: ${PSID}"
 #
 # If not started, die ...
 #
-if [[ "${PSID}" == "" ]] 
+if [[ "${PSID}" == "" ]]
 then
    die "Error: New Instance appears to not have stared, please verify ... "
 fi
@@ -473,7 +473,7 @@ log "Connection Test: ${RESULTS}"
 
 
 
-# This section has been commented to enable Staging Target run 
+# This section has been commented to enable Staging Target run
 # Anything with two ## are lines of code
 # Last Shutdown otherwise the toolkit hangs here ...
 
