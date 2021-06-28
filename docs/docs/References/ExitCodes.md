@@ -1,4 +1,4 @@
-# Bookmark
+# MySQL Plugin Exit Codes
 
 Bookmarks (Self Service Container Bookmark) are a way to mark and name a particular moment of 
 data on a timeline of a Self Service Container.   

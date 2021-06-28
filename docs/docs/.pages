@@ -1,6 +1,8 @@
 arrange:
   - index.md
   - Pre-Requisites
-  - References
+  - PluginInstallation.md
+  - Discovery.md
+  - Linking
+  - Provisioning.md
   - Release_Notes
-  - Building_Your_First_Integrations
