@@ -18,6 +18,7 @@ Different Ways to Ingest Data ( Dsource creation )
 - User Provided Backup with no Replication: User provides a backup file from source DB to ingest data and create a dSource. When a new backup is available, user initiates a resync of the dSource to ingest data from the new backup.
 - Manual Backup Ingestion: Delphix creates an empty seed datanase and User manually ingests a backup to create a dSource.
 
+MySQL Plugin documentation can be found at https://delphix.github.io/mysqllinux/
 
 ### <a id="upload-plugin"></a>Steps to build, upload and run unit tests for plugin
 
