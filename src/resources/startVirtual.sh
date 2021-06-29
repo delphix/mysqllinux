@@ -6,23 +6,23 @@ PGM_NAME='startVirtual.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 VDBPASS=`echo "'"${VDBPASS}"'"`
-log "VDB Connection: ${VDBCONN}"
+masklog "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
-VDB_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "Staging Connection: ${VDB_CONN}"
+VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection: ${VDB_CONN}"
 
 #
 # Get Port Status ...
 #
 log "Database Port: ${PORT}"
 RESULTS=$( portStatus "${PORT}" )
-#echo "${RESULTS}" | jq --raw-output ".status"
+#echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 
 NEW_MOUNT_DIR="${DLPX_DATA_DIRECTORY}"
@@ -55,15 +55,15 @@ JSON="{
 # 
 if [[ "${zSTATUS}" != "ACTIVE" ]]
 then
-   log "Startup ..."
+   log "Startup VDB"
    startDatabase "${JSON}" "${VDB_CONN}"
 else
-   log "Database is Already Started ..."
+   log "Database is Already Started"
 fi
 
 #log "Environment: "
 #export DLPX_LIBRARY_SOURCE=""
 #export MYROOTPASS=""
 #env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log "End"
 exit 0

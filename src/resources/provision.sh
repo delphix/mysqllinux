@@ -14,21 +14,18 @@ PGM_NAME='provision.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 DT=`date '+%Y%m%d%H%M%S'`
 
 printParams
 
-
 TARGET_PORT=${PORT}
 log "Target Port: ${TARGET_PORT}"
-
-#
+log "Config Params: ${MYCONFIG}"
 # Customer Config File Parameters ...
-#
 log "Customer my.cnf Parameters: ${MYCONFIG}"
 LINES=""
 if [[ "${MYCONFIG}" != "" ]]
@@ -39,9 +36,7 @@ fi
 log "my.cnf lines: ${LINES}"
 
 #
-# Get from Snapshot ...
-#
-#
+# Get from Snapshot
 # Staging Details from snapshot data ...
 #
 log "======== Logging Snapshot Information:=========="
@@ -53,7 +48,6 @@ log "======== Logging Snapshot Information:=========="
 #STAGED_ROOT_PASS=`echo "${SNAPSHOT_METADATA}" | $DLPX_BIN_JQ --raw-output '.snapPass'`
 #STAGED_BACKUP=`echo "${SNAPSHOT_METADATA}" | $DLPX_BIN_JQ --raw-output '.snapBackup'`
 
-log "Snap Staging Host: ${STAGED_HOST}"
 log "Snap Staging Port: ${STAGED_PORT}"
 log "Snap Staging DataDir: ${STAGED_DATADIR}"
 log "Snap Config BaseDir: ${CONFIG_BASEDIR}"
@@ -71,15 +65,14 @@ log "Binaries: ${INSTALL_BIN}"
 
 if [[ ! -f "${INSTALL_BIN}"/mysql ]]
 then
-   die "Error: ${INSTALL_BIN}/mysql is invalid ..."
+   terminate "Error: ${INSTALL_BIN}/mysql is invalid" 10
 fi
-
 VDBPASS=`echo "'"${VDBPASS}"'"`
-log "VDB Connection: ${VDBCONN}"
+masklog "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
-VDB_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "Staging Connection: ${VDB_CONN}"
+VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "VDB Connection: ${VDB_CONN}"
 
 NEW_MOUNT_DIR="${DLPX_DATA_DIRECTORY}"
 NEW_DATA_DIR="${NEW_MOUNT_DIR}/data"
@@ -91,30 +84,16 @@ log "Mount Directory: ${NEW_MOUNT_DIR}"
 log "ServerId: ${SERVERID}"
 
 ###########################################################
-## On Staging Server ...
-###########################################################
 ## On Target Server ...
-
 log "Source --basedir=${CONFIG_BASEDIR}"
-
-#
 # Create Initial Database ...
-#
 log "MySQL Version: ${MYSQLVER}"
-#MYSQLVER="5.7.20"
-#MYSQLVER="5.6.28-76.1"
-#10.1.32-MariaDB
-#echo ${MYSQLVER:0:3}
-#5.6
-
 if [[ "${MYSQLVER:0:3}" == "5.6" ]]
 then
-   die "MySQL ${MYSQLVER} is not supported ..."
+   die "MySQL ${MYSQLVER} is not supported."
 fi
 
-#
-# Create my.cnf file ...
-#
+# Create my.cnf file
 #NEW_MY_CNF="my.cnf"
 log "Creating my.cnf file ..."
 echo "[mysqld]" > ${NEW_MY_CNF}
@@ -142,9 +121,7 @@ CMD=`ls -llR ${NEW_MOUNT_DIR}`
 log "${NEW_MOUNT_DIR}"
 log "${CMD}"
 
-#
 # Change MySQL Database Tables ...
-#
 log "Checking for Customer Security ..."
 if [[ -f "${DLPX_TOOLKIT}/mysql_db_tables.zip" ]]
 then
@@ -159,12 +136,9 @@ then
    log "Restoring Security Done"
 fi
 
-# 
 # Initial Instance Startup ...
-#
 log "Initial Instance Startup ..."
 RESULTS=$( portStatus "${PORT}" )
-####log "Results: ${RESULTS}"
 zSTATUS=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"`
 
 JSON="{
@@ -182,23 +156,26 @@ JSON="{
   \"status\": \"${zSTATUS}\"
 }"
 
-#log "JSON: ${JSON}"
-
-#
 #  Start the Database
 #  DO NOT Start Slave
 if [[ "${zSTATUS}" != "ACTIVE" ]]
 then
-   log "Startup ..."
+   log "Starting up VDB"
    startDatabase "${JSON}" "${VDB_CONN}" " " "NO"
 else
    log "Database is Already Started ..."
 fi
 
 # Resetting Slave
+#         CMD="${INSTALL_BIN}/mysqladmin ${ZCONN} start-slave"
+#         log "Command to start Slave> ${CMD}"
+#         eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+
 log "Reset Slave Status for VDB"
-CMD="${INSTALL_BIN}/mysql ${VDB_CONN} -e \"stop slave;reset slave all;\""
+log "Reset Command: stop slave;CHANGE MASTER TO MASTER_HOST=' ';reset slave all;"
+CMD="${INSTALL_BIN}/mysql ${VDB_CONN} -e \"stop slave;CHANGE MASTER TO MASTER_HOST=' ';reset slave all;\""
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+sleep 4
 
 #
 # Stop ...
@@ -247,5 +224,5 @@ echo "${prettyName}"
 #export SNAPSHOT_METADATA=""
 #export STAGINGPASS=""
 #env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log "End"
 exit 0

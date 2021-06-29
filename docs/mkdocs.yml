@@ -1,0 +1,54 @@
+site_name: Delphix MySQL Plugin
+site_url: https://delphix.github.io/mysqllinux/
+theme:
+  name: material
+  custom_dir: 'material/'
+  palette:
+    primary: blue
+    accent:
+  logo: 'image/logo.png'
+  favicon: 'image/logo.png'
+  font:
+    text: Helvetica Neue
+    code: Ubuntu Mono
+
+copyright: Copyright &copy; 2021 Delphix Corp.
+
+google_analytics:
+  - 'UA-35429885-3'
+  - 'auto'
+
+use_directory_urls: false
+
+extra:
+  social:
+    - type: sitemap
+      link: https://www.delphix.com/
+    - type: facebook
+      link: https://www.facebook.com/DelphixCorp/
+    - type: twitter
+      link: https://twitter.com/delphix
+    - type: linkedin
+      link: https://www.linkedin.com/company/delphix
+    - type: github
+      link: https://github.com/delphix
+  version:
+    provider: mike
+
+extra_css:
+  - 'stylesheets/extra.css'
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - meta
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed
+
+plugins:
+  - search
+  - awesome-pages

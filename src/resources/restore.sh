@@ -1,23 +1,14 @@
 #!/bin/sh
-#
 # Copyright (c) 2018 by Delphix. All rights reserved.
-#
 
-##DEBUG## In Delphix debug.log
-#set -x
-
-#
-# Program Name ...
-#
+# Program Name
 PGM_NAME='restore.sh'
 
-#
-# Load Library ...
-#
+# Load Library
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 who=`whoami`
 log "whoami: $who"
@@ -29,63 +20,44 @@ log "awk: ${AWK}"
 
 DT=`date '+%Y%m%d%H%M%S'`
 
-#
+# Printing parame
+log "Backup Options: ${BACKUP_OPTIONS}"
+
 # Which Backup to Use ...
-#
 if [[ "${BACKUP_PATH}" == "" ]]
 then
-
-   #
    # No Backup Provided, let's generate one ...
-   #
-
-   #
    # Software Binaries must exist in the software install basedir ...
-   #
    INSTALL_BIN="${SOURCEBASEDIR}/bin"
    log "Source Binaries: ${INSTALL_BIN}"
 
-   #
-   # Ports ...
-   #
+   # Ports
    log "Source Port: ${SOURCEPORT}"
    log "Staging Port: ${STAGINGPORT}"
 
-   #
-   # Backup File Location ...
-   #
+   # Backup File Location
    BKUP_FILE="/tmp/dump_${SOURCEPORT}.sql"
    if [[ -f "${BKUP_FILE}" ]]
    then
-      mv ${BKUP_FILE} ${BKUP_FILE}_${DT}
+      rm ${BKUP_FILE}
    fi
 
-   # 
    # Source Connection for Backup ...
-   #
-   log "Source Connection: ${SOURCECONN}"
+   masklog "Source Connection: ${SOURCECONN}"
    RESULTS=$( buildConnectionString "${SOURCECONN}" "${SOURCEPASS}" "${SOURCEPORT}" "${SOURCEIP}" )
-   log "${RESULTS}" | jq --raw-output ".string"
-   SOURCE_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-   log "New Conn: ${SOURCE_CONN}"
-
+   #log "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+   SOURCE_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+   masklog "New Conn: ${SOURCE_CONN}"
    log "Source Backup Host: ${SOURCEIP}"
 
    ###########################################################
-   ## On Source Server ...
-
-   #
-   # Backup ...
-   #
-   log "Starting Backup ..."
+   ## On Source Server
+   # Backup
+   log "Starting Backup"
 
    if [[ "1" == "0" ]] 
    then
-
-      #
-      # No Replication Backup ...
-      #
-
+      # No Replication Backup
       SQL="SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT IN"
       SQL="${SQL} ('mysql','information_schema','performance_schema')"
  
@@ -102,48 +74,49 @@ then
       log "${INSTALL_BIN}/mysqldump ***** ${MYSQLDUMP_OPTIONS} --databases ${DBLIST}"
       ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} ${MYSQLDUMP_OPTIONS} --databases ${DBLIST} > ${BKUP_FILE}
 
-   else 
+   else
+      # Create backup command.
+      ########## LEGEND ##############
+      # -A :all datanases
+      # --databases='DB1 DB2 DB3' : Backup only specific dbs
+      # --no-tablespaces - if we dont want tablespace info
+      # --routines : To backup routines
+      # --triggers : To backup triggers
+      # --events : To backup events
+      ################################
+      log "Generating backup command"
+      CMD="${INSTALL_BIN}/mysqldump ${SOURCE_CONN} ${BACKUP_OPTIONS} > ${BKUP_FILE}"
+      masklog "Backup command: ${CMD}"
+      command_runner "${CMD}" 8
 
-      #
-      # Create Backup File for Replication ...
-      #
-
-      log "LogSync Enabled: ${LOGSYNC}"
-      if [[ "${LOGSYNC}" == "true" ]]
-      then 
-         log "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A"
-         ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A > ${BKUP_FILE}"
-         ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A  > ${BKUP_FILE}
-      else 
-         log "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob"
-         ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob > ${BKUP_FILE}"
-         ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob > ${BKUP_FILE}
-      fi 
+#      if [[ "${LOGSYNC}" == "true" ]]
+#      then
+#         masklog "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A"
+#         ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A > ${BKUP_FILE}"
+#         ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --skip-lock-tables --single-transaction --flush-logs --hex-blob --master-data=2 -A  > ${BKUP_FILE}
+#      else
+#         masklog "Backup CMD: ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob"
+#         ##log "Backup CMD: ${INSTALL_BIN}/mysqldump ******** --all-databases --skip-lock-tables --single-transaction --flush-logs --hex-blob > ${BKUP_FILE}"
+#         ${INSTALL_BIN}/mysqldump ${SOURCE_CONN} -skip-lock-tables --single-transaction --flush-logs --hex-blob -A  > ${BKUP_FILE}
+#      fi
 
    fi
 
-   #
-   # Verify Backup File Exists ...
-   #
+   # Verify Backup File Exists
    FS=`du -s ${BKUP_FILE} 2>/dev/null`
    FS=`echo ${FS} | ${AWK} -F " " '{print $1}' | xargs`
    log "Backup File Size: ${FS}"
    if [[ "${FS}" == "" ]] || [[ "${FS}" == "0" ]]
    then
-      die "ERROR: Backup File ${BKUP_FILE} Not Created, or is Empty ${FS} ..."
+      terminate "ERROR: Backup File ${BKUP_FILE} Not Created, or is Empty ${FS}" 8
    fi
-
    STAT=`ls -ll ${BKUP_FILE}`
    log "Backup File: ${STAT}"
    echo "Delphix Backup File: ${STAT}"
 
 else	# else if ${BACKUP_PATH} ...
-
-
-   #
-   # Customer Provided Backup File ...
-   #
-   log "Skipping Backup, File Provided ... "
+   # Customer Provided Backup File
+   log "Skipping Backup, File Provided"
    if [[ -f ${BACKUP_PATH} ]] 
    then
       FS=`du -s ${BACKUP_PATH} 2>/dev/null`
@@ -151,13 +124,13 @@ else	# else if ${BACKUP_PATH} ...
       log "Provided Backup File Size: ${FS}"
       if [[ "${FS}" == "" ]] || [[ "${FS}" == "0" ]]
       then
-         die "ERROR: Provided Backup File ${BACKUP_PATH} Not Created, or is Empty ${FS} ..."
+         terminate "ERROR: Provided Backup File ${BACKUP_PATH} Not Created, or is Empty ${FS}" 9
       fi
       STAT=`ls -ll ${BACKUP_PATH}`
       log "Customer Backup File: ${STAT}"
       echo "Customer Backup File: ${STAT}"
    else 
-      die "ERROR: Provided Backup File ${BACKUP_PATH} does not exist ..."
+      terminate "ERROR: Provided Backup File ${BACKUP_PATH} does not exist." 9
    fi
 fi       #  end if ${BACKUP_PATH} ...
 
@@ -165,6 +138,7 @@ log "Environment: "
 export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
+export SOURCEPASS=""
 env | sort  >>$DEBUG_LOG
 log "-- End --"
 exit 0
