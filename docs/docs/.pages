@@ -1,0 +1,8 @@
+arrange:
+  - index.md
+  - Pre-Requisites
+  - PluginInstallation.md
+  - Discovery.md
+  - Linking
+  - Provisioning.md
+  - Release_Notes

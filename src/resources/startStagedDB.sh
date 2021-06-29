@@ -14,19 +14,19 @@ PGM_NAME='startStagedDB.sh'
 # Load Library ...
 #
 eval "${DLPX_LIBRARY_SOURCE}"
-result=`hey`
-log "------------------------- Start"
-log "Library Loaded ... hey $result"
+result=`library_load`
+log "Start ${PGM_NAME}"
+log "Library Load Status: $result"
 
 printParams
 
 # These passwords contain special characters so need to wrap in single / literal quotes ...
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
-log "Staging Connection: ${STAGINGCONN}"
+masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
-STAGING_CONN=`echo "${RESULTS}" | jq --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection: ${STAGING_CONN}"
 
 #
 # Process Status ...
@@ -57,10 +57,10 @@ log "JSON: ${JSON}"
 #
 if [[ "${zSTATUS}" != "ACTIVE" ]]
 then
-   log "Startup ..."
+   log "Starting Database"
    startDatabase "${JSON}" "${STAGING_CONN}" ""
 else
-   log "Database is Already Started ..."
+   log "Database is Already Started"
 fi
 
 #log "Environment: "
@@ -68,5 +68,5 @@ fi
 #export REPLICATION_PASS=""
 #export STAGINGPASS=""
 #env | sort  >>$DEBUG_LOG
-log "------------------------- End"
+log "End"
 exit 0
