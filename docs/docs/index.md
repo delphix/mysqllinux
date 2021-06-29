@@ -41,7 +41,7 @@ Where to Start?
 By now, you must have an overall idea of what is possible with the MySQL plugin. 
 Before you can get started with virtualizing your MySQL databases, 
 there are some pre-requisites you need to take care of. 
-Please visit the Pre-requisites page for more details. 
+Please visit the [Pre-Requisites](/Pre-Requisites/General/index.html) page for more details. 
 
 Questions?
 ----------------
