@@ -713,17 +713,25 @@
 <li>
 <p>A Source DB user who </p>
 <ul>
-<li>Can connect to the source database from staging host. </li>
-<li>Has at the minimum, the following permissions on the source database(s).</li>
+<li>
+<p>Can connect to the source database from staging host as well as locally
+  <div class="highlight"><pre><span></span><code>  mysql&gt;CREATE USER &#39;delphix_os&#39;@&#39;&lt;staging_host&gt;&#39; IDENTIFIED BY &#39;delphix_user_passwd&#39;;
+</code></pre></div>
+  <div class="highlight"><pre><span></span><code>  mysql&gt;CREATE USER &#39;delphix_os&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;delphix_user_passwd&#39;;
+</code></pre></div></p>
+</li>
+<li>
+<p>Has at the minimum, the following permissions on the source database(s).</p>
+<p><em>SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE</em>
+      <div class="highlight"><pre><span></span><code>  mysql&gt;GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to &#39;delphix_os&#39;@&#39;staging-host&#39;;
+</code></pre></div>
+      <div class="highlight"><pre><span></span><code>  mysql&gt;GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to &#39;delphix_os&#39;@&#39;localhost&#39;;
+</code></pre></div></p>
+<p>You can also grant more permissive privileges<br />
+<div class="highlight"><pre><span></span><code> mysql&gt;GRANT ALL PRIVILEGES ON *.* TO &#39;user&#39;@&#39;%&#39;;
+</code></pre></div></p>
+</li>
 </ul>
-<p><em>SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE</em></p>
-<div class="codehilite"><pre><span></span><code>mysql&gt;GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to &#39;user&#39;@&#39;staging-host&#39;;
-</code></pre></div>
-
-<p>You can also grant more permissive privileges  </p>
-<div class="codehilite"><pre><span></span><code> mysql&gt;GRANT ALL PRIVILEGES ON *.* TO &#39;user&#39;@&#39;%&#39;;
-</code></pre></div>
-
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Remember, this is the user that Delphix uses to manage the Staging database. 

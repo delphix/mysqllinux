@@ -670,14 +670,19 @@ Hence, we require a user with the following permissions on the staging database.
 <p><em>SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER</em></p>
 <p>There are 2 ways to achieve this</p>
 <ol>
-<li>Create this user on your source database so that when the backup is restored, this user is present in the staging db. </li>
-<li>Create this user manually in the staging db. 
+<li>Create this user on your source database so that when the backup is restored, this user is present in the staging db.</li>
+<li>
+<p>Create this user manually in the staging db. 
    In this case, the customer user must ensure that this user is always present in the staging db 
-   and has the necessary privileges</li>
-</ol>
-<p><div class="highlight"><pre><span></span><code> mysql&gt; GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to &#39;user&#39;@&#39;staging-host&#39;;
+   and has the necessary privileges</p>
+<p><div class="highlight"><pre><span></span><code>  mysql&gt;CREATE USER &#39;delphix_os&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;delphix_user_passwd&#39;;
 </code></pre></div>
-  You can also grant more permissive privileges</p>
+3. Grant the necessary privileges to the user.    </p>
+<div class="highlight"><pre><span></span><code>mysql&gt; GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to &#39;delphix_os&#39;@&#39;localhost&#39;;
+</code></pre></div>
+</li>
+</ol>
+<p>You can also grant more permissive privileges</p>
 <div class="highlight"><pre><span></span><code>  mysql&gt;GRANT ALL PRIVILEGES ON *.* TO &#39;user&#39;@&#39;%&#39;;
 </code></pre></div>
 <div class="admonition note">
