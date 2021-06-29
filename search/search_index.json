@@ -1,0 +1,424 @@
+{
+    "docs": [
+        {
+            "location": "/index.html",
+            "text": "Overview\n\u00b6\n\n\nMySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.\n\n\nWhat does MySQL plugin do?\n\u00b6\n\n\nThe Delphix MySQL Plugin can virtualize a single instance MySQL database and create \nmultiple virtual copies as required. \n\n\nThere are two modes of operation of the plugin based on how the MySQL dSource is created \nand kept in-sync with source database.\n\n\nReplication\n\u00b6\n\n\nIn the Replication mode, Delphix uses MySQL's built-in replication technology to keep \nthe Delphix dSource in-sync with the MySQL source databases.\n\n\nCreation of the dSource requires a full backup of the source database(s) and there are\ntwo options to providing this backup. \n\n\n\n\n\n\nDelphix Managed Backup \n\n\nIn this option, Delphix is provided with the required information to take \na full backup of the source database.\n\n\n\n\n\n\nUser Provided Backup \n\n\nIn this option, user provides Delphix with an existing full backup. \nDelphix initializes the staging database using the full backup and configures the \n   staging database as a replicated slave of the source database. \nMySQL Replication keeps the data in the staging database in-sync with the source. \n\n\n\n\n\n\nManual Ingestion\n\u00b6\n\n\nIn the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.\nDelphix creates a seed MySQL staging database which can be managed via Delphix. \nThe end user assumes the responsibility of keeping the data in the staging \ndatabase in-sync with the source database. \n\n\nWhere to Start?\n\u00b6\n\n\nBy now, you must have an overall idea of what is possible with the MySQL plugin. \nBefore you can get started with virtualizing your MySQL databases, \nthere are some pre-requisites you need to take care of. \nPlease visit the Pre-requisites page for more details. \n\n\nQuestions?\n\u00b6\n\n\nIf you have questions, bugs or feature requests reach out to us via the \nMySQL Github\n or \nat \nDelphix Community Portal",
+            "title": "Overview"
+        },
+        {
+            "location": "/index.html#overview",
+            "text": "MySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.",
+            "title": "Overview"
+        },
+        {
+            "location": "/index.html#what-does-mysql-plugin-do",
+            "text": "The Delphix MySQL Plugin can virtualize a single instance MySQL database and create \nmultiple virtual copies as required.   There are two modes of operation of the plugin based on how the MySQL dSource is created \nand kept in-sync with source database.",
+            "title": "What does MySQL plugin do?"
+        },
+        {
+            "location": "/index.html#replication",
+            "text": "In the Replication mode, Delphix uses MySQL's built-in replication technology to keep \nthe Delphix dSource in-sync with the MySQL source databases.  Creation of the dSource requires a full backup of the source database(s) and there are\ntwo options to providing this backup.     Delphix Managed Backup   In this option, Delphix is provided with the required information to take \na full backup of the source database.    User Provided Backup   In this option, user provides Delphix with an existing full backup. \nDelphix initializes the staging database using the full backup and configures the \n   staging database as a replicated slave of the source database. \nMySQL Replication keeps the data in the staging database in-sync with the source.",
+            "title": "Replication"
+        },
+        {
+            "location": "/index.html#manual-ingestion",
+            "text": "In the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.\nDelphix creates a seed MySQL staging database which can be managed via Delphix. \nThe end user assumes the responsibility of keeping the data in the staging \ndatabase in-sync with the source database.",
+            "title": "Manual Ingestion"
+        },
+        {
+            "location": "/index.html#where-to-start",
+            "text": "By now, you must have an overall idea of what is possible with the MySQL plugin. \nBefore you can get started with virtualizing your MySQL databases, \nthere are some pre-requisites you need to take care of. \nPlease visit the Pre-requisites page for more details.",
+            "title": "Where to Start?"
+        },
+        {
+            "location": "/index.html#questions",
+            "text": "If you have questions, bugs or feature requests reach out to us via the  MySQL Github  or \nat  Delphix Community Portal",
+            "title": "Questions?"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html",
+            "text": "General\n\u00b6\n\n\nGiven below are the general pre-requisites for MySQL virtualization.\n\n\nEnvironments\n\u00b6\n\n\nFor MySQL virtualization, Delphix requies only Staging and Target Hosts to be added as environments. \n\n\nStaging Host/Environment\n\u00b6\n\n\nThe MySQL plugin is a \"Staged\" plugin - which means that in order to create a dSource, Delphix requires a staging environment.\n   This environment must have MySQL binaries installed and the version of MySQL must match the source MySQL database(s).\n\n\nTarget Host/Environment\n\u00b6\n\n\nIf you are familiar with Delphix, you must already know what a Target Host is.\n It is simply another host with MySQL binaries installed where Delphix creates virtual databases.\n Again, the version of MySQL must match your source database(s).\n\n\nStorage\n\u00b6\n\n\n\n\nEmpty folder on Staging & Target host to hold delphix toolkit [ approximate 2GB free space ]\n\n\nIf Delphix is managing backups, the Staging Host must have enough storage space to hold your source database backup.\n\n\n\n\nMySQL Version\n\u00b6\n\n\n\n\nMySQL Binary version on Staging and Target must match the version on the source database(s)",
+            "title": "General"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#general",
+            "text": "Given below are the general pre-requisites for MySQL virtualization.",
+            "title": "General"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#environments",
+            "text": "For MySQL virtualization, Delphix requies only Staging and Target Hosts to be added as environments.",
+            "title": "Environments"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#staging-hostenvironment",
+            "text": "The MySQL plugin is a \"Staged\" plugin - which means that in order to create a dSource, Delphix requires a staging environment.\n   This environment must have MySQL binaries installed and the version of MySQL must match the source MySQL database(s).",
+            "title": "Staging Host/Environment"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#target-hostenvironment",
+            "text": "If you are familiar with Delphix, you must already know what a Target Host is.\n It is simply another host with MySQL binaries installed where Delphix creates virtual databases.\n Again, the version of MySQL must match your source database(s).",
+            "title": "Target Host/Environment"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#storage",
+            "text": "Empty folder on Staging & Target host to hold delphix toolkit [ approximate 2GB free space ]  If Delphix is managing backups, the Staging Host must have enough storage space to hold your source database backup.",
+            "title": "Storage"
+        },
+        {
+            "location": "/Pre-Requisites/General/index.html#mysql-version",
+            "text": "MySQL Binary version on Staging and Target must match the version on the source database(s)",
+            "title": "MySQL Version"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html",
+            "text": "Replication\n\u00b6\n\n\nGiven below are the pre-requisites for MySQL virtualization when using Replication mode.\n\n\nSource Environment Requirements\n\u00b6\n\n\nSource environment is where the source MySQL databases are running. \n\n\nConnectivity\n\u00b6\n\n\n\n\nDelphix staging user must be able to connect to source environment from staging and take a backup of the source database(s) using the \nmysqldump\n utility.\n\n\n\n\nSource DB User\n\u00b6\n\n\n\n\n\n\nA Source DB user who \n\n\n\n\nCan connect to the source database from staging host. \n\n\nHas at the minimum, the following permissions on the source database(s).\n\n\n\n\nSELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE\n\n\nmysql>GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to 'user'@'staging-host';\n\n\n\n\nYou can also grant more permissive privileges  \n\n\n mysql>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';\n\n\n\n\n\n\nNote\n\n\nRemember, this is the user that Delphix uses to manage the Staging database. \nSo, it is recommended that you create a dedicated source db user for Delphix with the privileges \nmentioned above.\n\n\nAt present, the plugin uses the same source db user for backup and replication.\n\n\n\n\n\n\n\n\nBinary Logging\n\u00b6\n\n\n\n\n\n\nIn order to set up replication, binary logging should be enabled on the source database.\n  You can check the status of binary logging as follows \n\n\nmysql> SHOW VARIABLES LIKE 'log_bin';\n\n\n  If binary logging is enabled, you should see the following status\n\n    +---------------+-------+\n    | Variable_name | Value |\n    +---------------+-------+\n    | log_bin       | ON    |\n    +---------------+-------+\n\n\n\n\n\n\n\nServer-Id\n\u00b6\n\n\nThe source database must have a non zero server-id. \n\n\nStaging Environment Requirements\n\u00b6\n\n\nStaging OS User\n\u00b6\n\n\n\n\n\n\nA Delphix OS user with the elevated permissions to run \nps, mount, umount, mkdir, rmdir\n \n  commands without requiring a password \n\n\n\n    \n\n          \n/etc/sudoers\n\n    \n\n    \n\n        \n    \nDefaults:\ndelphix_os\n \n!\nrequiretty\n\n    \ndelphix_os\n \nALL\n=\nNOPASSWD:\n \n\\\n \n    \n/bin/\nmount\n,\n \n/bin/\numount\n,\n \n/bin/\nmkdir\n,\n \n/bin/\nrmdir\n,\n \n/bin/\nps\n\n\n\n    \n\n\n\n\n\n\n\n\nDelphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )\n\n\n\n\nDelphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.\n\n\n\n\nStorage\n\u00b6\n\n\n\n\nStaging Host must have enough storage space to hold the source backup file. \n\n\nEmpty folder on staging host to hold delphix toolkit [ approximate 2GB free space ]\n\n\n\n\nMySQL Version & Configuration\n\u00b6\n\n\n\n\n\n\nMySQL Binary version must match the version on the source database(s)\n\n\n\n\n\n\n[Recommended] \n\n  As every  organization's MySQL configuration is different, \n  Delphix expects a starter \nmy.cnf\n file to be present in Delphix Toolkit Directory when creating a staging database.\n  Delphix will use this \nmy.cnf\n file and modify it as per the configuration provided during the the dsource creation process. \n\n\nThis is recommended to reduce the possibility of errors while restoring the backup from the source database.\n\n\n\n\n\n\nTarget Environment Requirements\n\u00b6\n\n\nTarget OS User\n\u00b6\n\n\n\n\n\n\nA Delphix OS user with the elevated permissions to run \nps, mount, umount, mkdir, rmdir\n\n  commands without requiring a password\n\n\n\n    \n\n          \n/etc/sudoers\n\n    \n\n    \n\n        \n    \nDefaults:\ndelphix_os\n \n!\nrequiretty\n\n    \ndelphix_os\n \nALL\n=\nNOPASSWD:\n \n\\\n \n    \n/bin/\nmount\n,\n \n/bin/\numount\n,\n \n/bin/\nmkdir\n,\n \n/bin/\nrmdir\n,\n \n/bin/\nps\n\n\n\n    \n\n\n\n\n\n\n\n\nDelphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )\n\n\n\n\nDelphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.\n\n\n\n\nDone, What's Next?\n\u00b6\n\n\nAlright, we've taken care of all the pre-requisites. Next step - Install the plugin.",
+            "title": "Replication"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#replication",
+            "text": "Given below are the pre-requisites for MySQL virtualization when using Replication mode.",
+            "title": "Replication"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#source-environment-requirements",
+            "text": "Source environment is where the source MySQL databases are running.",
+            "title": "Source Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#connectivity",
+            "text": "Delphix staging user must be able to connect to source environment from staging and take a backup of the source database(s) using the  mysqldump  utility.",
+            "title": "Connectivity"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#source-db-user",
+            "text": "A Source DB user who    Can connect to the source database from staging host.   Has at the minimum, the following permissions on the source database(s).   SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE  mysql>GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to 'user'@'staging-host';  You can also grant more permissive privileges     mysql>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';   Note  Remember, this is the user that Delphix uses to manage the Staging database. \nSo, it is recommended that you create a dedicated source db user for Delphix with the privileges \nmentioned above.  At present, the plugin uses the same source db user for backup and replication.",
+            "title": "Source DB User"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#binary-logging",
+            "text": "In order to set up replication, binary logging should be enabled on the source database.\n  You can check the status of binary logging as follows   mysql> SHOW VARIABLES LIKE 'log_bin'; \n  If binary logging is enabled, you should see the following status     +---------------+-------+\n    | Variable_name | Value |\n    +---------------+-------+\n    | log_bin       | ON    |\n    +---------------+-------+",
+            "title": "Binary Logging"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#server-id",
+            "text": "The source database must have a non zero server-id.",
+            "title": "Server-Id"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#staging-environment-requirements",
+            "text": "",
+            "title": "Staging Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#staging-os-user",
+            "text": "A Delphix OS user with the elevated permissions to run  ps, mount, umount, mkdir, rmdir  \n  commands without requiring a password   \n     \n           /etc/sudoers \n     \n     \n              Defaults: delphix_os   ! requiretty \n     delphix_os   ALL = NOPASSWD:   \\  \n     /bin/ mount ,   /bin/ umount ,   /bin/ mkdir ,   /bin/ rmdir ,   /bin/ ps  \n         Delphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )   Delphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.",
+            "title": "Staging OS User"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#storage",
+            "text": "Staging Host must have enough storage space to hold the source backup file.   Empty folder on staging host to hold delphix toolkit [ approximate 2GB free space ]",
+            "title": "Storage"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#mysql-version-configuration",
+            "text": "MySQL Binary version must match the version on the source database(s)    [Recommended]  \n  As every  organization's MySQL configuration is different, \n  Delphix expects a starter  my.cnf  file to be present in Delphix Toolkit Directory when creating a staging database.\n  Delphix will use this  my.cnf  file and modify it as per the configuration provided during the the dsource creation process.   This is recommended to reduce the possibility of errors while restoring the backup from the source database.",
+            "title": "MySQL Version &amp; Configuration"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#target-environment-requirements",
+            "text": "",
+            "title": "Target Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#target-os-user",
+            "text": "A Delphix OS user with the elevated permissions to run  ps, mount, umount, mkdir, rmdir \n  commands without requiring a password  \n     \n           /etc/sudoers \n     \n     \n              Defaults: delphix_os   ! requiretty \n     delphix_os   ALL = NOPASSWD:   \\  \n     /bin/ mount ,   /bin/ umount ,   /bin/ mkdir ,   /bin/ rmdir ,   /bin/ ps  \n         Delphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )   Delphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.",
+            "title": "Target OS User"
+        },
+        {
+            "location": "/Pre-Requisites/Replication_Mode/index.html#done-whats-next",
+            "text": "Alright, we've taken care of all the pre-requisites. Next step - Install the plugin.",
+            "title": "Done, What's Next?"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html",
+            "text": "Manual Ingestion\n\u00b6\n\n\nGiven below are the pre-requisites for MySQL virtualization when using Manual Ingestion mode.\n\n\nSource Environment Requirements\n\u00b6\n\n\nSource environment is where the source MySQL databases are running.\n\n\nSource DB User\n\u00b6\n\n\nIn Manual Ingestion mode, Delphix does not interact with the source database. \nDelphix creates a staging database and the backups are ingested manually by a customer user. \n\n\nHowever, Delphix needs to be able to manage this staging database for snapshots and other time travel operations. \nHence, we require a user with the following permissions on the staging database.\n\n\nSELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER\n\n\nThere are 2 ways to achieve this\n\n\n\n\nCreate this user on your source database so that when the backup is restored, this user is present in the staging db. \n\n\nCreate this user manually in the staging db. \n   In this case, the customer user must ensure that this user is always present in the staging db \n   and has the necessary privileges\n\n\n\n\n mysql> GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to 'user'@'staging-host';\n\n\n  You can also grant more permissive privileges\n\n\n  mysql>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';\n\n\n\n\n\nNote\nRemember, this is the user that Delphix uses to manage the Staging database. \nSo, if you're using Option#1 above, it is recommended that you create a dedicated source db user for Delphix with the privileges \nmentioned above.\n\n\n\n\n\n\nStaging Environment Requirements\n\u00b6\n\n\nStaging OS User\n\u00b6\n\n\n\n\n\n\nA Delphix OS user with the elevated permissions to run \nps, mount, umount, mkdir, rmdir\n\n  commands without requiring a password\n\n\n\n    \n\n          \n/etc/sudoers\n\n    \n\n    \n\n        \n    \nDefaults:\ndelphix_os\n \n!\nrequiretty\n\n    \ndelphix_os\n \nALL\n=\nNOPASSWD:\n \n\\\n \n    \n/bin/\nmount\n,\n \n/bin/\numount\n,\n \n/bin/\nmkdir\n,\n \n/bin/\nrmdir\n,\n \n/bin/\nps\n\n\n\n    \n\n\n\n\n\n\n\n\nDelphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )\n\n\n\n\nDelphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.\n\n\n\n\nStorage\n\u00b6\n\n\n\n\nEmpty folder on staging host to hold delphix toolkit [ approximate 2GB free space ]\n\n\n\n\nMySQL Version & Configuration\n\u00b6\n\n\n\n\n\n\nMySQL Binary version must match the version on the source database(s)\n\n\n\n\n\n\nStarter \nmy.cnf\n file \n[Recommended] \n\n\nAs every  organization's MySQL configuration is different,\nDelphix expects a starter \nmy.cnf\n file to be present in Delphix Toolkit Directory when creating a staging database.\n\n\nDelphix will use this \nmy.cnf\n file and modify it as per the configuration provided during the the dsource creation process.\n\n\nThis is recommended to reduce the possibility of errors while restoring the backup from the source database.\n\n\nif tnis file is not provided, Delphix will create a \nmy.cnf\n file from scratch. \n\n\n\n\n\n\nTarget Environment Requirements\n\u00b6\n\n\nTarget OS User\n\u00b6\n\n\n\n\n\n\nA Delphix OS user with the elevated permissions to run \nps, mount, umount, mkdir, rmdir\n\n  commands without requiring a password\n\n\n\n    \n\n          \n/etc/sudoers\n\n    \n\n    \n\n        \n    \nDefaults:\ndelphix_os\n \n!\nrequiretty\n\n    \ndelphix_os\n \nALL\n=\nNOPASSWD:\n \n\\\n \n    \n/bin/\nmount\n,\n \n/bin/\numount\n,\n \n/bin/\nmkdir\n,\n \n/bin/\nrmdir\n,\n \n/bin/\nps\n\n\n\n    \n\n\n\n\n\n\n\n\nDelphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )\n\n\n\n\nDelphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.\n\n\n\n\nDone, What's Next?\n\u00b6\n\n\nAlright, we've taken care of all the pre-requisites. Next step - Install the plugin.",
+            "title": "Manual Ingestion"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#manual-ingestion",
+            "text": "Given below are the pre-requisites for MySQL virtualization when using Manual Ingestion mode.",
+            "title": "Manual Ingestion"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#source-environment-requirements",
+            "text": "Source environment is where the source MySQL databases are running.",
+            "title": "Source Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#source-db-user",
+            "text": "In Manual Ingestion mode, Delphix does not interact with the source database. \nDelphix creates a staging database and the backups are ingested manually by a customer user.   However, Delphix needs to be able to manage this staging database for snapshots and other time travel operations. \nHence, we require a user with the following permissions on the staging database.  SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER  There are 2 ways to achieve this   Create this user on your source database so that when the backup is restored, this user is present in the staging db.   Create this user manually in the staging db. \n   In this case, the customer user must ensure that this user is always present in the staging db \n   and has the necessary privileges    mysql> GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to 'user'@'staging-host'; \n  You can also grant more permissive privileges    mysql>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';   Note Remember, this is the user that Delphix uses to manage the Staging database. \nSo, if you're using Option#1 above, it is recommended that you create a dedicated source db user for Delphix with the privileges \nmentioned above.",
+            "title": "Source DB User"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#staging-environment-requirements",
+            "text": "",
+            "title": "Staging Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#staging-os-user",
+            "text": "A Delphix OS user with the elevated permissions to run  ps, mount, umount, mkdir, rmdir \n  commands without requiring a password  \n     \n           /etc/sudoers \n     \n     \n              Defaults: delphix_os   ! requiretty \n     delphix_os   ALL = NOPASSWD:   \\  \n     /bin/ mount ,   /bin/ umount ,   /bin/ mkdir ,   /bin/ rmdir ,   /bin/ ps  \n         Delphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )   Delphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.",
+            "title": "Staging OS User"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#storage",
+            "text": "Empty folder on staging host to hold delphix toolkit [ approximate 2GB free space ]",
+            "title": "Storage"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#mysql-version-configuration",
+            "text": "MySQL Binary version must match the version on the source database(s)    Starter  my.cnf  file  [Recommended]   As every  organization's MySQL configuration is different,\nDelphix expects a starter  my.cnf  file to be present in Delphix Toolkit Directory when creating a staging database.  Delphix will use this  my.cnf  file and modify it as per the configuration provided during the the dsource creation process.  This is recommended to reduce the possibility of errors while restoring the backup from the source database.  if tnis file is not provided, Delphix will create a  my.cnf  file from scratch.",
+            "title": "MySQL Version &amp; Configuration"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#target-environment-requirements",
+            "text": "",
+            "title": "Target Environment Requirements"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#target-os-user",
+            "text": "A Delphix OS user with the elevated permissions to run  ps, mount, umount, mkdir, rmdir \n  commands without requiring a password  \n     \n           /etc/sudoers \n     \n     \n              Defaults: delphix_os   ! requiretty \n     delphix_os   ALL = NOPASSWD:   \\  \n     /bin/ mount ,   /bin/ umount ,   /bin/ mkdir ,   /bin/ rmdir ,   /bin/ ps  \n         Delphix OS user should be in the same primary and secondary groups as mysql user ( or the MySQL binary owner )   Delphix OS user must have execute access on all files within MySQL installation folder - Min permission level 775 recommended.",
+            "title": "Target OS User"
+        },
+        {
+            "location": "/Pre-Requisites/Manual_Ingestion_Mode/index.html#done-whats-next",
+            "text": "Alright, we've taken care of all the pre-requisites. Next step - Install the plugin.",
+            "title": "Done, What's Next?"
+        },
+        {
+            "location": "/PluginInstallation/index.html",
+            "text": "Plugin Installation\n\u00b6\n\n\nPrerequisites\n\u00b6\n\n\n\n\nDelphix Engine of version 6.0.x\n\n\nInstall MySQL Binaries on source, staging, and target servers\n\n\n\n\nInstalling the MySQL Plugin\n\u00b6\n\n\nMethod1: Using GUI\n\u00b6\n\n\n\n\n\n\nClick on \nManage\n (present on top-left of this page) and then \nPlugins\n.  \n\n\n\n\n\n\n\n\nClick on \n+\n icon.  \n\n\n\n\n\n\n\n\nClick on \nUpload\n a plugin.  \n\n\n\n\n\n\n\n\nSelect the \nbuild(artifacts.json)\n from your device.   \n\n\n\n\n\n\n\n\nClick on \nclose\n button.  \n\n\n\n\n\n\n\n\nSee the plugin version in \nPlugins\n section.  \n\n\n\n\n\n\n\n\nMethod2: Using dvp command\n\u00b6\n\n\ndvp upload -e <Delphix_Engine_Name> -u <username> --password <password>\n\n\nDelphix Engine's documentation on installing plugins: \n\nPluginManagement\n.",
+            "title": "Plugin Installation"
+        },
+        {
+            "location": "/PluginInstallation/index.html#plugin-installation",
+            "text": "",
+            "title": "Plugin Installation"
+        },
+        {
+            "location": "/PluginInstallation/index.html#prerequisites",
+            "text": "Delphix Engine of version 6.0.x  Install MySQL Binaries on source, staging, and target servers",
+            "title": "Prerequisites"
+        },
+        {
+            "location": "/PluginInstallation/index.html#installing-the-mysql-plugin",
+            "text": "",
+            "title": "Installing the MySQL Plugin"
+        },
+        {
+            "location": "/PluginInstallation/index.html#method1-using-gui",
+            "text": "Click on  Manage  (present on top-left of this page) and then  Plugins .       Click on  +  icon.       Click on  Upload  a plugin.       Select the  build(artifacts.json)  from your device.        Click on  close  button.       See the plugin version in  Plugins  section.",
+            "title": "Method1: Using GUI"
+        },
+        {
+            "location": "/PluginInstallation/index.html#method2-using-dvp-command",
+            "text": "dvp upload -e <Delphix_Engine_Name> -u <username> --password <password>  Delphix Engine's documentation on installing plugins:  PluginManagement .",
+            "title": "Method2: Using dvp command"
+        },
+        {
+            "location": "/Discovery/index.html",
+            "text": "Discovery\n\u00b6\n\n\nEnvironment discovery/refresh is a process that enables the MySQL Plugin to determine MySQL installation details on a host. \nDatabase discovery/refresh is initiated during the environment set up process.\n\n\nWhenever there is any change (installing a new database home) to an already set up environment in the Delphix application, \nwe need to perform an environment discovery/refresh.\n\n\nPrerequisites\n\u00b6\n\n\n\n\nInstallation of the MySQL Plugin is required before the Discovery.\n\n\n\n\nRefreshing an Environment\n\u00b6\n\n\nEnvironment refresh will update the metadata associated with that environment and push Delphix Toolkit on to the host.\n\n\n\n\nLogin to the \nDelphix Management\n application.\n\n\nClick \nManage\n.\n\n\nSelect \nEnvironments\n.\n\n\nIn the Environments panel, click the name of the environment you want to refresh.\n\n\nSelect the \nRefresh\n icon.\n\n\nIn the Refresh confirmation dialog select \nRefresh\n.\n\n\n\n\n\n\nOnce an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. \nThese installations are referred to as \"repositories\"\n\n\nAdd Source Config\n\u00b6\n\n\nAs noted avove, environments contain \nrepositories\n, that are MySQL installations in the environment. \nEach environment may have any number of repositories associated with it.  \n\n\nThe next step in the virtualization process is to add a \nSourceConfig\n. \nA \nSourceConfig\n object defines the configuratino of the dSource and is required to create a dSource.\nYou can create any number of \nSourceConfig\n objects using a repository, which represent known database instances. \n\n\nFor the MySQL plugin, Source config is must be created manually.\n\n\nHow to create Source Config\n\u00b6\n\n\nSource Config is created on the Staging Environment\n\n\n\n\nLogin to the \nDelphix Management\n application.\n\n\nClick \nManage\n.\n\n\nSelect \nEnvironments\n.\n\n\nSelect the repository.\n\n\n\n\nClick on \n+\n icon (Shown in next image).\n      \n  \n\n\n\n\n\n\nAdd required details in the \nAdd database\n section.\n\n\n\n\nEnter source data directory in section \nData Directory\n.\n\n\nEnter source port number in \nPort\n section.\n\n\nEnter MySQL base directory on the source host in \nBase Directory\n section.\n\n\nEnter dsource name in \nMySQL dSource Name\n section.\n\n\n\n\n\n\n\n\n\n\nWhat's Next?\n\u00b6\n\n\nNow that your environments are all added and a Source Config has been created, \nplease proceed to \nLinking\n page to see how we can create the dSource.",
+            "title": "Discovery"
+        },
+        {
+            "location": "/Discovery/index.html#discovery",
+            "text": "Environment discovery/refresh is a process that enables the MySQL Plugin to determine MySQL installation details on a host. \nDatabase discovery/refresh is initiated during the environment set up process.  Whenever there is any change (installing a new database home) to an already set up environment in the Delphix application, \nwe need to perform an environment discovery/refresh.",
+            "title": "Discovery"
+        },
+        {
+            "location": "/Discovery/index.html#prerequisites",
+            "text": "Installation of the MySQL Plugin is required before the Discovery.",
+            "title": "Prerequisites"
+        },
+        {
+            "location": "/Discovery/index.html#refreshing-an-environment",
+            "text": "Environment refresh will update the metadata associated with that environment and push Delphix Toolkit on to the host.   Login to the  Delphix Management  application.  Click  Manage .  Select  Environments .  In the Environments panel, click the name of the environment you want to refresh.  Select the  Refresh  icon.  In the Refresh confirmation dialog select  Refresh .    Once an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. \nThese installations are referred to as \"repositories\"",
+            "title": "Refreshing an Environment"
+        },
+        {
+            "location": "/Discovery/index.html#add-source-config",
+            "text": "As noted avove, environments contain  repositories , that are MySQL installations in the environment. \nEach environment may have any number of repositories associated with it.    The next step in the virtualization process is to add a  SourceConfig . \nA  SourceConfig  object defines the configuratino of the dSource and is required to create a dSource.\nYou can create any number of  SourceConfig  objects using a repository, which represent known database instances.   For the MySQL plugin, Source config is must be created manually.",
+            "title": "Add Source Config"
+        },
+        {
+            "location": "/Discovery/index.html#how-to-create-source-config",
+            "text": "Source Config is created on the Staging Environment   Login to the  Delphix Management  application.  Click  Manage .  Select  Environments .  Select the repository.   Click on  +  icon (Shown in next image).\n             Add required details in the  Add database  section.   Enter source data directory in section  Data Directory .  Enter source port number in  Port  section.  Enter MySQL base directory on the source host in  Base Directory  section.  Enter dsource name in  MySQL dSource Name  section.",
+            "title": "How to create Source Config"
+        },
+        {
+            "location": "/Discovery/index.html#whats-next",
+            "text": "Now that your environments are all added and a Source Config has been created, \nplease proceed to  Linking  page to see how we can create the dSource.",
+            "title": "What's Next?"
+        },
+        {
+            "location": "/Linking/Replication_Mode/index.html",
+            "text": "Replication\n\u00b6\n\n\nIn Replication Mode, Delphix creates a staging database using an initial backup from the source database. \nThis initial backup can be taken by Delphix or can be provided by the end user. \n\n\nIn order to ensure that the staging database remains in-sync with the source database, \nDelphix can set up a MySQL native replication. from the source db to the staging db.\n\n\nPre-Requisites\n\u00b6\n\n\n\n\nStaging environment must be added to Delphix.\n\n\nA Source Config must be created on the staging environment-MySQL repository.\n\n\n\n\n[Recommended] \n\n    As every  organization's MySQL configuration is different,\n    Delphix expects a starter \nmy.cnf\n file to be present in Delphix Toolkit Directory when creating a staging database.\n    Delphix will use this \nmy.cnf\n file and modify it as per the configuration provided during the the dsource creation process.\n\n\nThis is recommended to reduce the possibility of errors while restoring the backup from the source database.\n\n\n\n\nWarning\n\n\nIt may take upto 5 minutes after successful dSource creation for the status to show as Active.\n\n\n\n\n\n\n\n\nCreating dSource\n\u00b6\n\n\n\n\nLogin to \nDelphix Management\n application.\n\n\nClick \nManage\n >  \nDatasets\n.\n\n\n\n\nSelect \nAdd dSource\n.\n\n\n\n\n\n\n\n\nIn the Add dSource wizard, select the MySQL source configuration which is created on the staging host.\n\n\n\n\n\n\nSelect \nReplication\n in the dSource Type dropdown.\n\n\n   \n\n\n\n\n\n\nProvide the additional details required for dsource creation\n\n\n\n\n\n\nStaging DB Server ID\n\n\nServer ID for the dsource (stagind db. For Replication Mode, \nthis server id must be greater than the source db server id.\n\n\n\n\n\n\nStaging DB Port\n\n\nPort for the dsource (staging db).\n\n\n\n\n\n\nStaging Initialization Password\n\n\nPassword to use while initializing the dsource (staging db). \nThis password will be assigned to the \n'root'@'localhost'\n\n\n\n\n\n\nMySQL Base Directory\n\n\nMySQL installation directory. This is where the location of \n/bin/mysql\n\n\n\n\n\n\nMount Location on Staging Host\n\n\n\n\n\n\nThis is the mount directory for Delphix on the staging host.\n   This location should be unique and empty.\n\n\n\n\n\n\nSource DB Host IP Address \n\n\nIP Address of the source db host.\n\n\n\n\n\n\nSource DB UserName\n\n\nDelphix db user on the source database. \nThis user will be created in the dsource when the initial backup is restored. \nDelphix will be using this db user to manage the dsource and other time travel operations. \n\n\n\n\n\n\nSource DB Password\n\n\nPassword for the source db user. \n\n\n\n\n\n\nDatabases List\n\n\nComma separated list of databases on the source MySQL instance that should be part of the dSource.\nDefault value \nALL\n indicates that all databases on the source instance will be brought in.\n\n\n\n\n\n\nMySQL Backup Path \n\n\nFull path, including the filename, of the full source db backup to use for the dsource creation.\nIf this is provided, Delphix will not create a backup. \n\n\n\n\n\n\nLogSync\n\n\nWhether to enable replication or not. If checked, Delphix will set up the dsource (staging db) \nas a replicated slave of the source database.\n\n\n\n\n\n\nReplication UserName\n\n\nDelphix DB user with replication privileges to set up replication from source to staging db. \nCurrently, Delphix uses the Source DB user for replication. \n\n\n\n\n\n\nReplication User Password\n\n\nPassword for the replication db user. \n\n\n\n\n\n\n\n\n\n\nOn dSource Configuration screen, select the dataset group where the dSource will be placed and click \nNext\n.\n\n\n\n\nOn the Data Management screen, select the staging environment and the environment user and click \nNext\n.\n\n\nOn the Policies screen, select the Snapsync and Retention policies for the dSource and click \nNext\n.\n\n\nOn the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click \nNext\n.\n\n\n\n\nReview the dSource configuration on the Summary screen and Submit. The Linking process has commenced. \n\n\n\n\n\n\n\n\nOnce the dSource creation is successful, the \nTimeflow\n tab should show the initial snapshot.\n\n\nDone, What's Next?\n\u00b6\n\n\nAlright, we have created a MySQL dSource. Next step - Provision a VDB.",
+            "title": "Replication"
+        },
+        {
+            "location": "/Linking/Replication_Mode/index.html#replication",
+            "text": "In Replication Mode, Delphix creates a staging database using an initial backup from the source database. \nThis initial backup can be taken by Delphix or can be provided by the end user.   In order to ensure that the staging database remains in-sync with the source database, \nDelphix can set up a MySQL native replication. from the source db to the staging db.",
+            "title": "Replication"
+        },
+        {
+            "location": "/Linking/Replication_Mode/index.html#pre-requisites",
+            "text": "Staging environment must be added to Delphix.  A Source Config must be created on the staging environment-MySQL repository.   [Recommended]  \n    As every  organization's MySQL configuration is different,\n    Delphix expects a starter  my.cnf  file to be present in Delphix Toolkit Directory when creating a staging database.\n    Delphix will use this  my.cnf  file and modify it as per the configuration provided during the the dsource creation process.  This is recommended to reduce the possibility of errors while restoring the backup from the source database.   Warning  It may take upto 5 minutes after successful dSource creation for the status to show as Active.",
+            "title": "Pre-Requisites"
+        },
+        {
+            "location": "/Linking/Replication_Mode/index.html#creating-dsource",
+            "text": "Login to  Delphix Management  application.  Click  Manage  >   Datasets .   Select  Add dSource .     In the Add dSource wizard, select the MySQL source configuration which is created on the staging host.    Select  Replication  in the dSource Type dropdown.         Provide the additional details required for dsource creation    Staging DB Server ID  Server ID for the dsource (stagind db. For Replication Mode, \nthis server id must be greater than the source db server id.    Staging DB Port  Port for the dsource (staging db).    Staging Initialization Password  Password to use while initializing the dsource (staging db). \nThis password will be assigned to the  'root'@'localhost'    MySQL Base Directory  MySQL installation directory. This is where the location of  /bin/mysql    Mount Location on Staging Host    This is the mount directory for Delphix on the staging host.\n   This location should be unique and empty.    Source DB Host IP Address   IP Address of the source db host.    Source DB UserName  Delphix db user on the source database. \nThis user will be created in the dsource when the initial backup is restored. \nDelphix will be using this db user to manage the dsource and other time travel operations.     Source DB Password  Password for the source db user.     Databases List  Comma separated list of databases on the source MySQL instance that should be part of the dSource.\nDefault value  ALL  indicates that all databases on the source instance will be brought in.    MySQL Backup Path   Full path, including the filename, of the full source db backup to use for the dsource creation.\nIf this is provided, Delphix will not create a backup.     LogSync  Whether to enable replication or not. If checked, Delphix will set up the dsource (staging db) \nas a replicated slave of the source database.    Replication UserName  Delphix DB user with replication privileges to set up replication from source to staging db. \nCurrently, Delphix uses the Source DB user for replication.     Replication User Password  Password for the replication db user.       On dSource Configuration screen, select the dataset group where the dSource will be placed and click  Next .   On the Data Management screen, select the staging environment and the environment user and click  Next .  On the Policies screen, select the Snapsync and Retention policies for the dSource and click  Next .  On the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click  Next .   Review the dSource configuration on the Summary screen and Submit. The Linking process has commenced.      Once the dSource creation is successful, the  Timeflow  tab should show the initial snapshot.",
+            "title": "Creating dSource"
+        },
+        {
+            "location": "/Linking/Replication_Mode/index.html#done-whats-next",
+            "text": "Alright, we have created a MySQL dSource. Next step - Provision a VDB.",
+            "title": "Done, What's Next?"
+        },
+        {
+            "location": "/Linking/Manual_Ingestion_Mode/index.html",
+            "text": "Manual Ingestion\n\u00b6\n\n\nIn Manual Ingestion Mode, Delphix creates a seed (empty) staging database. \nCustomer users will be responsible to manually ingest data into this staging db. \nAll other management operations can be performed through Delphix. A snapshot can be taken either manually \nor via a SnapSync policy once the data is restored into the seed staging database. \n\n\nPre-Requisites\n\u00b6\n\n\n\n\nStaging environment must be added to Delphix.\n\n\nA Source Config must be created on the staging environment-MySQL repository.\n\n\n[Recommended] \n\n  As every  organization's MySQL configuration is different,\n  Delphix expects a starter \nmy.cnf\n file to be present in Delphix Toolkit Directory when creating a staging database.\n  Delphix will use this \nmy.cnf\n file and modify it as per the configuration provided during the the dsource creation process.\n\n\n\n\nThis is recommended to reduce the possibility of errors while restoring the backup from the source database.\n\n\n!!! warning\n  It may take upto 5 minutes after successful dSource creation for the status to show as Active.\n\n\nCreating dSource\n\u00b6\n\n\n\n\nLogin to \nDelphix Management\n application.\n\n\nClick \nManage\n >  \nDatasets\n.\n\n\nSelect \nAdd dSource\n.\n\n\n\n\n\n\n\n\nIn the Add dSource wizard, select the MySQL source configuration which is created on the staging host.\n\n\nSelect \nManual Ingestion\n in the dSource Type dropdown.\n\n\nProvide the additional details required for dsource creation\n\n\n\n\nStaging DB Server ID\n\n\nServer ID for the dsource (stagind db. For Replication Mode,\nthis server id must be greater than the source db server id.\n\n\n\n\n\n\nStaging DB Port\n\n\nPort for the dsource (staging db).\n\n\n\n\n\n\nStaging Initialization Password\n\n\nPassword to use while initializing the dsource (staging db).\nThis password will be assigned to the \n'root'@'localhost'\n\n\n\n\n\n\nMySQL Base Directory\n\n\nMySQL installation directory. This is where the location of \n/bin/mysql\n\n\n\n\n\n\nMount Location on Staging Host\n\n\nThis is the mount directory for Delphix on the staging host. \nThis location should be unique and empty.\n\n\n\n\n\n\nSource DB UserName\n\n\nDelphix db user on the source database. In Manual Ingestion mode, Delphix does not connect to the source db.\nDelphix will be using this db user to manage the dsource and other time travel operations.\nThis user must be part of the source db backup that will be restored into the staging db.\n\n\n\n\n\n\nSource DB Password\n\n\nPassword for the source db user.\n\n\n\n\n\n\nOn dSource Configuration screen, select the dataset group where the dSource will be placed and click \nNext\n.\n\n\n\n\nOn the Data Management screen, select the staging environment and the environment user and click \nNext\n.\n\n\nOn the Policies screen, select the Snapsync and Retention policies for the dSource and click \nNext\n.\n\n\nOn the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click \nNext\n.\n\n\n\n\nReview the dSource configuration on the Summary screen and Submit. The Linking process has commenced.\n\n\n\n\n\n\n\n\nOnce the dSource creation is successful, the \nTimeflow\n tab should show the initial snapshot.\n\n\nDone, What's Next?\n\u00b6\n\n\nAlright, we have created a MySQL dSource. Next step - Provision a VDB.",
+            "title": "Manual Ingestion"
+        },
+        {
+            "location": "/Linking/Manual_Ingestion_Mode/index.html#manual-ingestion",
+            "text": "In Manual Ingestion Mode, Delphix creates a seed (empty) staging database. \nCustomer users will be responsible to manually ingest data into this staging db. \nAll other management operations can be performed through Delphix. A snapshot can be taken either manually \nor via a SnapSync policy once the data is restored into the seed staging database.",
+            "title": "Manual Ingestion"
+        },
+        {
+            "location": "/Linking/Manual_Ingestion_Mode/index.html#pre-requisites",
+            "text": "Staging environment must be added to Delphix.  A Source Config must be created on the staging environment-MySQL repository.  [Recommended]  \n  As every  organization's MySQL configuration is different,\n  Delphix expects a starter  my.cnf  file to be present in Delphix Toolkit Directory when creating a staging database.\n  Delphix will use this  my.cnf  file and modify it as per the configuration provided during the the dsource creation process.   This is recommended to reduce the possibility of errors while restoring the backup from the source database.  !!! warning\n  It may take upto 5 minutes after successful dSource creation for the status to show as Active.",
+            "title": "Pre-Requisites"
+        },
+        {
+            "location": "/Linking/Manual_Ingestion_Mode/index.html#creating-dsource",
+            "text": "Login to  Delphix Management  application.  Click  Manage  >   Datasets .  Select  Add dSource .     In the Add dSource wizard, select the MySQL source configuration which is created on the staging host.  Select  Manual Ingestion  in the dSource Type dropdown.  Provide the additional details required for dsource creation   Staging DB Server ID  Server ID for the dsource (stagind db. For Replication Mode,\nthis server id must be greater than the source db server id.    Staging DB Port  Port for the dsource (staging db).    Staging Initialization Password  Password to use while initializing the dsource (staging db).\nThis password will be assigned to the  'root'@'localhost'    MySQL Base Directory  MySQL installation directory. This is where the location of  /bin/mysql    Mount Location on Staging Host  This is the mount directory for Delphix on the staging host. \nThis location should be unique and empty.    Source DB UserName  Delphix db user on the source database. In Manual Ingestion mode, Delphix does not connect to the source db.\nDelphix will be using this db user to manage the dsource and other time travel operations.\nThis user must be part of the source db backup that will be restored into the staging db.    Source DB Password  Password for the source db user.    On dSource Configuration screen, select the dataset group where the dSource will be placed and click  Next .   On the Data Management screen, select the staging environment and the environment user and click  Next .  On the Policies screen, select the Snapsync and Retention policies for the dSource and click  Next .  On the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click  Next .   Review the dSource configuration on the Summary screen and Submit. The Linking process has commenced.     Once the dSource creation is successful, the  Timeflow  tab should show the initial snapshot.",
+            "title": "Creating dSource"
+        },
+        {
+            "location": "/Linking/Manual_Ingestion_Mode/index.html#done-whats-next",
+            "text": "Alright, we have created a MySQL dSource. Next step - Provision a VDB.",
+            "title": "Done, What's Next?"
+        },
+        {
+            "location": "/Provisioning/index.html",
+            "text": "Provisioning\n\u00b6\n\n\nVirtual Databases (VDB) are a virtualized copies of dSource. \nA VDB can be created using a snapshot on the dSource timeflow. \n\n\nPrerequisites\n\u00b6\n\n\n\n\nRequire a linked dSource with at least 1 snapshot.\n\n\nRequire a Target environment added to Delphix.\n\n\nA MySQL binary with the same version as the source db must be installed on the Target enviornment.\n\n\n\n\nProvisioning a VDB\n\u00b6\n\n\n\n\n\n\nOn the dSource Timeflow, click on the \nProvision\n action \n   on the snapshot that you want to use for the VDB (highlighted below) \n\n\n\n\n\n\n\n\nSelect the target host from the dropdown on which VDB needs to be created.\n\n   If there are multiple MySQL repositories on the host, \n   select the one that matches the source db version.\n\n\nIf there are multiple OS users on the host, select the user you want to use. \n\n\n\n\n\n\n\n\nEnter the following values for the target configuration:\n\n\n\n\n\n\nDB User\n     This is the database user for the VDB. Delphix will use this user to manage the VDB.\n     It is recommended that you use the same user account that was used by the staging db.\n\n\n\n\n\n\nDB Password\n     Password for the VDB db user. \n\n\n\n\n\n\nBaseDir\n     MySQL installation directory. This is where the location of \n/bin/mysql\n\n\n\n\n\n\nVDB Port\n     MySQL database port for the VDB.\n\n\n\n\n\n\nVDB Server ID\n     MySQL server id for the VDB. This server id must be non-zero and greater than the dsource server id.\n\n\n\n\n\n\nMount Location\n     This is the mount directory for Delphix VDB on the Target host.\n     This location should be unique and empty.\n\n\n\n\n\n\n\n\n\n\n\n\nOn Configuration screen, add VDB name, select Target group,  check \nAuto vFiles Restart\n checkbox and select \nNext\n\n   \n\n\n\n\n\n\nOn Policies screen, add any required policies and select \nNext\n.\n\n\n\n\n\n\nIf you want to Mask the VDB, select the required configuration this screen and select \nNext\n.\n\n\n\n\n\n\nOn Hooks screen, add any required Hooks and select \nNext\n.\n\n\n\n\n\n\nPreview the summary and select \nSubmit\n.\n\n\n\n\n\n\nOnce the VDB is created successfully, you can review the datasets on \nManage\n > \nDatasets\n > \nvdb Name\n.\n\n\n\n\n\n\nAnd we're done!\n\u00b6\n\n\nWe have not successfully provisioned a MySQL VDN.",
+            "title": "Provisioning"
+        },
+        {
+            "location": "/Provisioning/index.html#provisioning",
+            "text": "Virtual Databases (VDB) are a virtualized copies of dSource. \nA VDB can be created using a snapshot on the dSource timeflow.",
+            "title": "Provisioning"
+        },
+        {
+            "location": "/Provisioning/index.html#prerequisites",
+            "text": "Require a linked dSource with at least 1 snapshot.  Require a Target environment added to Delphix.  A MySQL binary with the same version as the source db must be installed on the Target enviornment.",
+            "title": "Prerequisites"
+        },
+        {
+            "location": "/Provisioning/index.html#provisioning-a-vdb",
+            "text": "On the dSource Timeflow, click on the  Provision  action \n   on the snapshot that you want to use for the VDB (highlighted below)      Select the target host from the dropdown on which VDB needs to be created. \n   If there are multiple MySQL repositories on the host, \n   select the one that matches the source db version.  If there are multiple OS users on the host, select the user you want to use.      Enter the following values for the target configuration:    DB User\n     This is the database user for the VDB. Delphix will use this user to manage the VDB.\n     It is recommended that you use the same user account that was used by the staging db.    DB Password\n     Password for the VDB db user.     BaseDir\n     MySQL installation directory. This is where the location of  /bin/mysql    VDB Port\n     MySQL database port for the VDB.    VDB Server ID\n     MySQL server id for the VDB. This server id must be non-zero and greater than the dsource server id.    Mount Location\n     This is the mount directory for Delphix VDB on the Target host.\n     This location should be unique and empty.       On Configuration screen, add VDB name, select Target group,  check  Auto vFiles Restart  checkbox and select  Next \n       On Policies screen, add any required policies and select  Next .    If you want to Mask the VDB, select the required configuration this screen and select  Next .    On Hooks screen, add any required Hooks and select  Next .    Preview the summary and select  Submit .    Once the VDB is created successfully, you can review the datasets on  Manage  >  Datasets  >  vdb Name .",
+            "title": "Provisioning a VDB"
+        },
+        {
+            "location": "/Provisioning/index.html#and-were-done",
+            "text": "We have not successfully provisioned a MySQL VDN.",
+            "title": "And we're done!"
+        },
+        {
+            "location": "/Release_Notes/MySQL_2.0.26/index.html",
+            "text": "MySQL Plugin 2.0.26\n\u00b6\n\n\nTo install dxi, refer to \nPlugin Installation\n\n\nNew Features\n\u00b6\n\n\n\n\nSelecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.\n\n\nDelphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one. \n\n\nNew Exit Return Codes : MySQL Plugin 1.1.69 introduces more granular exit codes for errors. \n\n\nRemoved Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.\n\n\n\n\nSupported versions\n\u00b6\n\n\nThe current release supports  \n\n\n\n\nAll MySQL 5.7 versions greater than 5.7.6\n\n\nRHEL 6.9 / 7.x\n\n\nDelphix Engine 6.0.4 and above\n\n\n\n\nFuture releases may add support for additional versions.\n\n\nQuestions?\n\u00b6\n\n\nIf you have questions, bugs or feature requests reach out to us via the \nMySQL Github\n or\nat \nDelphix Community Portal",
+            "title": "MySQL Plugin 2.0.26"
+        },
+        {
+            "location": "/Release_Notes/MySQL_2.0.26/index.html#mysql-plugin-2026",
+            "text": "To install dxi, refer to  Plugin Installation",
+            "title": "MySQL Plugin 2.0.26"
+        },
+        {
+            "location": "/Release_Notes/MySQL_2.0.26/index.html#new-features",
+            "text": "Selecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.  Delphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one.   New Exit Return Codes : MySQL Plugin 1.1.69 introduces more granular exit codes for errors.   Removed Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.",
+            "title": "New Features"
+        },
+        {
+            "location": "/Release_Notes/MySQL_2.0.26/index.html#supported-versions",
+            "text": "The current release supports     All MySQL 5.7 versions greater than 5.7.6  RHEL 6.9 / 7.x  Delphix Engine 6.0.4 and above   Future releases may add support for additional versions.",
+            "title": "Supported versions"
+        },
+        {
+            "location": "/Release_Notes/MySQL_2.0.26/index.html#questions",
+            "text": "If you have questions, bugs or feature requests reach out to us via the  MySQL Github  or\nat  Delphix Community Portal",
+            "title": "Questions?"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html",
+            "text": "MySQL Plugin 1.0.0\n\u00b6\n\n\nTo install dxi, refer to \nPlugin Installation\n\n\nFeatures\n\u00b6\n\n\nMySQLLinux 1.0.0 release is the first release of the Delphix MySQL Plugin.\n\n\nSupported versions\n\u00b6\n\n\nThe current release supports  \n\n\n\n\nAll MySQL 5.7 versions greater than 5.7.6\n\n\nRHEL 6.9 / 7.x\n\n\nDelphix Engine 6.0.4 and above\n\n\n\n\nFuture releases may add support for additional versions.  \n\n\ncompatibility\n\u00b6\n\n\n\n\nForward compatibility is not guaranteed between current version of MySQL plugin and future versions of MySQL.\n\n\nMySQL Plugin may work with future RHEL/CentOS versions, but this is not guaranteed.\n\n\n\n\nQuestions?\n\u00b6\n\n\nIf you have questions, bugs or feature requests reach out to us via the \nMySQL Github\n or\nat \nDelphix Community Portal",
+            "title": "MySQL Plugin 1.0.0"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html#mysql-plugin-100",
+            "text": "To install dxi, refer to  Plugin Installation",
+            "title": "MySQL Plugin 1.0.0"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html#features",
+            "text": "MySQLLinux 1.0.0 release is the first release of the Delphix MySQL Plugin.",
+            "title": "Features"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html#supported-versions",
+            "text": "The current release supports     All MySQL 5.7 versions greater than 5.7.6  RHEL 6.9 / 7.x  Delphix Engine 6.0.4 and above   Future releases may add support for additional versions.",
+            "title": "Supported versions"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html#compatibility",
+            "text": "Forward compatibility is not guaranteed between current version of MySQL plugin and future versions of MySQL.  MySQL Plugin may work with future RHEL/CentOS versions, but this is not guaranteed.",
+            "title": "compatibility"
+        },
+        {
+            "location": "/Release_Notes/MySQL_1.0.0/index.html#questions",
+            "text": "If you have questions, bugs or feature requests reach out to us via the  MySQL Github  or\nat  Delphix Community Portal",
+            "title": "Questions?"
+        },
+        {
+            "location": "/References/ExitCodes/index.html",
+            "text": "Plugin Exit Codes\n\u00b6\n\n\nDetailed below are the exit codes that the MySQL \nPlugin throws if an error occurs. \n\n\nExit Codes\n\u00b6\n\n\n\n\n\n\n\n\nCode\n\n\nDescription\n\n\nPossible Reason\n\n\n\n\n\n\n\n\n\n\n1\n\n\nGeneral Error\n\n\nCheck logs\n\n\n\n\n\n\n2\n\n\nGeneral Error\n\n\nCheck logs\n\n\n\n\n\n\n3\n\n\nUnable to start MySQL\n\n\n1. Delphix user does not have the necessary permissions on the host  \n 2. Mount location provided is  in use \n 3. Database credentials provided are not accurate \n 4. Invalid serverid \n 5. Provided port is not in use\n\n\n\n\n\n\n4\n\n\nMissing config file\n\n\nA \nmy.cnf\n file was not provided and Delphix was unable to create one.\n\n\n\n\n\n\n5\n\n\nUnable to change \nroot\n password\n\n\nDelphix was unable to change the password for the root user after creating the staging db.\n Please check logs.\n\n\n\n\n\n\n6\n\n\nUnable to restore backup\n\n\nDelphix was unable to restore the full backup into staging db. Please check logs.\n\n\n\n\n\n\n7\n\n\nConnect failure post restore\n\n\nDelphix is unable to connect to staging db after backup is restored. \n 1. The Source DB username and password provided may be incorrect \n2. The MySQL Database did not restart after the restore. \n Check logs for more information on the error.\n\n\n\n\n\n\n8\n\n\nDelphix backup failure\n\n\nDelphix could not take a source db backup. \n 1. Staging Host may not be able to connect to Source Host \n 2. Source DB credentials may be incorrect \n 3. Source DB user may not have the required permissions \n4. Databases provided in the list may not be present on the source MySQL instance. \n Check logs for more information on the error.\n\n\n\n\n\n\n9\n\n\nCustomer backup failure\n\n\nThere was an issue with the customer provided backup. 1. Backup location may not exist. \n 2. The backup file may not exist \n 3. Backup file may be empty.\nCheck logs for more information on the error.\n\n\n\n\n\n\n10\n\n\nInvalid binary path\n\n\nmysql\n was not found under the provided installation directory.\n\n\n\n\n\n\n11\n\n\nConnect failure after restart\n\n\nIn Backup Ingestion Mode, the Delphix source user could not connect to the MySQL instance after reboot. \n Check logs for more information on the error.\n\n\n\n\n\n\n12\n\n\nUnable to create user\n\n\nIn Backup Ingestion Mode, there was an error while creating the delphix user after staging db was initialized. \n Check logs for more information on the error.",
+            "title": "Plugin Exit Codes"
+        },
+        {
+            "location": "/References/ExitCodes/index.html#plugin-exit-codes",
+            "text": "Detailed below are the exit codes that the MySQL \nPlugin throws if an error occurs.",
+            "title": "Plugin Exit Codes"
+        },
+        {
+            "location": "/References/ExitCodes/index.html#exit-codes",
+            "text": "Code  Description  Possible Reason      1  General Error  Check logs    2  General Error  Check logs    3  Unable to start MySQL  1. Delphix user does not have the necessary permissions on the host    2. Mount location provided is  in use   3. Database credentials provided are not accurate   4. Invalid serverid   5. Provided port is not in use    4  Missing config file  A  my.cnf  file was not provided and Delphix was unable to create one.    5  Unable to change  root  password  Delphix was unable to change the password for the root user after creating the staging db.  Please check logs.    6  Unable to restore backup  Delphix was unable to restore the full backup into staging db. Please check logs.    7  Connect failure post restore  Delphix is unable to connect to staging db after backup is restored.   1. The Source DB username and password provided may be incorrect  2. The MySQL Database did not restart after the restore.   Check logs for more information on the error.    8  Delphix backup failure  Delphix could not take a source db backup.   1. Staging Host may not be able to connect to Source Host   2. Source DB credentials may be incorrect   3. Source DB user may not have the required permissions  4. Databases provided in the list may not be present on the source MySQL instance.   Check logs for more information on the error.    9  Customer backup failure  There was an issue with the customer provided backup. 1. Backup location may not exist.   2. The backup file may not exist   3. Backup file may be empty. Check logs for more information on the error.    10  Invalid binary path  mysql  was not found under the provided installation directory.    11  Connect failure after restart  In Backup Ingestion Mode, the Delphix source user could not connect to the MySQL instance after reboot.   Check logs for more information on the error.    12  Unable to create user  In Backup Ingestion Mode, there was an error while creating the delphix user after staging db was initialized.   Check logs for more information on the error.",
+            "title": "Exit Codes"
+        },
+        {
+            "location": "/References/Troubleshooting/index.html",
+            "text": "Troubleshooting\n\u00b6\n\n\nIf you run into an error while using the MySQL plugin and have an exit code in the error, \nrefer to \nExitCodes\n for further information. \n\n\nLogs\n\u00b6\n\n\nThere are 2 sets of logs for the MySQL plugin\n\n\n\n\n\n\nPlugin Logs\n\n\nPlugin logs are part of the Delphix Engine. Refer to [How to Retrieve Logs] (https://developer.delphix.com/References/Logging/#how-to-retrieve-logs) \nto find out how to get the Delphix Plugin Logs. \n\n\n\n\n\n\nMySQL Shell Operation Logs\n\n\nWhen the plugin performs certain operations ( such as Take backup, Link, Provision etc), \nlogs are written to log files on the staging or target host under the \nDelphix Toolkit\n directory\n\n\nFollowing are the logs to review\n\n\n\n\ndelphix_mysql_debug.log \n\n\ndelphix_mysql_info.log\n\n\ndelphix_mysql_error.log",
+            "title": "Troubleshooting"
+        },
+        {
+            "location": "/References/Troubleshooting/index.html#troubleshooting",
+            "text": "If you run into an error while using the MySQL plugin and have an exit code in the error, \nrefer to  ExitCodes  for further information.",
+            "title": "Troubleshooting"
+        },
+        {
+            "location": "/References/Troubleshooting/index.html#logs",
+            "text": "There are 2 sets of logs for the MySQL plugin    Plugin Logs  Plugin logs are part of the Delphix Engine. Refer to [How to Retrieve Logs] (https://developer.delphix.com/References/Logging/#how-to-retrieve-logs) \nto find out how to get the Delphix Plugin Logs.     MySQL Shell Operation Logs  When the plugin performs certain operations ( such as Take backup, Link, Provision etc), \nlogs are written to log files on the staging or target host under the  Delphix Toolkit  directory  Following are the logs to review   delphix_mysql_debug.log   delphix_mysql_info.log  delphix_mysql_error.log",
+            "title": "Logs"
+        }
+    ]
+}
