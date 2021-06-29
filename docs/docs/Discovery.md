@@ -57,8 +57,7 @@ For the MySQL plugin, Source config is must be created manually.
       - Enter source port number in **Port** section.
       - Enter MySQL base directory on the source host in **Base Directory** section.
       - Enter dsource name in **MySQL dSource Name** section.
-
-
+    
       ![Screenshot](./image/image11.png)
 
 
