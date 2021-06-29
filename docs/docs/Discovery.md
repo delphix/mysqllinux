@@ -7,14 +7,12 @@ Whenever there is any change (installing a new database home) to an already set 
 we need to perform an environment discovery/refresh.
 
 
-Prerequisites
-=============
+## Prerequisites
 
 -   Installation of the MySQL Plugin is required before the Discovery.
 
+## Refreshing an Environment
 
-Refreshing an Environment
-=========================
 Environment refresh will update the metadata associated with that environment and push Delphix Toolkit on to the host.
 
 1. Login to the **Delphix Management** application.
@@ -29,8 +27,10 @@ Environment refresh will update the metadata associated with that environment an
 Once an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. 
 These installations are referred to as "repositories"
 
-Add Source Config
-===================
+
+## Add Source Config
+
+
 As noted avove, environments contain `repositories`, that are MySQL installations in the environment. 
 Each environment may have any number of repositories associated with it.  
 
@@ -42,27 +42,28 @@ For the MySQL plugin, Source config is must be created manually.
 
 ### How to create Source Config
 
+*Source Config is created on the Staging Environment*
+
 1. Login to the **Delphix Management** application.
 2. Click **Manage**.
 3. Select **Environments**.
 4. Select the repository.
 5. Click on **+** icon (Shown in next image).
-
-   ![Screenshot](./image/image10.png)
-
+      ![Screenshot](./image/image10.png)  
 
 6. Add required details in the `Add database` section.
-- Enter port number in **Source Couchbase port** section.
-- Enter source host address in section **Source Host**.
-- Enter unique name for the staging database in **identify field** section.
-- Enter Couchbase data path of staging host in **DB data path** section.
+      
+      - Enter source data directory in section **Data Directory**.
+      - Enter source port number in **Port** section.
+      - Enter MySQL base directory on the source host in **Base Directory** section.
+      - Enter dsource name in **MySQL dSource Name** section.
 
 
-![Screenshot](./image/image11.png)
+      ![Screenshot](./image/image11.png)
 
 
-What's Next?
-===================
+## What's Next?
+
 
 Now that your environments are all added and a Source Config has been created, 
 please proceed to [Linking](/Linking/Replication_Mode/index.html) page to see how we can create the dSource.

@@ -1,68 +1,67 @@
 # Provisioning
 
-Environment discovery/refresh is a process that enables the MySQL Plugin to determine MySQL installation details on a host. 
-Database discovery/refresh is initiated during the environment set up process.
+Virtual Databases (VDB) are a virtualized copies of dSource. 
+A VDB can be created using a snapshot on the dSource timeflow. 
 
-Whenever there is any change (installing a new database home) to an already set up environment in the Delphix application, 
-we need to perform an environment discovery/refresh.
+## Prerequisites
 
-
-Prerequisites
-=============
-
--   Installation of the MySQL Plugin is required before the Discovery.
+- Require a linked dSource with at least 1 snapshot.
+- Require a Target environment added to Delphix.
+- A MySQL binary with the same version as the source db must be installed on the Target enviornment.
 
 
-Refreshing an Environment
-=========================
-Environment refresh will update the metadata associated with that environment and push Delphix Toolkit on to the host.
-
-1. Login to the **Delphix Management** application.
-2. Click **Manage**.
-3. Select **Environments**.
-4. In the Environments panel, click the name of the environment you want to refresh.
-5. Select the **Refresh** icon.
-6. In the Refresh confirmation dialog select **Refresh**.
-
-![Screenshot](./image/image9.png)
-
-Once an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. 
-These installations are referred to as "repositories"
-
-Add Source Config
-===================
-As noted avove, environments contain `repositories`, that are MySQL installations in the environment. 
-Each environment may have any number of repositories associated with it.  
-
-The next step in the virtualization process is to add a `SourceConfig`. 
-A `SourceConfig` object defines the configuratino of the dSource and is required to create a dSource.
-You can create any number of `SourceConfig` objects using a repository, which represent known database instances. 
-
-For the MySQL plugin, Source config is must be created manually.
-
-### How to create Source Config
-
-1. Login to the **Delphix Management** application.
-2. Click **Manage**.
-3. Select **Environments**.
-4. Select the repository.
-5. Click on **+** icon (Shown in next image).
-
-   ![Screenshot](./image/image10.png)
+## Provisioning a VDB
 
 
-6. Add required details in the `Add database` section.
-- Enter port number in **Source Couchbase port** section.
-- Enter source host address in section **Source Host**.
-- Enter unique name for the staging database in **identify field** section.
-- Enter Couchbase data path of staging host in **DB data path** section.
+1. On the dSource Timeflow, click on the *Provision* action 
+   on the snapshot that you want to use for the VDB (highlighted below) 
+   
+      ![Screenshot](./image/select-snap.png)
 
+2. Select the target host from the dropdown on which VDB needs to be created.  
+   If there are multiple MySQL repositories on the host, 
+   select the one that matches the source db version.
+   
+    If there are multiple OS users on the host, select the user you want to use. 
+   
+      ![Screenshot](./image/select-target.png)
 
-![Screenshot](./image/image11.png)
+3. Enter the following values for the target configuration:
+      - DB User
+         This is the database user for the VDB. Delphix will use this user to manage the VDB.
+         It is recommended that you use the same user account that was used by the staging db.
+        
+      - DB Password
+         Password for the VDB db user. 
+   
+      - BaseDir
+         MySQL installation directory. This is where the location of */bin/mysql*
+   
+      - VDB Port
+         MySQL database port for the VDB.
+   
+      - VDB Server ID
+         MySQL server id for the VDB. This server id must be non-zero and greater than the dsource server id.
+        
+      - Mount Location
+         This is the mount directory for Delphix VDB on the Target host.
+         This location should be unique and empty.
+ 
+      ![Screenshot](./image/target-config.png)
 
+4. On Configuration screen, add VDB name, select Target group,  check *Auto vFiles Restart* checkbox and select **Next**
+   ![Screenshot](./image/image27.png)
 
-What's Next?
-===================
+5. On Policies screen, add any required policies and select **Next**.
 
-Now that your environments are all added and a Source Config has been created, 
-please proceed to [Linking](/Linking/Replication_Mode/index.html) page to see how we can create the dSource.
+6. If you want to Mask the VDB, select the required configuration this screen and select **Next**.
+
+7. On Hooks screen, add any required Hooks and select **Next**.
+
+8. Preview the summary and select **Submit**.
+
+9. Once the VDB is created successfully, you can review the datasets on **Manage** > **Datasets** > **vdb Name**.
+
+And we're done!
+----------------
+We have not successfully provisioned a MySQL VDN. 

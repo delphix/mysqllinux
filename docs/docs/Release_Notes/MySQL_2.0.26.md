@@ -1,4 +1,4 @@
-# MySQL Plugin 1.1.69
+# MySQL Plugin 2.0.26
 
 To install dxi, refer to [Plugin Installation](/PluginInstallation/index.html)
 
