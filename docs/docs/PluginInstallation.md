@@ -1,16 +1,15 @@
 # Plugin Installation
 
 
-Prerequisites
-=============
+## Prerequisites
+
 
 -   Delphix Engine of version 6.0.x
 -   Install MySQL Binaries on source, staging, and target servers
 
-Installing the MySQL Plugin
-===============================
-Method1: Using GUI
-------------------
+## Installing the MySQL Plugin
+
+### Method1: Using GUI
 
 1. Click on **Manage** (present on top-left of this page) and then **Plugins**.  
    
@@ -42,8 +41,8 @@ Method1: Using GUI
       ![Screenshot](./image/image7.png)
 
 
-Method2: Using dvp command
----------------------------
+### Method2: Using dvp command
+
 `dvp upload -e <Delphix_Engine_Name> -u <username> --password <password>`
 
 Delphix Engine's documentation on installing plugins: 

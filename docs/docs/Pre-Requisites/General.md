@@ -3,8 +3,9 @@
 Given below are the general pre-requisites for MySQL virtualization.
 
 ### Environments
-   
-##### Staging Environment
+For MySQL virtualization, Delphix requies only Staging and Target Hosts to be added as environments. 
+
+##### Staging Host/Environment
    The MySQL plugin is a "Staged" plugin - which means that in order to create a dSource, Delphix requires a staging environment.
    This environment must have MySQL binaries installed and the version of MySQL must match the source MySQL database(s).
 

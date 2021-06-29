@@ -1,6 +1,6 @@
-# Delphix Integration Hubs (dxi)
+# MySQLLinux
 
-This is the Markdown-based documentation for Hubs (dxi) repo.
+This is the Markdown-based documentation for mysqllinux repository.
 
 ## Local Testing
 Install dependencies for building documentation and run `pipenv run mkdocs serve`
@@ -32,8 +32,8 @@ To publish doc change to your individual fork for review, we use github pages. T
 pipenv run mkdocs build --clean
 ```
 This will generate the `site` directory which will contain all the gererated docs.
-3. Copy all these files to the root directory of the Hubs (dxi) repo and delete all other files.
+3. Copy all these files to the root directory of the mysqllinux repo and delete all other files.
 4. Commit and push these changes to your individual fork.
-5. Go to your individual Hubs (dxi) repo settings, scroll to the bottom and verify under the GitHub Pages section the `Source` is set to `gh-pages branch`.
+5. Go to your individual mysqllinux repo settings, scroll to the bottom and verify under the GitHub Pages section the `Source` is set to `gh-pages branch`.
 6. Right above this will be a link explaining where your docs are published.
 
