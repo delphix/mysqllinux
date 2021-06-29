@@ -11,17 +11,28 @@ Given below are the pre-requisites for MySQL virtualization when using Replicati
 
 #### Source DB User
 - A Source DB user who 
-    - Can connect to the source database from staging host. 
+    - Can connect to the source database from staging host as well as locally
+      ```jql
+        mysql>CREATE USER 'delphix_os'@'<staging_host>' IDENTIFIED BY 'delphix_user_passwd';
+      ```  
+      ```jql       
+        mysql>CREATE USER 'delphix_os'@'localhost' IDENTIFIED BY 'delphix_user_passwd';
+      ```    
+  
     - Has at the minimum, the following permissions on the source database(s).
-
-      *SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE*
-    
-        mysql>GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to 'user'@'staging-host';
-
-    You can also grant more permissive privileges  
-
+  
+        *SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE*
+      ```jql    
+        mysql>GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER, REPLICATION CLIENT,REPLICATION SLAVE on *.* to 'delphix_os'@'staging-host';
+      ```
+      ```jql          
+        mysql>GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to 'delphix_os'@'localhost';
+      ```  
+      
+        You can also grant more permissive privileges  
+        ```jql 
          mysql>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';
-
+        ```  
 
     !!! note
         Remember, this is the user that Delphix uses to manage the Staging database. 
