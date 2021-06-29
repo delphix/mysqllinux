@@ -337,7 +337,7 @@
         },
         {
             "location": "/Release_Notes/MySQL_2.0.26/index.html",
-            "text": "MySQL Plugin 2.0.26\n\u00b6\n\n\nTo install dxi, refer to \nPlugin Installation\n\n\nNew Features\n\u00b6\n\n\n\n\nSelecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.\n\n\nDelphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one. \n\n\nNew Exit Return Codes : MySQL Plugin 1.1.69 introduces more granular exit codes for errors. \n\n\nRemoved Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.\n\n\n\n\nSupported versions\n\u00b6\n\n\nThe current release supports  \n\n\n\n\nAll MySQL 5.7 versions greater than 5.7.6\n\n\nRHEL 6.9 / 7.x\n\n\nDelphix Engine 6.0.4 and above\n\n\n\n\nFuture releases may add support for additional versions.\n\n\nQuestions?\n\u00b6\n\n\nIf you have questions, bugs or feature requests reach out to us via the \nMySQL Github\n or\nat \nDelphix Community Portal",
+            "text": "MySQL Plugin 2.0.26\n\u00b6\n\n\nTo install dxi, refer to \nPlugin Installation\n\n\nNew Features\n\u00b6\n\n\n\n\nSelecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.\n\n\nDelphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one. \n\n\nNew Exit Return Codes : MySQL Plugin 2.0.26 introduces more granular exit codes for errors. \n\n\nRemoved Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.\n\n\n\n\nSupported versions\n\u00b6\n\n\nThe current release supports  \n\n\n\n\nAll MySQL 5.7 versions greater than 5.7.6\n\n\nRHEL 6.9 / 7.x\n\n\nDelphix Engine 6.0.4 and above\n\n\n\n\nFuture releases may add support for additional versions.\n\n\nQuestions?\n\u00b6\n\n\nIf you have questions, bugs or feature requests reach out to us via the \nMySQL Github\n or\nat \nDelphix Community Portal",
             "title": "MySQL Plugin 2.0.26"
         },
         {
@@ -347,7 +347,7 @@
         },
         {
             "location": "/Release_Notes/MySQL_2.0.26/index.html#new-features",
-            "text": "Selecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.  Delphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one.   New Exit Return Codes : MySQL Plugin 1.1.69 introduces more granular exit codes for errors.   Removed Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.",
+            "text": "Selecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.  Delphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one.   New Exit Return Codes : MySQL Plugin 2.0.26 introduces more granular exit codes for errors.   Removed Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.",
             "title": "New Features"
         },
         {
