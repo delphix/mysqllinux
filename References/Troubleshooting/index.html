@@ -450,6 +450,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#common-mysql-commands" title="Common MySQL Commands" class="md-nav__link">
+    Common MySQL Commands
+  </a>
+  
+</li>
+      
       
       
       
@@ -493,6 +500,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#common-mysql-commands" title="Common MySQL Commands" class="md-nav__link">
+    Common MySQL Commands
+  </a>
+  
+</li>
+      
       
       
       
@@ -531,6 +545,34 @@ logs are written to log files on the staging or target host under the <em>Delphi
 <li>delphix_mysql_info.log</li>
 <li>delphix_mysql_error.log</li>
 </ul>
+</li>
+</ol>
+<h2 id="common-mysql-commands">Common MySQL Commands<a class="headerlink" href="#common-mysql-commands" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Connecting to a MySQL instance</p>
+<div class="highlight"><pre><span></span><code>delphixos&gt; /usr/bin/mysql -uUserName -pPassword --protocol=TCP --port=1234
+</code></pre></div>
+</li>
+<li>
+<p>List databases in MySQL
+   <div class="highlight"><pre><span></span><code>mysql&gt; show databases;
+</code></pre></div></p>
+</li>
+<li>
+<p>Check replication status in MySQL
+   <div class="highlight"><pre><span></span><code>mysql&gt; show slave status;
+</code></pre></div></p>
+</li>
+<li>
+<p>Check binary logging
+   <div class="highlight"><pre><span></span><code>mysql&gt; SHOW VARIABLES LIKE &#39;log_bin&#39;;
+</code></pre></div></p>
+</li>
+<li>
+<p>Check user permissions
+    <div class="highlight"><pre><span></span><code>mysql&gt; show grants for &#39;delphixdb&#39;@&#39;%&#39;;
+</code></pre></div></p>
 </li>
 </ol>
                 
