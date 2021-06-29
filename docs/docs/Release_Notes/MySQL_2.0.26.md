@@ -6,7 +6,7 @@ To install dxi, refer to [Plugin Installation](/PluginInstallation/index.html)
 
 -  Selecting Databases : Ability to select specific databases in the Source MySQL server when creating a dSource.
 -  Delphix generated config file : If a my.cnf file is not provided while creating a dSource, Delphix now creates one. 
--  New Exit Return Codes : MySQL Plugin 1.1.69 introduces more granular exit codes for errors. 
+-  New Exit Return Codes : MySQL Plugin 2.0.26 introduces more granular exit codes for errors. 
 -  Removed Simple Tablespace Backup: MySQL Plugin does not support the Simple Tablespace Backup option for Linking. This option may be supported in the future.
 
 ###Supported versions
