@@ -17,14 +17,20 @@ Hence, we require a user with the following permissions on the staging database.
 
 There are 2 ways to achieve this
 
-1. Create this user on your source database so that when the backup is restored, this user is present in the staging db. 
+1. Create this user on your source database so that when the backup is restored, this user is present in the staging db.
 2. Create this user manually in the staging db. 
    In this case, the customer user must ensure that this user is always present in the staging db 
    and has the necessary privileges
+
+      ```jql       
+        mysql>CREATE USER 'delphix_os'@'localhost' IDENTIFIED BY 'delphix_user_passwd';
+      ```
+3. Grant the necessary privileges to the user.    
    
-   ```jql
-    mysql> GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to 'user'@'staging-host';
-   ```
+    ```jql
+    mysql> GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to 'delphix_os'@'localhost';
+    ```
+    
   You can also grant more permissive privileges
 
   ```jql
