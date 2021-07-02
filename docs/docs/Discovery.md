@@ -22,7 +22,7 @@ Environment refresh will update the metadata associated with that environment an
 5. Select the **Refresh** icon.
 6. In the Refresh confirmation dialog select **Refresh**.
 
-![Screenshot](./image/Image9.png)
+![Screenshot](./image/image9.png)
 
 Once an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. 
 These installations are referred to as "repositories"
@@ -49,7 +49,7 @@ For the MySQL plugin, Source config is must be created manually.
 3. Select **Environments**.
 4. Select the repository.
 5. Click on **+** icon (Shown in next image).
-      ![Screenshot](./image/Image10.png)  
+   ![Screenshot](./image/image10.png)
 
 6. Add required details in the `Add database` section.
       
@@ -57,8 +57,8 @@ For the MySQL plugin, Source config is must be created manually.
       - Enter source port number in **Port** section.
       - Enter MySQL base directory on the source host in **Base Directory** section.
       - Enter dsource name in **MySQL dSource Name** section.
-    
-      ![Screenshot](./image/Image11.png)
+
+   ![Screenshot](./image/image11.png)
 
 
 ## What's Next?
