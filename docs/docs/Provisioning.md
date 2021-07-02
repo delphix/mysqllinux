@@ -8,6 +8,9 @@ A VDB can be created using a snapshot on the dSource timeflow.
 - Require a linked dSource with at least 1 snapshot.
 - Require a Target environment added to Delphix.
 - A MySQL binary with the same version as the source db must be installed on the Target enviornment.
+  
+    !!! warning
+        It may take upto 5 minutes after successful dSource creation for the status to show as Active.
 
 
 ## Provisioning a VDB
@@ -64,4 +67,4 @@ A VDB can be created using a snapshot on the dSource timeflow.
 
 And we're done!
 ----------------
-We have not successfully provisioned a MySQL VDN. 
+We have now successfully provisioned a MySQL VDB. 
