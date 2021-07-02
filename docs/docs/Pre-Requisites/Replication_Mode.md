@@ -10,7 +10,9 @@ Given below are the pre-requisites for MySQL virtualization when using Replicati
  - Delphix staging user must be able to connect to source environment from staging and take a backup of the source database(s) using the *mysqldump* utility.
 
 #### Source DB User
-- A Source DB user who 
+- A Source DB user with the following permissions. 
+
+
     - Can connect to the source database from staging host as well as locally
       ```jql
         mysql>CREATE USER 'delphix_os'@'<staging_host>' IDENTIFIED BY 'delphix_user_passwd';
@@ -64,6 +66,12 @@ The source database must have a non zero server-id.
 ### Staging Environment Requirements
 
 #### Staging OS User
+
+This is a typical Delphix OS staging user. 
+Key requirements for this user are given below. 
+
+Please refer to Delphix Docs for more detailed requirements.
+
 - A Delphix OS user with the elevated permissions to run *ps, mount, umount, mkdir, rmdir* 
   commands without requiring a password 
 
@@ -101,6 +109,12 @@ The source database must have a non zero server-id.
 ### Target Environment Requirements
 
 #### Target OS User
+
+This is a typical Delphix OS target user.
+Key requirements for this user are given below.
+
+Please refer to Delphix Docs for more detailed requirements.
+
 - A Delphix OS user with the elevated permissions to run *ps, mount, umount, mkdir, rmdir*
   commands without requiring a password
 
