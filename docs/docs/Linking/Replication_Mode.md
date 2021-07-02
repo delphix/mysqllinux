@@ -27,13 +27,13 @@ Delphix can set up a MySQL native replication. from the source db to the staging
 2. Click **Manage** >  **Datasets**.
 3. Select **Add dSource**.
    
-     ![Screenshot](../../image/add-dsource.png)
+     ![Screenshot](../image/add-dsource.png)
    
    
 4. In the Add dSource wizard, select the MySQL source configuration which is created on the staging host.
 5. Select *Replication* in the dSource Type dropdown.
      
-      ![Screenshot](../../image/dsource-type.png)   
+      ![Screenshot](../image/dsource-type.png)   
 
 7. Provide the additional details required for dsource creation
     - Staging DB Server ID
@@ -103,7 +103,7 @@ Delphix can set up a MySQL native replication. from the source db to the staging
 11. On the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click *Next*.
 12. Review the dSource configuration on the Summary screen and Submit. The Linking process has commenced. 
     
-    ![Screenshot](../../image/dsource-creation.png)
+    ![Screenshot](../image/dsource-creation.png)
 
 
 Once the dSource creation is successful, the <span class="code_title">*Timeflow*</span> tab should show the initial snapshot.
