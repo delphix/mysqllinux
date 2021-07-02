@@ -45,6 +45,12 @@ There are 2 ways to achieve this
 ### Staging Environment Requirements
 
 #### Staging OS User
+
+This is a typical Delphix OS staging user.
+Key requirements for this user are given below.
+
+Please refer to Delphix Docs for more detailed requirements.
+
 - A Delphix OS user with the elevated permissions to run *ps, mount, umount, mkdir, rmdir*
   commands without requiring a password
 
@@ -84,6 +90,12 @@ There are 2 ways to achieve this
 ### Target Environment Requirements
 
 #### Target OS User
+
+This is a typical Delphix OS target user.
+Key requirements for this user are given below.
+
+Please refer to Delphix Docs for more detailed requirements.
+
 - A Delphix OS user with the elevated permissions to run *ps, mount, umount, mkdir, rmdir*
   commands without requiring a password
 
