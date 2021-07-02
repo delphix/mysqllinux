@@ -33,12 +33,12 @@
 
 5. Click on **close** button.  
    
-      ![Screenshot](./image/image6.png)
+      ![Screenshot](./image/Image6.png)
 
 
 6. See the plugin version in **Plugins** section.  
    
-      ![Screenshot](./image/image7.png)
+      ![Screenshot](./image/Image7.png)
 
 
 ### Method2: Using dvp command
