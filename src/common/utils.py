@@ -118,17 +118,20 @@ def parse_db_list(dbstr):
         dbs = dbs.strip()
     return dbs
 
-def create_backup_options(logsync, dbs, logger):
+def create_backup_options(logsync, dbs, logger, aws_rds):
     """
     Creates the backup options string to be used in restore.sh script for source backup
     Args:
         logsync (string) : Are we enabling replication?
         dbs (string): Which databases are we backing up?
+        aws_rds (string) : Is this an aws database.
     Returns:
          backup_options (string): Complete backup options string
     """
-    backup_options="--skip-lock-tables --single-transaction --flush-logs --hex-blob --no-tablespaces"
+    backup_options="--skip-lock-tables --single-transaction --hex-blob --no-tablespaces --triggers --routines --events"
     try:
+        if aws_rds!="true":
+            backup_options+=" --flush-logs"
         if logsync=="true":
             backup_options+=" --master-data=2"
         if dbs is None or dbs=="ALL":

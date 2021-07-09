@@ -162,7 +162,8 @@
           "backupPath",
           "logSync",
           "replicationUser",
-          "replicationPass"
+          "replicationPass",
+          "awsRds"
         ],
         "properties" : {
           "dSourceType": {
@@ -252,6 +253,12 @@
              "prettyName": "MySQL Base Directory",
              "description": "Base Directory of MySQL Installation (Location of /bin/mysql)",
              "default": "/usr"
+          },
+          "awsRds": {
+            "default": false,
+            "prettyName": "Source on AWS-RDS",
+            "type": "boolean",
+            "description": "Check this if your source database is on AWS-RDS."
           }
         }
       },
