@@ -28,25 +28,6 @@ TARGET_PORT=${STAGINGPORT}
 log "Source Port: ${SOURCE_PORT}"
 log "Staging Port: ${TARGET_PORT}"
 
-# Backup File Location ...
-if [[ "${BACKUP_PATH}" == "" ]]
-then
-   BKUP_FILE="/tmp/dump_${SOURCE_PORT}.sql"
-else 
-   BKUP_FILE="${BACKUP_PATH}"
-fi 
-log "Backup File: ${BKUP_FILE}"
-
-# Staging Connection for Install/Configuration ...
-STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
-
-
-masklog "Staging Connection: ${STAGINGCONN}"
-RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
-STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-masklog "Staging Connection: ${STAGING_CONN}"
-
 # Replication Variables ...
 log "========= Replication Variables ==========="
 log "Staging Host: ${STAGINGHOSTIP}"
@@ -60,7 +41,7 @@ MASTER_PASS="${REPLICATION_PASS}"
 
 # Directory Paths ...
 NEW_MOUNT_DIR="${STAGINGDATADIR}"
-log "Staging Base Directory: ${NEW_MOUNT_DIR}" 
+log "Staging Base Directory: ${NEW_MOUNT_DIR}"
 
 NEW_DATA_DIR="${NEW_MOUNT_DIR}/data"
 NEW_LOG_DIR="${NEW_MOUNT_DIR}/log"
@@ -68,6 +49,35 @@ NEW_TMP_DIR="${NEW_MOUNT_DIR}/tmp"
 NEW_MY_CNF="${NEW_MOUNT_DIR}/my.cnf"
 NEW_SERVER_ID="${STAGINGSERVERID}"
 
+########## Sanity Checks###############
+# 1. Data Directory must be empty
+#######################################
+if [ ! -z "$(ls -A ${NEW_DATA_DIR})" ]; then
+   log " Data directory is not empty. This is a resync of an existing database."
+   cleanup_dir NEW_DATA_DIR
+   cleanup_dir NEW_LOG_DIR
+   cleanup_dir NEW_TMP_DIR
+   log " Cleanup complete."
+fi
+
+# Backup File Location
+if [[ "${BACKUP_PATH}" == "" ]]; then
+   BKUP_FILE="/tmp/dump_${SOURCE_PORT}.sql"
+else 
+   BKUP_FILE="${BACKUP_PATH}"
+fi 
+log "Backup File: ${BKUP_FILE}"
+
+
+
+# Staging Connection for Install/Configuration
+STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
+
+masklog "Staging Connection: ${STAGINGCONN}"
+RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
+echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
+masklog "Staging Connection: ${STAGING_CONN}"
 
 ###########################################################
 ## On Staging Server ...
@@ -372,8 +382,11 @@ fi
 #
 # Change Password for Staging Conn ...
 #
-CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
-CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+#CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
+#CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+
+CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};FLUSH PRIVILEGES;\""
+CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';FLUSH PRIVILEGES;\""
 masklog "Final Command to Change Password is : ${CMDFORLOG}"
 command_runner "${CMD}" 5
 
@@ -396,22 +409,23 @@ masklog "Staging Connection after updating password: ${STAGING_CONN}"
 
 ########################################################################
 # Load Source Database Export ...
+CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"RESET MASTER;\""
+masklog "Reset Master Command:  ${CMD}"
+eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+
 log "============================================================"
 log "Restoring Backup File "
 log "============================================================"
-masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
+masklog "${INSTALL_BIN}/mysql ${STAGING_CONN} -f < ${BKUP_FILE}"
 #RESULTS=$( ${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE} )
 #log "Restore Results: ${RESULTS}"
 
 ## Reset Master before restoring backup
 ##RESET_MASTER="${DLPX_TOOLKIT}/reset_master.sql"
 ##echo "RESET MASTER;" > ${RESET_MASTER}
-CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"RESET MASTER;\""
-masklog "Reset Master Command:  ${CMD}"
-eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 ## Ingest Backup File
-CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} < ${BKUP_FILE}"
+CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -f < ${BKUP_FILE}"
 command_runner "${CMD}" 5
   #eval ${CMD} 1>>${DEBUG_LOG} 2>&1
   #return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
@@ -427,6 +441,20 @@ log "Validating Restored Databases"
 #log "show databases: ${RESULTS}"
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"show databases;\""
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+
+#log "============================================================"
+#log "Granting SUPER and SHUTDOWN"
+#CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"GRANT SELECT, SHUTDOWN, SUPER, RELOAD ,SHOW VIEW, EVENT, TRIGGER on *.* to '${SOURCEUSER}'@'localhost'; FLUSH PRIVILEGES;\""
+#log ${CMD}
+if [[ "${AWS_SOURCE}" == "true" ]]
+log "AWS-RDS Privilege Elevation"
+then
+   # Privilege Elevation sql
+   CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -se \"UPDATE mysql.user set Shutdown_priv='Y', Grant_priv='Y', Super_priv='Y' where mysql.user.User='${SOURCEUSER}' and mysql.user.Host='localhost';FLUSH PRIVILEGES;\""
+   masklog "Privilege Elevation Command :${CMD}"
+   # Running Privilege elevation
+   command_runner "${CMD}" 13
+fi
 
 # Shutting down after the backup has been ingested.
 log "============================================================"

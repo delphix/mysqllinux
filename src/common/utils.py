@@ -132,7 +132,7 @@ def create_backup_options(logsync, dbs, logger, aws_rds):
     try:
         if aws_rds!="true":
             backup_options+=" --flush-logs"
-        if logsync=="true":
+        if logsync=="true" and aws_rds!="true":
             backup_options+=" --master-data=2"
         if dbs is None or dbs=="ALL":
             backup_options+=" -A"

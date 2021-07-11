@@ -284,6 +284,15 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         logger.debug("source_conection > "+sourceConn)
         logger.debug("staging_conection > "+stagingConn)
 
+        # If performing resync on existing db, we must shut down first.
+        stop_mysql(
+            staged_source.parameters.staging_port,
+            staged_source.connection,
+            staged_source.parameters.staging_basedir,
+            staged_source.parameters.source_user,
+            staged_source.parameters.source_pass,
+            "localhost"
+        )
 
         if dSourceType == "Replication": 
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
@@ -310,6 +319,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "STAGINGDATADIR":mount_path,
                 "STAGINGHOSTIP":staging_ip,
                 "BACKUP_OPTIONS":backup_options,
+                "AWS_SOURCE":aws_rds,
             }
             logger.debug("Taking Source BackUp")
             backup_script = pkgutil.get_data('resources', 'restore.sh')

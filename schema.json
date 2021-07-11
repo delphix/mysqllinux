@@ -150,6 +150,7 @@
         ],
         "ordering" : [
           "dSourceType",
+          "awsRds",
           "serverId",
           "stagingPort",
           "stagingPass",
@@ -162,8 +163,7 @@
           "backupPath",
           "logSync",
           "replicationUser",
-          "replicationPass",
-          "awsRds"
+          "replicationPass"
         ],
         "properties" : {
           "dSourceType": {
@@ -183,26 +183,26 @@
             "type": "string",
             "prettyName": "Source DB Host IP address",
             "description": "* Required if using Replication Method",
-            "default": "10.0.1.20"
+            "default": "rds-mysql1.cdsvgllsbibq.us-east-1.rds.amazonaws.com"
          },
           "mountPath": {
             "type": "string",
             "prettyName": "Mount Location on Staging Host",
             "description": "Unique NFS mount directory on the Staging Host",
-            "default": "/mnt/provision/mysql_stage"
+            "default": "/mnt/provision/mysql_stage2"
          },
          "sourceUser": {
              "type": "string",
              "prettyName": "Source DB UserName",
              "description": "* Required if Delphix is taking backups",
-             "default": "delphixdb"
+             "default": "dlpxusr"
           },
           "sourcePass": {
              "type": "string",
              "format": "password",
              "prettyName": "Source Connection Password",
              "description": "* Required if Delphix is taking backups",
-             "default": "Delphix@123"
+             "default": "Delphix_1234"
           },
           "databaseList": {
             "type": "string",
@@ -220,39 +220,39 @@
              "type": "string",
              "prettyName": "Replication UserName",
              "description": "* Required if using Replication Method with LogSync",
-             "default": "delphixdb"
+             "default": "dlpxusr"
           },
           "replicationPass": {
              "type": "string",
              "format": "password",
              "prettyName": "Replication User's Password",
              "description": "* Required if using Replication Method with LogSync",
-             "default": "Delphix@123"
+             "default": "Delphix_1234"
           },
           "stagingPass": {
              "type": "string",
              "format": "password",
              "prettyName": "Staging Initialization Password",
              "description": "root user password to use while initializing Staging DB.",
-             "default": "Delphix@123"
+             "default": "Delphix_1234"
           },
           "serverId": {
              "type": "string",
              "prettyName": "Staging DB Server ID",
              "description": "ServerID for the Stagine DB. Must be different from Source DB Server ID",
-             "default": "102"
+             "default": "110"
           },
           "stagingPort": {
              "type": "string",
              "prettyName": "Staging DB Port",
              "description": "Staging Database Port",
-             "default": "3308"
+             "default": "3310"
           },
           "stagingBasedir": {
              "type": "string",
              "prettyName": "MySQL Base Directory",
              "description": "Base Directory of MySQL Installation (Location of /bin/mysql)",
-             "default": "/usr"
+             "default": "/"
           },
           "awsRds": {
             "default": false,
