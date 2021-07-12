@@ -76,8 +76,8 @@ def find_mysql_binaries(connection):
                 versionArr=versionStr.split(" ")
                 version=versionArr[3]
                 if (version !="" and baseName =="mysqld"):
-                    prettyName= versionStr[versionStr.index("(MySQL"):len(versionStr)]
-                    prettyName= prettyName+" {}".format(version)
+                    prettyName= repoPath
+                    prettyName= prettyName+" Version: {}".format(version)
                     repository = RepositoryDefinition(
                                     name=prettyName,
                                     install_path=dirName,
