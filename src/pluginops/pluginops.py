@@ -233,7 +233,7 @@ def stop_staging(staged_source, repository, source_config):
             raise LinkingException("Exception while stopping staging:"+error)
         else:
             logger.debug("Stop Staging - Successful: "+output)
-        #TODO: Integration
+
 
 ##################################################
 # Function to perform pre-snapshot actions
@@ -285,14 +285,9 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         logger.debug("staging_conection > "+stagingConn)
 
         # If performing resync on existing db, we must shut down first.
-        stop_mysql(
-            staged_source.parameters.staging_port,
-            staged_source.connection,
-            staged_source.parameters.staging_basedir,
-            staged_source.parameters.source_user,
-            staged_source.parameters.source_pass,
-            "localhost"
-        )
+        # If an error occurs, ignore and proceed.
+        stop_staging(staged_source, repository, source_config)
+
 
         if dSourceType == "Replication": 
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
