@@ -77,33 +77,33 @@
          "vdbUser": {
             "type": "string",
             "prettyName": "DB User",
-            "description": "DB user for the virtual database",
-            "default": "delphixdb"
+            "description": "The DB user who has necessary permissions to manage your VDB",
+            "default": ""
          },         
          "vdbPass": {
             "type": "string",
             "format": "password",
             "prettyName": "DB Password",
             "description": "DB user password for the virtual database",
-            "default": "Delphix@123"
+            "default": ""
          },
          "baseDir": {
             "type": "string",
             "prettyName": "BaseDir",
             "description": "Path of the MySQL Installation, where binaries (./bin) exists",
-            "default": "/usr"
+            "default": ""
          },
          "port": {
             "type": "string",
             "prettyName": "VDB Port",
             "description": "Port for the MySQL VDB",
-            "default": "3308"
+            "default": ""
          },
          "serverId": {
             "type": "string",
             "prettyName": "VDB Server ID",
             "description": "Server ID for the MySQL VDB",
-            "default": "201"
+            "default": ""
          },
          "config_settings_prov" : {
             "type" : "array",
@@ -135,7 +135,7 @@
             "type": "string",
             "prettyName": "Mount Location",
             "description": "Unique NFS Mount folder for Delphix",
-            "default": "/mnt/provision/mysql_vdb"
+            "default": ""
          }
       }
     },
@@ -183,26 +183,26 @@
             "type": "string",
             "prettyName": "Source DB Host IP address",
             "description": "* Required if using Replication Method",
-            "default": "rds-mysql1.cdsvgllsbibq.us-east-1.rds.amazonaws.com"
+            "default": ""
          },
           "mountPath": {
             "type": "string",
             "prettyName": "Mount Location on Staging Host",
             "description": "Unique NFS mount directory on the Staging Host",
-            "default": "/mnt/provision/mysql_stage2"
+            "default": ""
          },
          "sourceUser": {
              "type": "string",
              "prettyName": "Source DB UserName",
              "description": "* Required if Delphix is taking backups",
-             "default": "dlpxusr"
+             "default": ""
           },
           "sourcePass": {
              "type": "string",
              "format": "password",
              "prettyName": "Source Connection Password",
              "description": "* Required if Delphix is taking backups",
-             "default": "Delphix_1234"
+             "default": ""
           },
           "databaseList": {
             "type": "string",
@@ -220,39 +220,39 @@
              "type": "string",
              "prettyName": "Replication UserName",
              "description": "* Required if using Replication Method with LogSync",
-             "default": "dlpxusr"
+             "default": ""
           },
           "replicationPass": {
              "type": "string",
              "format": "password",
              "prettyName": "Replication User's Password",
              "description": "* Required if using Replication Method with LogSync",
-             "default": "Delphix_1234"
+             "default": ""
           },
           "stagingPass": {
              "type": "string",
              "format": "password",
              "prettyName": "Staging Initialization Password",
              "description": "root user password to use while initializing Staging DB.",
-             "default": "Delphix_1234"
+             "default": ""
           },
           "serverId": {
              "type": "string",
              "prettyName": "Staging DB Server ID",
              "description": "ServerID for the Stagine DB. Must be different from Source DB Server ID",
-             "default": "110"
+             "default": ""
           },
           "stagingPort": {
              "type": "string",
              "prettyName": "Staging DB Port",
              "description": "Staging Database Port",
-             "default": "3310"
+             "default": ""
           },
           "stagingBasedir": {
              "type": "string",
              "prettyName": "MySQL Base Directory",
              "description": "Base Directory of MySQL Installation (Location of /bin/mysql)",
-             "default": "/"
+             "default": ""
           },
           "awsRds": {
             "default": false,

@@ -52,12 +52,16 @@ NEW_SERVER_ID="${STAGINGSERVERID}"
 ########## Sanity Checks###############
 # 1. Data Directory must be empty
 #######################################
+log "DATADIRCHECK"
+log "Checking directory ${NEW_DATA_DIR}"
 if [ ! -z "$(ls -A ${NEW_DATA_DIR})" ]; then
    log " Data directory is not empty. This is a resync of an existing database."
-   cleanup_dir NEW_DATA_DIR
-   cleanup_dir NEW_LOG_DIR
-   cleanup_dir NEW_TMP_DIR
+   cleanup_dir $NEW_DATA_DIR
+   cleanup_dir $NEW_LOG_DIR
+   cleanup_dir $NEW_TMP_DIR
    log " Cleanup complete."
+else
+  log "Data Directory is empty"
 fi
 
 # Backup File Location

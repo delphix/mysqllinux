@@ -57,6 +57,14 @@ function printParams {
    log "==== PRINT PARAMS ====="
 }
 
+# Removes previous data directory and backs up existing data/tmp dir.
+# Ignore errors
+function cleanup_dir {
+    log "Cleanup MySQL directory: $1"
+    rm -rf $1".1" >> out.log
+    mv $1 $1".1" >> out.log
+}
+
 # Log infomation and die if option -d is used.
 function log {
    Parms=$@
@@ -506,13 +514,6 @@ function command_runner {
     fi
 }
 
-# Removes previous data directory and backs up existing data/tmp dir.
-# Ignore errors
-function cleanup_dir{
-    log "Cleanup MySQL directory: $1"
-    rm -rf $1".1"  # Format /home/delphix/data.1
-    mv $1 $1".1"
-}
 
 
 ###########################################################

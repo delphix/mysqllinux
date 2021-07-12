@@ -286,8 +286,9 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
 
         # If performing resync on existing db, we must shut down first.
         # If an error occurs, ignore and proceed.
-        stop_staging(staged_source, repository, source_config)
 
+        stop_staging(staged_source, repository, source_config)
+        logger.debug("AWS-RDS Check Status of Staging")
 
         if dSourceType == "Replication": 
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
