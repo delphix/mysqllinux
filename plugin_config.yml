@@ -1,5 +1,5 @@
 id: ebc2548c-a4c3-402a-b617-389da41292d7
-name: mysql-sdk-plugin
+name: sc:mysql-sdk-plugin
 language: PYTHON27
 hostTypes:
 - UNIX

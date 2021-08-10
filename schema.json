@@ -306,5 +306,18 @@
             "description": "Time when the snapshot was taken."
          }
       }
+    },
+    "snapshotParametersDefinition": {
+         "type" : "object",
+         "additionalProperties" : false,
+         "required": ["resync"],
+         "properties" : {
+             "resync" : {
+                 "type": "boolean",
+                 "default": true,
+                 "prettyName": "Resynchronize dSource",
+                 "description": "Resynchronizing dSource will force a non-incremental load of data from the source. This operation is similar to creating a new dSource, but avoids duplicating storage requirements and maintains timeflow history."
+             }
+         }
     }
 }
