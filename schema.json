@@ -77,33 +77,28 @@
          "vdbUser": {
             "type": "string",
             "prettyName": "DB User",
-            "description": "DB user for the virtual database",
-            "default": "delphixdb"
+            "description": "DB user for the virtual database"
          },         
          "vdbPass": {
             "type": "string",
             "format": "password",
             "prettyName": "DB Password",
-            "description": "DB user password for the virtual database",
-            "default": "Delphix@123"
+            "description": "DB user password for the virtual database"
          },
          "baseDir": {
             "type": "string",
             "prettyName": "BaseDir",
-            "description": "Path of the MySQL Installation, where binaries (./bin) exists",
-            "default": "/usr"
+            "description": "Path of the MySQL Installation, where binaries (./bin) exists"
          },
          "port": {
             "type": "string",
             "prettyName": "VDB Port",
-            "description": "Port for the MySQL VDB",
-            "default": "3308"
+            "description": "Port for the MySQL VDB"
          },
          "serverId": {
             "type": "string",
             "prettyName": "VDB Server ID",
-            "description": "Server ID for the MySQL VDB",
-            "default": "201"
+            "description": "Server ID for the MySQL VDB"
          },
          "config_settings_prov" : {
             "type" : "array",
@@ -134,8 +129,7 @@
          "mPath": {
             "type": "string",
             "prettyName": "Mount Location",
-            "description": "Unique NFS Mount folder for Delphix",
-            "default": "/mnt/provision/mysql_vdb"
+            "description": "Unique NFS Mount folder for Delphix"
          }
       }
     },

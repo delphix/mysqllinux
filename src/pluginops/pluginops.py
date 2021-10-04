@@ -608,6 +608,8 @@ def stop_mysql(port,connection,baseDir,user,pwd,host):
     environment_vars={
     }
     if(port_stat == Status.ACTIVE):
+        logger.debug("Forced hibernation for 120s. Waiting for DB to be in active state.")
+        time.sleep(120)
         logger.debug("DB is Running. Shutting down.")
         shutdown_cmd = "%s/bin/mysqladmin %s'%s' --protocol=TCP --port=%s shutdown" % (baseDir,vdbConn,pwd,port)
         logger.debug("Shutdown Command: {}".format(shutdown_cmd))

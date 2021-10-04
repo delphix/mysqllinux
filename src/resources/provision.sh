@@ -166,10 +166,10 @@ else
    log "Database is Already Started ..."
 fi
 
-# Resetting Slave
-#         CMD="${INSTALL_BIN}/mysqladmin ${ZCONN} start-slave"
-#         log "Command to start Slave> ${CMD}"
-#         eval ${CMD} 1>>${DEBUG_LOG} 2>&1
+# ig vdb provision issue / Add sleep time for db to start
+log "Forced hibernate for 120s. Waiting for database to be online."
+sleep 120
+log "Waking from hibernation. Resuming provision."
 
 log "Reset Slave Status for VDB"
 log "Reset Command: stop slave;CHANGE MASTER TO MASTER_HOST=' ';reset slave all;"
@@ -192,6 +192,10 @@ then
 else
    log "Database is Already Shut Down ..."
 fi
+
+log "Forced hibernate for 10s. Waiting for database to be shutdown."
+sleep 10
+log "Waking from hibernation. Resuming."
 
 #  Second StartUp
 #  Do Not Start Slave
