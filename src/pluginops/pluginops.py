@@ -252,12 +252,12 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         resync_staging_user="root"
         is_delphix_managed=True
         backup_options=""
-        aws_rds=""
+        aws_source=""
 
         if not staged_source.parameters.log_sync:
             logsync="false"
-        if staged_source.parameters.aws_rds:
-            aws_rds="true"
+        if staged_source.parameters.aws_rds or staged_source.parameters.aws_aurora:
+            aws_source="true"
         #Are backups managed by Delphix?
         backup_path = staged_source.parameters.backup_path
         if backup_path is not None and backup_path.strip()!="":
@@ -268,7 +268,13 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         if is_delphix_managed:
             dbs = utils.parse_db_list(staged_source.parameters.database_list)
             logger.debug("List of databases to backup >"+dbs)
-            backup_options = utils.create_backup_options(logsync, dbs, logger, aws_rds)
+            backup_options = utils.create_backup_options(
+                logsync,
+                dbs,
+                logger,
+                staged_source.parameters.aws_rds,
+                staged_source.parameters.aws_aurora
+            )
             logger.debug("Backup Options for restore.sh >"+backup_options)
 
         # Create & Copy Backup file to staging host
@@ -315,7 +321,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "STAGINGDATADIR":mount_path,
                 "STAGINGHOSTIP":staging_ip,
                 "BACKUP_OPTIONS":backup_options,
-                "AWS_SOURCE":aws_rds,
+                "AWS_SOURCE":aws_source,
             }
             logger.debug("Taking Source BackUp")
             backup_script = pkgutil.get_data('resources', 'restore.sh')

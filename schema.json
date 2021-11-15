@@ -151,6 +151,7 @@
         "ordering" : [
           "dSourceType",
           "awsRds",
+          "awsAurora",
           "serverId",
           "stagingPort",
           "stagingPass",
@@ -183,26 +184,26 @@
             "type": "string",
             "prettyName": "Source DB Host IP address",
             "description": "* Required if using Replication Method",
-            "default": ""
+            "default": "10.0.1.20"
          },
           "mountPath": {
             "type": "string",
             "prettyName": "Mount Location on Staging Host",
             "description": "Unique NFS mount directory on the Staging Host",
-            "default": ""
+            "default": "/home/delphix/mount/dsource"
          },
          "sourceUser": {
              "type": "string",
              "prettyName": "Source DB UserName",
              "description": "* Required if Delphix is taking backups",
-             "default": ""
+             "default": "delphixdb"
           },
           "sourcePass": {
              "type": "string",
              "format": "password",
              "prettyName": "Source Connection Password",
              "description": "* Required if Delphix is taking backups",
-             "default": ""
+             "default": "Delphix@123"
           },
           "databaseList": {
             "type": "string",
@@ -234,31 +235,37 @@
              "format": "password",
              "prettyName": "Staging Initialization Password",
              "description": "root user password to use while initializing Staging DB.",
-             "default": ""
+             "default": "Delphix@123"
           },
           "serverId": {
              "type": "string",
              "prettyName": "Staging DB Server ID",
              "description": "ServerID for the Stagine DB. Must be different from Source DB Server ID",
-             "default": ""
+             "default": "110"
           },
           "stagingPort": {
              "type": "string",
              "prettyName": "Staging DB Port",
              "description": "Staging Database Port",
-             "default": ""
+             "default": "3310"
           },
           "stagingBasedir": {
              "type": "string",
              "prettyName": "MySQL Base Directory",
              "description": "Base Directory of MySQL Installation (Location of /bin/mysql)",
-             "default": ""
+             "default": "/usr"
           },
           "awsRds": {
             "default": false,
             "prettyName": "Source on AWS-RDS",
             "type": "boolean",
-            "description": "Check this if your source database is on AWS-RDS."
+            "description": "Check this if your source database is on RDS MySQL."
+          },
+          "awsAurora": {
+            "default": false,
+            "prettyName": "Source on AWS-Aurora",
+            "type": "boolean",
+            "description": "Check this if your source database is on Aurora RDS MySQL."
           }
         }
       },
