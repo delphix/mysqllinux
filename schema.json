@@ -298,7 +298,15 @@
             "type": "string",
             "prettyName": "Snapshot Timestamp",
             "description": "Time when the snapshot was taken."
-         }
+         },
+          "snapshotParametersDefinition": {
+            "type": "object",
+            "required": ["resync"],
+            "additionalProperties": true,
+            "properties": {
+              "resync": { "type": "boolean" }
+          }
+        }
       }
     }
 }

@@ -3,8 +3,8 @@
 #
 
 #######################################################################################################################
-# This module contains all functions invoked by the main plugin() module. 
-# All virtual operations are moved to Python already. 
+# This module contains all functions invoked by the main plugin() module.
+# All virtual operations are moved to Python already.
 # Staging/Linking operations are still in hybrid code
 #######################################################################################################################
 import pkgutil
@@ -79,10 +79,10 @@ def find_mysql_binaries(connection):
                     prettyName= repoPath
                     prettyName= prettyName+" Version: {}".format(version)
                     repository = RepositoryDefinition(
-                                    name=prettyName,
-                                    install_path=dirName,
-                                    version=version
-                                )
+                        name=prettyName,
+                        install_path=dirName,
+                        version=version
+                    )
                     repositories.append(repository)
     except RepositoryDiscoveryError as err:
         raise RepositoryDiscoveryError(err.message).to_user_error(), None, sys.exc_info()[2]
@@ -100,7 +100,7 @@ def start_staging(staged_source, repository, source_config):
     staging_ip="localhost"
     stagingConn=build_lua_connect_string(staged_source.parameters.source_user, staging_ip)
     logger.debug("Binary Path in start_staging:"+binary_path)
-    if staged_source.parameters.d_source_type == "Replication": 
+    if staged_source.parameters.d_source_type == "Replication":
         logger.debug("dSourceType is Replication")
         library_script=pkgutil.get_data('resources','library.sh')
         mount_path=staged_source.parameters.mount_path
@@ -119,7 +119,7 @@ def start_staging(staged_source, repository, source_config):
             "STAGINGPASS":staged_source.parameters.staging_pass,
             "LOGSYNC":log_sync,
             "STAGINGDATADIR":mount_path
-        }        
+        }
         start_staging_script = pkgutil.get_data('resources', 'startStagedDB.sh')
         result = libs.run_bash(staged_source.staged_connection, start_staging_script,environment_vars,check=True)
         output = result.stdout.strip()
@@ -146,7 +146,7 @@ def start_staging(staged_source, repository, source_config):
             "STAGINGCONN":stagingConn,
             "STAGINGPASS":staged_source.parameters.staging_pass,
             "STAGINGDATADIR":mount_path
-        }        
+        }
         start_staging_script = pkgutil.get_data('resources', 'startStagedDB.sh')
         result = libs.run_bash(staged_source.staged_connection, start_staging_script,environment_vars,check=True)
         output = result.stdout.strip()
@@ -158,9 +158,9 @@ def start_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while Starting Stage:"+error)
         else:
-            logger.debug("Start Staging - Successful")        
+            logger.debug("Start Staging - Successful")
 
-##################################################
+        ##################################################
 # Function to Stop Staging DB
 # Format: Hybrid ( Python calls Shell Script )
 ##################################################
@@ -168,7 +168,7 @@ def stop_staging(staged_source, repository, source_config):
     logger.debug("plugin_operations.stop_staging > Stopping Staged DB")
     staging_ip="localhost"
     stagingConn=build_lua_connect_string(staged_source.parameters.source_user,staging_ip)
-    if staged_source.parameters.d_source_type == "Replication": 
+    if staged_source.parameters.d_source_type == "Replication":
         library_script=pkgutil.get_data('resources','library.sh')
         binary_path=staged_source.staged_connection.environment.host.binary_path
         environment_vars={
@@ -210,7 +210,7 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while stopping staging:"+error)
         else:
-            logger.debug("Stop Staging - Successful: "+output)   
+            logger.debug("Stop Staging - Successful: "+output)
     else :
         logger.debug("dSourceType is Simple Tablespace Backup. ")
         library_script=pkgutil.get_data('resources','library.sh')
@@ -240,13 +240,13 @@ def stop_staging(staged_source, repository, source_config):
 # Format: Hybrid ( Python calls Shell Script )
 ##################################################
 
-def linked_pre_snapshot(staged_source, repository, source_config, snapshot_parameters):
+def linked_pre_snapshot(staged_source, repository, source_config, optional_snapshot_parameters):
     logger.debug("plugin_operations.linked_pre_snapshot > Start ")
     dSourceType = staged_source.parameters.d_source_type
     staging_ip = "localhost"
 
     # Check if performing re-sync
-    if int(snapshot_parameters.resync) == 1:
+    if int(optional_snapshot_parameters.resync) == 1:
         # Setting defaults
         logsync="true"
         resync_staging_user="root"
@@ -282,7 +282,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
         logger.debug("staging_conection > "+stagingConn)
 
 
-        if dSourceType == "Replication": 
+        if dSourceType == "Replication":
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
             environment_vars={
                 "DLPX_LIBRARY_SOURCE" : library_script,
@@ -321,7 +321,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore successful "+output)   
+                logger.debug("Pre-Snapshot/Restore successful "+output)
             logger.debug("Restoring Backup to Stage")
             restore_script = pkgutil.get_data('resources', 'restore_stage.sh')
             result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
@@ -339,7 +339,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
         elif dSourceType == "Manual Backup Ingestion":
-            logger.debug("dSourceType is Manual Backup Ingestion") 
+            logger.debug("dSourceType is Manual Backup Ingestion")
             logger.debug("Inside linked_pre_snapshot() > resync () > dSourceType is Replication")
             environment_vars={
                 "DLPX_LIBRARY_SOURCE" : library_script,
@@ -355,7 +355,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "STAGINGDATADIR":mount_path,
                 "SOURCEBASEDIR":source_config.base_dir,
                 "STAGINGHOSTIP":staging_ip
-            }  
+            }
             logger.debug("Initializing Seed DB")
             restore_script = pkgutil.get_data('resources', 'restore_stage_bi.sh')
             result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
@@ -369,7 +369,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful "+output)  
+                logger.debug("Pre-Snapshot/Restore_DB successful "+output)
         else:
             # Simple Tablespace Option is hidden from the plugin.
             # This section will not get triggered until the option gets added back in schema.json
@@ -397,7 +397,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 "STAGINGDATADIR":mount_path,
                 "STAGINGHOSTIP":staging_ip,
                 "STAGINGBASEDIR": staged_source.parameters.staging_basedir
-            }      
+            }
             restore_script = pkgutil.get_data('resources', 'restore_stage_si.sh')
             result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=True)
             output = result.stdout.strip()
@@ -407,9 +407,9 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.debug("There was an error while resync : "+error)
                 raise LinkingException("Exception in pre-snapshot/restore_db:"+error)
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful "+output)   
+                logger.debug("Pre-Snapshot/Restore_DB successful "+output)
 
-    # Simple Tablespace Option is hidden from the plugin.
+                # Simple Tablespace Option is hidden from the plugin.
     # This section will not get triggered until the option gets added back in schema.json
     # if dSourceType == "Simple (Tablespace Backup)":
     #     library_script=pkgutil.get_data('resources','library.sh')
@@ -466,12 +466,12 @@ def linked_post_snapshot(
         staged_source,
         repository,
         source_config,
-        snapshot_parameters
+        optional_snapshot_parameters
 ):
-    logger.debug("plugin_opertions.linked_post_snapshot - Start ") 
+    logger.debug("plugin_opertions.linked_post_snapshot - Start ")
     dSourceType = staged_source.parameters.d_source_type
     start_staging(staged_source,repository,source_config)
-    logger.debug(snapshot_parameters)
+    logger.debug(optional_snapshot_parameters)
     mount_path=staged_source.parameters.mount_path
     snapshot = SnapshotDefinition(validate=False)
     snapshot.snapshot_id= str(utils.get_snapshot_id())
@@ -483,7 +483,7 @@ def linked_post_snapshot(
     snapshot.snap_backup_path=staged_source.parameters.backup_path
     snapshot.snap_time=utils.get_current_time()
     logger.debug(snapshot)
-    logger.debug("linked_post_snapshot - End ")                   
+    logger.debug("linked_post_snapshot - End ")
     return snapshot
 
 ##################################################
@@ -505,17 +505,17 @@ def linked_status(staged_source, repository, source_config):
     result = libs.run_bash(staged_source.staged_connection, status_script,environment_vars,check=True)
     output = result.stdout.strip()
     error = result.stderr.strip()
-    exit_code = result.exit_code 
+    exit_code = result.exit_code
     if exit_code !=0:
         logger.debug("Exception while checking Staging DB Status : "+error)
         #ignore status?
     else:
-        logger.debug("Staging Status Check: "+output)  
+        logger.debug("Staging Status Check: "+output)
     if output == "ACTIVE":
         return Status.ACTIVE
     else:
         return Status.INACTIVE
-        
+
 ##################################################
 # Function to Configure VDB
 # Format: Hybrid ( Python calls Shell Script )
@@ -527,8 +527,8 @@ def configure(virtual_source, snapshot, repository):
     library_script=pkgutil.get_data('resources','library.sh')
     mount_path=virtual_source.mounts[0].mount_path
     vdbConn=build_lua_connect_string(
-                virtual_source.parameters.vdb_user,
-                "localhost"
+        virtual_source.parameters.vdb_user,
+        "localhost"
     )
     logger.debug("Mount Path:"+mount_path)
     logger.debug("Snapshot Settings:")
@@ -557,8 +557,8 @@ def configure(virtual_source, snapshot, repository):
 
     environment_vars={
         "DLPX_LIBRARY_SOURCE" : library_script,
-        "DLPX_DATA_DIRECTORY":mount_path,   
-        "DLPX_BIN" : binary_path,  
+        "DLPX_DATA_DIRECTORY":mount_path,
+        "DLPX_BIN" : binary_path,
         "MYSQLD":repository.install_path,
         "MYSQLVER":repository.version,
         "VDBCONN":vdbConn,
@@ -671,13 +671,13 @@ def get_port_status(port,connection):
         output = result.stdout.strip()
     except Exception as err:
         logger.debug("Port Check Failed.: "+err.message)
-    if output== "": 
+    if output== "":
         port_status_cmd="ps -ef | grep -E \"[m]ysqld .*-p.*"+myport+" | grep -v grep"
         try:
             result = libs.run_bash(connection, port_status_cmd,variables=None,check=True)
-            output = result.stdout.strip() 
+            output = result.stdout.strip()
         except Exception as err:
-            logger.debug("Port Check Failed for second cmd: "+err.message)      
+            logger.debug("Port Check Failed for second cmd: "+err.message)
     logger.debug("Port Status Response >")
     logger.debug(output)
 
@@ -752,7 +752,7 @@ def start_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         start_slave_cmd=CommandFactory.start_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(start_slave_cmd))     
+        logger.debug("Connection String with {}".format(start_slave_cmd))
         try:
             logger.debug("Starting Slave")
             result = libs.run_bash(connection, start_slave_cmd,environment_vars,check=True)
@@ -775,7 +775,7 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         stop_slave_cmd=CommandFactory.stop_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(stop_slave_cmd))    
+        logger.debug("Connection String with {}".format(stop_slave_cmd))
         try:
             logger.debug("Stopping Replication")
             result = libs.run_bash(connection, stop_slave_cmd,environment_vars,check=True)
@@ -787,7 +787,7 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
                 raise Exception(_bashErrMsg)
             logger.debug("Start Slave Response: {}".format(_output))
         except Exception as err:
-            logger.debug("Stop Replication Failed Due To: "+err.message)       
+            logger.debug("Stop Replication Failed Due To: "+err.message)
             logger.debug("Ignoring and continuing")
 
 ##################################################
@@ -795,7 +795,7 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
 # Format: Python
 ##################################################
 def build_lua_connect_string(user,host):
-    return CommandFactory.build_lua_connect_string(user,host)       
+    return CommandFactory.build_lua_connect_string(user,host)
 
 def get_connection_cmd(installPath,port,connString,username,pwd,hostIp):
     connection_cmd=""
@@ -804,7 +804,7 @@ def get_connection_cmd(installPath,port,connString,username,pwd,hostIp):
         raise ValueError("One of the required params for MySQL Connection is empty")
     else:
         connection_cmd=CommandFactory.connect_to_mysql(installPath,port,connString,username,pwd,hostIp)
-        logger.debug("connaction_cmd >"+connection_cmd) 
+        logger.debug("connaction_cmd >"+connection_cmd)
     return connection_cmd
 
 ##################################################
