@@ -302,10 +302,10 @@
           "snapshotParametersDefinition": {
             "type": "object",
             "required": ["resync"],
-            "additionalProperties": true,
+            "additionalProperties": false,
             "properties": {
               "resync": { "type": "boolean" }
-          }
+            }
         }
       }
     }
