@@ -64,4 +64,4 @@ This software is provided as-is, without warranty of any kind or commercial supp
 
 ### <a id="license"></a>License
 
-This is code is licensed under the Apache License 2.0. Full license is available [here](./LICENSE).
+This is code is licensed under the Apache License 2.0. Full license is available [here](./LICENSE)
