@@ -296,7 +296,7 @@ stopDatabase() {
    ZLOGSYNC=`echo "${ZRESULTS}" | $DLPX_BIN_JQ --raw-output ".logSync"`
 
    echo "ZCONN:"
-   echo "$ZCONN"
+   masklog "$ZCONN"
 
    # Found valid process ...
    if [[ "${ZPORT}" != "" ]] && [[ "${ZPSID}" != "" ]]
@@ -495,7 +495,7 @@ function terminate {
 
 # Runs a given command and exits with code if error
 function command_runner {
-    masklog "command_runner: CMD : $1"
+    #masklog "command_runner: CMD : $1"
     return_msg=$(eval $1 2>&1 1>&2 > /dev/null)
     return_code=$?
     log "Return Status: ${return_code}"

@@ -27,7 +27,7 @@ log "VDB Connection: ${VDBCONN}"
 RESULTS=$( buildConnectionString "${VDBCONN}" "${VDBPASS}" "${PORT}" )
 #log "${RESULTS}"
 VDB_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${VDB_CONN}"
+masklog "Staging Connection: ${VDB_CONN}"
 
 RESULTS=$( portStatus "${PORT}" )
 #echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".status"

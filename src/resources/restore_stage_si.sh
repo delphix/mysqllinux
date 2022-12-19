@@ -211,8 +211,9 @@ fi
 # Change Password for Staging Conn ... 
 # 
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS}; FLUSH PRIVILEGES;\""
+CMDLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********'; FLUSH PRIVILEGES;\""
 
-log "Change Password: ${CMD}"
+log "Change Password: ${CMDLOG}"
 
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
@@ -223,7 +224,7 @@ log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+masklog "Staging Connection: ${STAGING_CONN}"
 
 log "Validating Restore Databases ..."
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"show databases;\""

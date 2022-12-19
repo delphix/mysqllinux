@@ -38,11 +38,11 @@ NEW_TMP_DIR="${NEW_MOUNT_DIR}/tmp"
 #SOURCE_CONN="-uroot -pdelphix --protocol=TCP --port=3306"
 
 SOURCEPASS=`echo "'"${SOURCEPASS}"'"`
-log "Source Connection: ${SOURCECONN}"
+masklog "Source Connection: ${SOURCECONN}"
 RESULTS=$( buildConnectionString "${SOURCECONN}" "${SOURCEPASS}" "${SOURCEPORT}" )
 #log "${RESULTS}"
 SOURCE_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Source Connection: ${SOURCE_CONN}"
+masklog "Source Connection: ${SOURCE_CONN}"
 
 SOURCE_DATA_DIR="${SOURCEDATADIR}" 				# "/usr/local/mysql/data"
 SOURCE_BASE_DIR="${SOURCEBASEDIR}" 				# "/usr/local/mysql"
@@ -55,11 +55,11 @@ SOURCE_TABLES="${SOURCETABLES}"					# "ALL" "employees,patient,patient_details,m
 #TARGET_CONN="-uroot -pdelphix --protocol=TCP --port=3307"
 
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
-log "Staging Connection: ${STAGINGCONN}"
+masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
 TARGET_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${TARGET_CONN}"
+masklog "Staging Connection: ${TARGET_CONN}"
 
 #TARGET_DATA_DIR="/mnt/provision/my_stage/data"
 TARGET_DATA_DIR="${STAGINGDATADIR}"/data
