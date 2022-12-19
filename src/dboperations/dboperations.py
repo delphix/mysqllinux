@@ -37,7 +37,7 @@ def stop_mysql(port,connection,baseDir,vdbConn,pwd):
     if(port_stat == Status.ACTIVE):
         logger.debug("DB is Running. Shutting down.")
         shutdown_cmd = "%s/bin/mysqladmin %s'%s' --protocol=TCP --port=%s shutdown" % (baseDir,vdbConn,pwd,port)
-        logger.debug("Shutdown Command: {}".format(shutdown_cmd))
+        # logger.debug("Shutdown Command: {}".format(shutdown_cmd))
         result = libs.run_bash(connection, shutdown_cmd,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
@@ -46,7 +46,7 @@ def stop_mysql(port,connection,baseDir,vdbConn,pwd):
             logger.debug("There was an error trying to shutdown the database : "+error)
             raise MySQLShutdownException(error)
         else:
-            logger.debug("Output: "+output)
+            logger.debug("DB shutdown completed")
         time.sleep(25)
         if(Status.ACTIVE == get_port_status(port,connection)):
             logger.debug("KILL")  
@@ -97,7 +97,6 @@ def get_port_status(port,connection):
         except Exception as err:
             logger.debug("Port Check Failed for second cmd: "+err.message)      
     logger.debug("Port Status Response >")
-    logger.debug(output)
 
     if output== "":
         logger.debug("MySQL DB is NOT RUNNING at Port:"+myport)
@@ -130,7 +129,6 @@ def start_mysql(installPath,baseDir,mountPath,port,serverId,connection):
     if(port_stat == Status.INACTIVE):
         logger.debug("DB is not running. Starting the MySQL DB")
         start_cmd=get_start_cmd(installPath,baseDir,mountPath,port,serverId)
-        logger.debug("Startup Command: {}".format(start_cmd))
         result = libs.run_bash(connection, start_cmd,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
@@ -139,7 +137,7 @@ def start_mysql(installPath,baseDir,mountPath,port,serverId,connection):
             logger.debug("There was an error trying to start the DB : "+error)
             raise MySQLStartupException(error)
         else:
-            logger.debug("Output: "+output)
+            logger.debug("DB Started")
         time.sleep(25)
         if(Status.ACTIVE == get_port_status(port,connection)):
             logger.debug("DB Started Successfully")
@@ -168,12 +166,11 @@ def start_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         start_slave_cmd=CommandFactory.start_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(start_slave_cmd))     
         try:
             logger.debug("Starting Slave")
             result = libs.run_bash(connection, start_slave_cmd,environment_vars,check=True)
             output = result.stdout.strip()
-            logger.debug("Start Slave Output: {}".format(output))
+            logger.debug("Start Slave Completed")
         except Exception as err:
             logger.debug("Starting Slave Failed: "+err.message)
             raise err
@@ -187,7 +184,6 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         stop_slave_cmd=CommandFactory.stop_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(stop_slave_cmd))    
         try:
             logger.debug("Stopping Replication")
             result = libs.run_bash(connection, stop_slave_cmd,environment_vars,check=True)
@@ -195,9 +191,9 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
             _bashErrMsg=result.stderr.strip()
             _bashErrCode=result.exit_code
             if _bashErrCode!=0:
-                logger.debug("Stopping Slave was not succesful")
+                logger.debug("Stopping Slave was not successful")
                 raise Exception(_bashErrMsg)
-            logger.debug("Start Slave Response: {}".format(_output))
+            logger.debug("Stop Replication successful")
         except Exception as err:
             logger.debug("Stop Replication Failed Due To: "+err.message)       
             logger.debug("Ignoring and continuing")
@@ -213,7 +209,6 @@ def get_connection_cmd(installPath,port,connString,username,pwd,hostIp):
         raise ValueError("One of the required params for MySQL Connection is empty")
     else:
         connection_cmd=CommandFactory.connect_to_mysql(installPath,port,connString,username,pwd,hostIp)
-        logger.debug("connaction_cmd >"+connection_cmd) 
     return connection_cmd
 
 def get_start_cmd(installPath,baseDir,mountPath,port,serverId):

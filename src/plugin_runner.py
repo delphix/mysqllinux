@@ -75,16 +75,16 @@ def stop_staging(staged_source, repository, source_config):
     pluginops.stop_staging(staged_source, repository, source_config)
 
 @plugin.linked.pre_snapshot()
-def linked_pre_snapshot(staged_source, repository, source_config, snapshot_parameters):
+def linked_pre_snapshot(staged_source, repository, source_config, optional_snapshot_parameters):
     logger.debug("linked_pre_snapshot > Start ")
     # Start Staging if not already running.
-    pluginops.linked_pre_snapshot(staged_source, repository, source_config, snapshot_parameters)
+    pluginops.linked_pre_snapshot(staged_source, repository, source_config, optional_snapshot_parameters)
     logger.debug(" linked_pre_snapshot > End ")
 
 @plugin.linked.post_snapshot()
-def linked_post_snapshot(staged_source,repository,source_config,snapshot_parameters):
+def linked_post_snapshot(staged_source,repository,source_config,optional_snapshot_parameters):
     logger.debug("linked_post_snapshot - Start ")   
-    snapshot = pluginops.linked_post_snapshot(staged_source,repository,source_config,snapshot_parameters)
+    snapshot = pluginops.linked_post_snapshot(staged_source,repository,source_config,optional_snapshot_parameters)
     linked_status(staged_source, repository, source_config)
     logger.debug("linked_post_snapshot - End ")                   
     return snapshot
@@ -105,9 +105,6 @@ def configure(virtual_source, snapshot, repository):
 def reconfigure(virtual_source, repository, source_config, snapshot):
     logger.debug("virtual.reconfigure > Start")
     start(virtual_source, repository, source_config)
-    logger.debug(source_config)
-    logger.debug("Snapshot")
-    logger.debug(snapshot)
     #srcConfig = configure(virtual_source,snapshot,repository)
     logger.debug("virtual.reconfigure > End")
     virtual_status(virtual_source, repository, source_config)
@@ -140,7 +137,6 @@ def virtual_post_snapshot(virtual_source, repository, source_config):
     snapshot.snap_backup_path=""
     snapshot.snap_time=utils.get_current_time()
     logger.debug("SnapShot Definition Created")
-    logger.debug(snapshot)
     return snapshot
 
 @plugin.virtual.start()

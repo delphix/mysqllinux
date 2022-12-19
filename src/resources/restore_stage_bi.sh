@@ -36,7 +36,7 @@ log "Staging Port: ${TARGET_PORT}"
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
 
@@ -75,15 +75,15 @@ ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error
 
 PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
 # sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
-log "init temporary password: ${PWD_LINE}"
+# log "init temporary password: ${PWD_LINE}"
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 TMP_PWD=`echo "'"$TMP_PWD"'"`
-log "Temporary Password: ${TMP_PWD}"
+# log "Temporary Password: ${TMP_PWD}"
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
 masklog "Creation Results: ${RESULTS}"
@@ -341,7 +341,8 @@ fi
 ########################################################################
 # Change Password for Staging Conn ...
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
-masklog "Final Command to Change Password is : ${CMD}"
+CMDLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+masklog "Final Command to Change Password is : ${CMDLOG}"
 command_runner "${CMD}" 5
 
 #eval ${CMD} 1>>${DEBUG_LOG} 2>&1
@@ -349,7 +350,7 @@ command_runner "${CMD}" 5
 # Update Staging Connection with supplied password ...
 masklog "Staging Connection Prior to updating password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
+# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "============================================================"
 masklog "Staging Connection after updating password: ${STAGING_CONN}"

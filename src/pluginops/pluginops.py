@@ -124,8 +124,6 @@ def start_staging(staged_source, repository, source_config):
         result = libs.run_bash(staged_source.staged_connection, start_staging_script,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
-        logger.debug("output:"+output)
-        logger.debug("error:"+error)
         exit_code = result.exit_code
         if exit_code !=0:
             logger.debug("There was an error> "+error)
@@ -151,8 +149,6 @@ def start_staging(staged_source, repository, source_config):
         result = libs.run_bash(staged_source.staged_connection, start_staging_script,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
-        logger.debug("output:"+output)
-        logger.debug("error:"+error)
         exit_code = result.exit_code
         if exit_code !=0:
             logger.debug("Error is : "+error)
@@ -188,7 +184,7 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while stopping staging:"+error)
         else:
-            logger.debug("Stop Staging - Successful: "+output)
+            logger.debug("Stop Staging - Successful")
     elif staged_source.parameters.d_source_type == "Manual Backup Ingestion":
         logger.debug("plugin_operations.stop_staging > Manual Backup Ingestion")
         library_script=pkgutil.get_data('resources','library.sh')
@@ -210,7 +206,7 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while stopping staging:"+error)
         else:
-            logger.debug("Stop Staging - Successful: "+output)   
+            logger.debug("Stop Staging - Successful")
     else :
         logger.debug("dSourceType is Simple Tablespace Backup. ")
         library_script=pkgutil.get_data('resources','library.sh')
@@ -232,7 +228,7 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while stopping staging:"+error)
         else:
-            logger.debug("Stop Staging - Successful: "+output)
+            logger.debug("Stop Staging - Successful: ")
         #TODO: Integration
 
 ##################################################
@@ -321,18 +317,17 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore successful "+output)   
+                logger.debug("Pre-Snapshot/Restore successful ")
             logger.debug("Restoring Backup to Stage")
             restore_script = pkgutil.get_data('resources', 'restore_stage.sh')
             result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
-            logger.debug(result)
             output = result.stdout.strip()
             std_err=result.stderr.strip()
             exit_code = result.exit_code
             logger.debug(std_err)
             logger.debug(exit_code)
             if exit_code == 0:
-                logger.debug("Creation of Staging DB(Pre-Snapshot) successful."+output)
+                logger.debug("Creation of Staging DB(Pre-Snapshot) successful.")
             else:
                 logger.debug("There was an error while creating the staging DB.Check error.log for details.")
                 err = utils.process_exit_codes(exit_code,"DBLINK",std_err)
@@ -369,7 +364,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful "+output)  
+                logger.debug("Pre-Snapshot/Restore_DB successful ")
         else:
             # Simple Tablespace Option is hidden from the plugin.
             # This section will not get triggered until the option gets added back in schema.json
@@ -407,7 +402,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.debug("There was an error while resync : "+error)
                 raise LinkingException("Exception in pre-snapshot/restore_db:"+error)
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful "+output)   
+                logger.debug("Pre-Snapshot/Restore_DB successful")
 
     # Simple Tablespace Option is hidden from the plugin.
     # This section will not get triggered until the option gets added back in schema.json
@@ -471,7 +466,6 @@ def linked_post_snapshot(
     logger.debug("plugin_opertions.linked_post_snapshot - Start ") 
     dSourceType = staged_source.parameters.d_source_type
     start_staging(staged_source,repository,source_config)
-    logger.debug(snapshot_parameters)
     mount_path=staged_source.parameters.mount_path
     snapshot = SnapshotDefinition(validate=False)
     snapshot.snapshot_id= str(utils.get_snapshot_id())
@@ -482,7 +476,6 @@ def linked_post_snapshot(
     snapshot.snap_pass=staged_source.parameters.staging_pass
     snapshot.snap_backup_path=staged_source.parameters.backup_path
     snapshot.snap_time=utils.get_current_time()
-    logger.debug(snapshot)
     logger.debug("linked_post_snapshot - End ")                   
     return snapshot
 
@@ -510,7 +503,7 @@ def linked_status(staged_source, repository, source_config):
         logger.debug("Exception while checking Staging DB Status : "+error)
         #ignore status?
     else:
-        logger.debug("Staging Status Check: "+output)  
+        logger.debug("Staging Status Check successful")
     if output == "ACTIVE":
         return Status.ACTIVE
     else:
@@ -532,11 +525,9 @@ def configure(virtual_source, snapshot, repository):
     )
     logger.debug("Mount Path:"+mount_path)
     logger.debug("Snapshot Settings:")
-    logger.debug(snapshot)
     logger.debug("Snapshot_id"+snapshot.snapshot_id)
     logger.debug("Config Settings: ")
     config_settings_prov = virtual_source.parameters.config_settings_prov
-    logger.debug(config_settings_prov)
     config_params=""
     ###################################################################
     # TODO: Operation fails if there are config settings. Must revisit.
@@ -576,19 +567,18 @@ def configure(virtual_source, snapshot, repository):
     }
     configure_script = pkgutil.get_data('resources', 'provision.sh')
     result = libs.run_bash(virtual_source.connection, configure_script,environment_vars,check=False)
-    logger.debug(result)
     output = result.stdout.strip()
     std_err=result.stderr.strip()
     exit_code = result.exit_code
     if exit_code == 0:
-        logger.debug("Pre-Snapshot/Restore_DB successful "+output)
+        logger.debug("Pre-Snapshot/Restore_DB successful")
     else:
         err = utils.process_exit_codes(exit_code,"PROVISION",std_err)
         logger.debug("There was an error while provisioning.Check error.log for details.")
         logger.error(err)
         raise err
     return SourceConfigDefinition(
-        db_name=output,
+        db_name=virtual_source.parameters.t_database_name,
         base_dir=virtual_source.parameters.base_dir,
         port=virtual_source.parameters.port,
         data_dir=mount_path
@@ -610,7 +600,6 @@ def stop_mysql(port,connection,baseDir,user,pwd,host):
     if(port_stat == Status.ACTIVE):
         logger.debug("DB is Running. Shutting down.")
         shutdown_cmd = "%s/bin/mysqladmin %s'%s' --protocol=TCP --port=%s shutdown" % (baseDir,vdbConn,pwd,port)
-        logger.debug("Shutdown Command: {}".format(shutdown_cmd))
         result = libs.run_bash(connection, shutdown_cmd,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
@@ -619,7 +608,7 @@ def stop_mysql(port,connection,baseDir,user,pwd,host):
             logger.debug("There was an error trying to shutdown the database : "+error)
             #raise MySQLShutdownException(error)
         else:
-            logger.debug("Output: "+output)
+            logger.debug("Shutdown of database successful")
         time.sleep(20)
         if(Status.ACTIVE == get_port_status(port,connection)):
             logger.debug("MySQL has not shutdown after 20 seconds. Killing process.")
@@ -676,8 +665,7 @@ def get_port_status(port,connection):
             output = result.stdout.strip() 
         except Exception as err:
             logger.debug("Port Check Failed for second cmd: "+err.message)      
-    logger.debug("Port Status Response >")
-    logger.debug(output)
+    logger.debug("Get port status successful")
 
     if output== "":
         logger.debug("MySQL DB is NOT RUNNING at Port:"+myport)
@@ -714,7 +702,6 @@ def start_mysql(installPath,baseDir,mountPath,port,serverId,connection):
     if(port_stat == Status.INACTIVE):
         logger.debug("DB is not running. Starting the MySQL DB")
         start_cmd=get_start_cmd(installPath,baseDir,mountPath,port,serverId)
-        logger.debug("Startup Command: {}".format(start_cmd))
         result = libs.run_bash(connection, start_cmd,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()
@@ -726,8 +713,6 @@ def start_mysql(installPath,baseDir,mountPath,port,serverId,connection):
                 constants.ERR_START_ACTION,
                 "ExitCode:{} \n {}".format(exit_code,error)
             )
-        else:
-            logger.debug("Output: "+output)
         time.sleep(30)
         if(Status.ACTIVE == get_port_status(port,connection)):
             logger.debug("DB Started Successfully")
@@ -750,12 +735,11 @@ def start_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         start_slave_cmd=CommandFactory.start_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(start_slave_cmd))     
         try:
             logger.debug("Starting Slave")
             result = libs.run_bash(connection, start_slave_cmd,environment_vars,check=True)
             output = result.stdout.strip()
-            logger.debug("Start Slave Output: {}".format(output))
+            logger.debug("Start Slave successful")
         except Exception as err:
             logger.debug("Starting Slave Failed: "+err.message)
             raise err
@@ -773,7 +757,6 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
         raise Exception("One of the required params for MySQL Connection is empty")
     else:
         stop_slave_cmd=CommandFactory.stop_replication(connection,installPath,port,connString,username,pwd,hostIp)
-        logger.debug("Connection String with {}".format(stop_slave_cmd))    
         try:
             logger.debug("Stopping Replication")
             result = libs.run_bash(connection, stop_slave_cmd,environment_vars,check=True)
@@ -781,9 +764,9 @@ def stop_slave(connection,installPath,port,connString,username,pwd,hostIp):
             _bashErrMsg=result.stderr.strip()
             _bashErrCode=result.exit_code
             if _bashErrCode!=0:
-                logger.debug("Stopping Slave was not succesful")
+                logger.debug("Stopping Slave was not successful")
                 raise Exception(_bashErrMsg)
-            logger.debug("Start Slave Response: {}".format(_output))
+            logger.debug("Stopping Slave successful")
         except Exception as err:
             logger.debug("Stop Replication Failed Due To: "+err.message)       
             logger.debug("Ignoring and continuing")
@@ -802,7 +785,6 @@ def get_connection_cmd(installPath,port,connString,username,pwd,hostIp):
         raise ValueError("One of the required params for MySQL Connection is empty")
     else:
         connection_cmd=CommandFactory.connect_to_mysql(installPath,port,connString,username,pwd,hostIp)
-        logger.debug("connaction_cmd >"+connection_cmd) 
     return connection_cmd
 
 ##################################################
@@ -850,16 +832,13 @@ def repository_discovery(source_connection):
         logger.debug("Error is : "+error)
         raise RepositoryDiscoveryError("Exception while discovering:"+error)
     else:
-        logger.debug("Output: "+output)
         #process repository json
         repos_js=json.loads(output)
         # print the keys and values
         for repo_js in repos_js:
-            #logger.debug("Adding repository:"+repo_js+" to list")
             path = repo_js['installPath']
             version = repo_js['version']
             prettyName = repo_js['prettyName'].split("/bin")[1]
             repository = RepositoryDefinition(name=prettyName, install_path=path, version=version)
             repositories.append(repository)
-    logger.debug("output:"+output)
     return repositories
