@@ -15,6 +15,7 @@ import sys
 import json
 import re
 import os
+import json
 from datetime import datetime
 from common import utils,constants
 #from dboperations import dboperations
@@ -571,14 +572,14 @@ def configure(virtual_source, snapshot, repository):
     std_err=result.stderr.strip()
     exit_code = result.exit_code
     if exit_code == 0:
-        logger.debug("Pre-Snapshot/Restore_DB successful")
+        logger.debug("Pre-Snapshot/Restore_DB successful"+output)
     else:
         err = utils.process_exit_codes(exit_code,"PROVISION",std_err)
         logger.debug("There was an error while provisioning.Check error.log for details.")
         logger.error(err)
         raise err
     return SourceConfigDefinition(
-        db_name=virtual_source.parameters.t_database_name,
+        db_name=output,
         base_dir=virtual_source.parameters.base_dir,
         port=virtual_source.parameters.port,
         data_dir=mount_path

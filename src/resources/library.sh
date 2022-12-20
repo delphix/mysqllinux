@@ -295,7 +295,7 @@ stopDatabase() {
    ZBASEDIR=`echo "${ZRESULTS}" | $DLPX_BIN_JQ --raw-output ".baseDir"`
    ZLOGSYNC=`echo "${ZRESULTS}" | $DLPX_BIN_JQ --raw-output ".logSync"`
 
-   echo "ZCONN:"
+   #echo "ZCONN:"
    masklog "$ZCONN"
 
    # Found valid process ...
