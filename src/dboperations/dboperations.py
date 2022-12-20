@@ -37,7 +37,6 @@ def stop_mysql(port,connection,baseDir,vdbConn,pwd):
     if(port_stat == Status.ACTIVE):
         logger.debug("DB is Running. Shutting down.")
         shutdown_cmd = "%s/bin/mysqladmin %s'%s' --protocol=TCP --port=%s shutdown" % (baseDir,vdbConn,pwd,port)
-        # logger.debug("Shutdown Command: {}".format(shutdown_cmd))
         result = libs.run_bash(connection, shutdown_cmd,environment_vars,check=True)
         output = result.stdout.strip()
         error = result.stderr.strip()

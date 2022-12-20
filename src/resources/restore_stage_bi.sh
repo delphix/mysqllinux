@@ -36,7 +36,6 @@ log "Staging Port: ${TARGET_PORT}"
 STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
 
@@ -80,10 +79,8 @@ TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 TMP_PWD=`echo "'"$TMP_PWD"'"`
-# log "Temporary Password: ${TMP_PWD}"
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
 masklog "Creation Results: ${RESULTS}"
@@ -350,7 +347,6 @@ command_runner "${CMD}" 5
 # Update Staging Connection with supplied password ...
 masklog "Staging Connection Prior to updating password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-# echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 log "============================================================"
 masklog "Staging Connection after updating password: ${STAGING_CONN}"
