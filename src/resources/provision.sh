@@ -216,7 +216,7 @@ outputJSON=$($DLPX_BIN_JQ ".baseDir = $(jqQuote "$CONFIG_BASEDIR")" <<< "$output
 outputJSON=$($DLPX_BIN_JQ ".dbName = $(jqQuote "$prettyName")" <<< "$outputJSON")
 
 printf "$outputJSON" > "$DLPX_OUTPUT_FILE"
-log "Output: $outputJSON"
+#log "Output: $outputJSON"
 echo "${prettyName}"
 #log "Environment: "
 #export DLPX_LIBRARY_SOURCE=""
