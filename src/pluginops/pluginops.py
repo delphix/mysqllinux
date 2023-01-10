@@ -76,7 +76,8 @@ def find_mysql_binaries(connection):
                 versionArr=versionStr.split(" ")
                 version=versionArr[3]
                 if (version !="" and baseName =="mysqld"):
-                    prettyName= versionStr[versionStr.index("(MySQL"):len(versionStr)]
+                    r=re.compile("\((MariaDB|MySQL)")
+                    prettyName= versionStr[r.search(versionStr).start():len(versionStr)]
                     prettyName= prettyName+" {}".format(version)
                     repository = RepositoryDefinition(
                                     name=prettyName,

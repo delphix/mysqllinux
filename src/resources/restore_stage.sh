@@ -374,6 +374,19 @@ fi
 #
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};UPDATE mysql.user SET authentication_string=PASSWORD(${STAGINGPASS}) where USER='root';FLUSH PRIVILEGES;\""
 CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';UPDATE mysql.user SET authentication_string=PASSWORD('********') where USER='root';FLUSH PRIVILEGES;\""
+
+# if mysql version >= 8, then change password syntx is different
+versionRegex="Ver ([0-9]*)"
+versionString=$(${MYSQLD}/mysqld -V)
+if [[ $versionString =~ $versionRegex ]]; then 
+   versionNumber="${BASH_REMATCH[1]}";
+   if [[ $versionNumber -ge 8 ]]; then
+      masklog "MySQL Version 8 or greater, change password syntax altered."
+      CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS};FLUSH PRIVILEGES;\""
+      CMDFORLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********';FLUSH PRIVILEGES;\""
+   fi
+fi
+
 masklog "Final Command to Change Password is : ${CMDFORLOG}"
 command_runner "${CMD}" 5
 

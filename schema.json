@@ -117,14 +117,14 @@
                   "propertyName" : {
                      "type" : "string",
                      "prettyName": "Property Name",
-                     "pattern": "^$|^[_a-zA-Z0-9]*$",
+                     "pattern": "^$|^[_a-zA-Z0-9\\-]*$",
                      "default": "",
                      "maxLength": 40
                   },
                   "value": {
                      "type": "string",
                      "prettyName": "Value",
-                     "pattern": "^$|^[_a-zA-Z0-9]*$",
+                     "pattern": "^$|^[_a-zA-Z0-9\/\\-\\._]*$",
                      "default": "",
                      "maxLength": 40
                   }
