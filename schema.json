@@ -310,5 +310,18 @@
             "description": "Time when the snapshot was taken."
          }
       }
+    },
+    "snapshotParametersDefinition": {
+        "type" : "object",
+        "additionalProperties" : false,
+        "required": ["resync"],
+        "properties" : {
+            "resync" : {
+                "type": "boolean",
+                "default": true,
+                "prettyName": "Resynchronize dSource",
+                "description": "Before taking a snapshot will refresh the staging database to update its data. Unselect this option if you wish to snapshot the staging database in its current state."
+            }
+        }
     }
 }
