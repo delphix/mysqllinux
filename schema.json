@@ -79,12 +79,13 @@
             "prettyName": "DB User",
             "description": "DB user for the virtual database",
             "default": "delphixdb"
-         },         
+         },
          "vdbPass": {
             "type": "string",
             "format": "password",
+            "pattern" : "^[^\"\\'\\s]*$",
             "prettyName": "DB Password",
-            "description": "DB user password for the virtual database",
+            "description": "DB user password for the virtual database. Double quote, single quote or space characters are not valid.",
             "default": "Delphix@123"
          },
          "baseDir": {
@@ -199,8 +200,9 @@
           "sourcePass": {
              "type": "string",
              "format": "password",
+             "pattern" : "^[^\"\\'\\s]*$",
              "prettyName": "Source Connection Password",
-             "description": "* Required if Delphix is taking backups",
+             "description": "* Required if Delphix is taking backups. Double quote, single quote or space characters are not valid.",
              "default": "Delphix@123"
           },
           "databaseList": {
@@ -224,15 +226,17 @@
           "replicationPass": {
              "type": "string",
              "format": "password",
+             "pattern" : "^[^\"\\'\\s]*$",
              "prettyName": "Replication User's Password",
-             "description": "* Required if using Replication Method with LogSync",
+             "description": "* Required if using Replication Method with LogSync. Double quote, single quote or space characters are not valid.",
              "default": "Delphix@123"
           },
           "stagingPass": {
              "type": "string",
              "format": "password",
+             "pattern" : "^[^\"\\'\\s]*$",
              "prettyName": "Staging Initialization Password",
-             "description": "root user password to use while initializing Staging DB.",
+             "description": "root user password to use while initializing Staging DB. Double quote, single quote or space characters are not valid.",
              "default": "Delphix@123"
           },
           "serverId": {
