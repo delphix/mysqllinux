@@ -572,7 +572,7 @@ def configure(virtual_source, snapshot, repository):
     std_err=result.stderr.strip()
     exit_code = result.exit_code
     if exit_code == 0:
-        logger.debug("Pre-Snapshot/Restore_DB successful"+output)
+        logger.debug("Pre-Snapshot/Restore_DB successful")
     else:
         err = utils.process_exit_codes(exit_code,"PROVISION",std_err)
         logger.debug("There was an error while provisioning.Check error.log for details.")

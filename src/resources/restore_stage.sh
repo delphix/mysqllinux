@@ -109,7 +109,6 @@ masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
-log "Creation Results: ${RESULTS}"
 
 ############################################################
 log "Creating Staging Directories on NFS Mounted Path from Delphix"
@@ -584,6 +583,6 @@ export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
 export SOURCEPASS=""
-env | sort  >>$DEBUG_LOG
+env | grep -v 'SOURCEPASS' | sort >>$DEBUG_LOG
 log " <<<End"
 exit 0
