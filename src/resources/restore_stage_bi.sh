@@ -73,8 +73,6 @@ log "${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-
 ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error=${NEW_DATA_DIR}/mysqld.log 1>>${DEBUG_LOG} 2>&1
 
 PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
-# sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
-# log "init temporary password: ${PWD_LINE}"
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
@@ -83,7 +81,6 @@ masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
-masklog "Creation Results: ${RESULTS}"
 
 ############################################################
 ##
@@ -361,7 +358,6 @@ masklog "Granting privileges command: ${CMD}"
 return_msg=$(eval ${CMD} 2>&1 1>&2 > /dev/null)
 return_code=$?
 log "Return Status: ${return_code}"
-log "Return message:${return_msg}"
 if [ $return_code != 0 ]; then
   errorlog "Unable to grant required permissions to delphix database user. This may have to be done manually"
 fi
@@ -471,7 +467,7 @@ command_runner "${CMD}" 11
 log "Environment:"
 export DLPX_LIBRARY_SOURCE=""
 export STAGINGPASS=""
-env | sort  >>$DEBUG_LOG
+env | grep -v 'STAGINGPASS' | sort >>$DEBUG_LOG
 log "End"
 echo "Staging Started"
 exit 0
