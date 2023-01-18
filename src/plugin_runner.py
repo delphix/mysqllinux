@@ -75,16 +75,16 @@ def stop_staging(staged_source, repository, source_config):
     pluginops.stop_staging(staged_source, repository, source_config)
 
 @plugin.linked.pre_snapshot()
-def linked_pre_snapshot(staged_source, repository, source_config, snapshot_parameters):
+def linked_pre_snapshot(staged_source, repository, source_config, optional_snapshot_parameters):
     logger.debug("linked_pre_snapshot > Start ")
     # Start Staging if not already running.
-    pluginops.linked_pre_snapshot(staged_source, repository, source_config, snapshot_parameters)
+    pluginops.linked_pre_snapshot(staged_source, repository, source_config, optional_snapshot_parameters)
     logger.debug(" linked_pre_snapshot > End ")
 
 @plugin.linked.post_snapshot()
-def linked_post_snapshot(staged_source,repository,source_config,snapshot_parameters):
+def linked_post_snapshot(staged_source,repository,source_config,optional_snapshot_parameters):
     logger.debug("linked_post_snapshot - Start ")   
-    snapshot = pluginops.linked_post_snapshot(staged_source,repository,source_config,snapshot_parameters)
+    snapshot = pluginops.linked_post_snapshot(staged_source,repository,source_config,optional_snapshot_parameters)
     linked_status(staged_source, repository, source_config)
     logger.debug("linked_post_snapshot - End ")                   
     return snapshot
