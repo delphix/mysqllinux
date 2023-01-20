@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
 # Program Name
 PGM_NAME='restore_stage_bi.sh'
 
@@ -467,7 +467,7 @@ command_runner "${CMD}" 11
 log "Environment:"
 export DLPX_LIBRARY_SOURCE=""
 export STAGINGPASS=""
-env | grep -v 'STAGINGPASS' | sort >>$DEBUG_LOG
+env | grep -v 'PASS' | sort >>$DEBUG_LOG
 log "End"
 echo "Staging Started"
 exit 0
