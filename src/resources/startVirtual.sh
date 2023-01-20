@@ -1,4 +1,7 @@
 #
+# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+#
+#
 set -x 
 PGM_NAME='startVirtual.sh'
 

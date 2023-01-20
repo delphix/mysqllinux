@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+#
+
 import pkgutil
 import logging
 import sys

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
 PGM_NAME='restore_stage.sh'
 
 # Load Library ...
@@ -583,6 +583,6 @@ export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
 export SOURCEPASS=""
-env | grep -v 'SOURCEPASS' | sort >>$DEBUG_LOG
+env | grep -v 'PASS' | sort >>$DEBUG_LOG
 log " <<<End"
 exit 0
