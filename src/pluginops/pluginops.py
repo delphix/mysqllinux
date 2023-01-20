@@ -229,7 +229,7 @@ def stop_staging(staged_source, repository, source_config):
             logger.debug("Error is : "+error)
             raise LinkingException("Exception while stopping staging:"+error)
         else:
-            logger.debug("Stop Staging - Successful: ")
+            logger.debug("Stop Staging - Successful")
         #TODO: Integration
 
 ##################################################
@@ -318,7 +318,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore successful ")
+                logger.debug("Pre-Snapshot/Restore successful")
             logger.debug("Restoring Backup to Stage")
             restore_script = pkgutil.get_data('resources', 'restore_stage.sh')
             result = libs.run_bash(staged_source.staged_connection, restore_script,environment_vars,check=False)
@@ -328,7 +328,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
             logger.debug(std_err)
             logger.debug(exit_code)
             if exit_code == 0:
-                logger.debug("Creation of Staging DB(Pre-Snapshot) successful.")
+                logger.debug("Creation of Staging DB(Pre-Snapshot) successful")
             else:
                 logger.debug("There was an error while creating the staging DB.Check error.log for details.")
                 err = utils.process_exit_codes(exit_code,"DBLINK",std_err)
@@ -365,7 +365,7 @@ def linked_pre_snapshot(staged_source, repository, source_config, snapshot_param
                 logger.error(err)
                 raise err
             else:
-                logger.debug("Pre-Snapshot/Restore_DB successful ")
+                logger.debug("Pre-Snapshot/Restore_DB successful")
         else:
             # Simple Tablespace Option is hidden from the plugin.
             # This section will not get triggered until the option gets added back in schema.json
