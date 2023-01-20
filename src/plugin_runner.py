@@ -1,3 +1,7 @@
+#
+# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+#
+
 import pkgutil
 import logging
 import sys
@@ -105,9 +109,6 @@ def configure(virtual_source, snapshot, repository):
 def reconfigure(virtual_source, repository, source_config, snapshot):
     logger.debug("virtual.reconfigure > Start")
     start(virtual_source, repository, source_config)
-    logger.debug(source_config)
-    logger.debug("Snapshot")
-    logger.debug(snapshot)
     #srcConfig = configure(virtual_source,snapshot,repository)
     logger.debug("virtual.reconfigure > End")
     virtual_status(virtual_source, repository, source_config)
@@ -140,7 +141,6 @@ def virtual_post_snapshot(virtual_source, repository, source_config):
     snapshot.snap_backup_path=""
     snapshot.snap_time=utils.get_current_time()
     logger.debug("SnapShot Definition Created")
-    logger.debug(snapshot)
     return snapshot
 
 @plugin.virtual.start()

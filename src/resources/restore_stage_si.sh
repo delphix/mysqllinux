@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 #
 
 ##DEBUG## In Delphix debug.log
@@ -92,16 +92,13 @@ ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error
 PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
 # sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
 # 2019-04-11T14:40:34.032576Z 1 [Note] A temporary password is generated for root@localhost: L0qXNZ8?C3Us
-log "init temporary password: ${PWD_LINE}"
 
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 #
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 #
 TMP_PWD=`echo "'"$TMP_PWD"'"`
-log "Temporary Password: ${TMP_PWD}"
 
-##log "Creation Results: ${RESULTS}"
 
 log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" )
@@ -211,8 +208,9 @@ fi
 # Change Password for Staging Conn ... 
 # 
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY ${STAGINGPASS}; FLUSH PRIVILEGES;\""
+CMDLOG="${INSTALL_BIN}/mysql ${STAGING_CONN} --connect-expired-password -se \"ALTER USER 'root'@'localhost' IDENTIFIED BY '********'; FLUSH PRIVILEGES;\""
 
-log "Change Password: ${CMD}"
+log "Change Password: ${CMDLOG}"
 
 eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
@@ -223,7 +221,7 @@ log "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" )
 #log "${RESULTS}"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
-log "Staging Connection: ${STAGING_CONN}"
+masklog "Staging Connection: ${STAGING_CONN}"
 
 log "Validating Restore Databases ..."
 CMD="${INSTALL_BIN}/mysql ${STAGING_CONN} -e \"show databases;\""
@@ -263,8 +261,6 @@ eval ${CMD} 1>>${DEBUG_LOG} 2>&1
 
 log "Environment: "
 export DLPX_LIBRARY_SOURCE=""
-#export REPLICATION_PASS=""
-#export STAGINGPASS=""
-env | sort  >>$DEBUG_LOG
+env | grep -v 'PASS' | sort >>$DEBUG_LOG
 log "------------------------- End"
 exit 0

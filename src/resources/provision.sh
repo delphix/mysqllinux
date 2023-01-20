@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 #
 
 ##DEBUG## In Delphix debug.log
@@ -216,13 +216,6 @@ outputJSON=$($DLPX_BIN_JQ ".baseDir = $(jqQuote "$CONFIG_BASEDIR")" <<< "$output
 outputJSON=$($DLPX_BIN_JQ ".dbName = $(jqQuote "$prettyName")" <<< "$outputJSON")
 
 printf "$outputJSON" > "$DLPX_OUTPUT_FILE"
-log "Output: $outputJSON"
 echo "${prettyName}"
-#log "Environment: "
-#export DLPX_LIBRARY_SOURCE=""
-#export REPLICATION_PASS=""
-#export SNAPSHOT_METADATA=""
-#export STAGINGPASS=""
-#env | sort  >>$DEBUG_LOG
 log "End"
 exit 0

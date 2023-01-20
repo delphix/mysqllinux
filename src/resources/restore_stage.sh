@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 PGM_NAME='restore_stage.sh'
 
 # Load Library ...
@@ -43,7 +43,6 @@ STAGINGPASS=`echo "'"${STAGINGPASS}"'"`
 
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
 
@@ -101,18 +100,14 @@ ${MYSQLD}/mysqld --initialize --user=mysql --datadir=${NEW_DATA_DIR} --log-error
 PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
 # sudo grep 'temporary password' ${NEW_DATA_DIR}/mysqld.log`
 # 2019-04-11T14:40:34.032576Z 1 [Note] A temporary password is generated for root@localhost: L0qXNZ8?C3Us
-log "init temporary password: ${PWD_LINE}"
 
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 TMP_PWD=`echo "'"$TMP_PWD"'"`
-log "Temporary Password: ${TMP_PWD}"
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection: ${STAGING_CONN}"
-log "Creation Results: ${RESULTS}"
 
 ############################################################
 log "Creating Staging Directories on NFS Mounted Path from Delphix"
@@ -390,7 +385,6 @@ command_runner "${CMD}" 5
 #
 masklog "Staging Connection Prior to updaging password : ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${STAGINGPASS}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
-echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`
 masklog "Staging Connection after updating password: ${STAGING_CONN}"
 
@@ -588,6 +582,6 @@ export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
 export SOURCEPASS=""
-env | sort  >>$DEBUG_LOG
+env | grep -v 'PASS' | sort >>$DEBUG_LOG
 log " <<<End"
 exit 0
