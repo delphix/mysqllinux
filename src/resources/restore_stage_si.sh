@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 #
 
 ##DEBUG## In Delphix debug.log

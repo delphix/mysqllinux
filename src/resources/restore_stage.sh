@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 PGM_NAME='restore_stage.sh'
 
 # Load Library ...
@@ -104,7 +104,6 @@ PWD_LINE=`cat ${NEW_DATA_DIR}/mysqld.log | grep 'temporary password'`
 TMP_PWD=`echo "${PWD_LINE}" | ${AWK} -F": " '{print $2}' | xargs`
 # These temporary passwords contain special characters so need to wrap in single / literal quotes ...
 TMP_PWD=`echo "'"$TMP_PWD"'"`
-# log "Temporary Password: ${TMP_PWD}"
 masklog "Staging Connection: ${STAGINGCONN}"
 RESULTS=$( buildConnectionString "${STAGINGCONN}" "${TMP_PWD}" "${STAGINGPORT}" "${STAGINGHOSTIP}" )
 STAGING_CONN=`echo "${RESULTS}" | $DLPX_BIN_JQ --raw-output ".string"`

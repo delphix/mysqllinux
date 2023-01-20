@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright (c) 2021, 2023 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 # Program Name
 PGM_NAME='restore_stage_bi.sh'
 
