@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (c) 2018 by Delphix. All rights reserved.
+# Copyright (c) 2018, 2023 by Delphix. All rights reserved.
 
 # Program Name
 PGM_NAME='restore.sh'
@@ -139,6 +139,6 @@ export DLPX_LIBRARY_SOURCE=""
 export REPLICATION_PASS=""
 export STAGINGPASS=""
 export SOURCEPASS=""
-env | sort  >>$DEBUG_LOG
+env | grep -v 'PASS' | sort >>$DEBUG_LOG
 log "-- End --"
 exit 0
