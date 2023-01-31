@@ -77,7 +77,7 @@ or via a SnapSync policy once the data is restored into the seed staging databas
 Once the dSource creation is successful, the <span class="code_title">*Timeflow*</span> tab should show the initial snapshot.
 
 ### Info
-While ingesting the data for Manual Backup Ingestion, make sure to ingest the data on the MySQL instance which has been created as a part of dSource creation.
+While using Manual Backup Ingestion to create dsource, make sure to ingest the data on the MySQL instance which has been created as a part of dSource creation.
 
 Done, What's Next?
 ----------------
