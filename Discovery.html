@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="https://delphix.github.io/mysqllinux/index.html">
+        
+        <link rel="canonical" href="https://delphix.github.io/mysqllinux/Discovery.html">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <title>Delphix MySQL Plugin</title>
+        <title>Discovery - Delphix MySQL Plugin</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/font-awesome.min.css" rel="stylesheet">
         <link href="css/base.css" rel="stylesheet">
@@ -30,7 +30,7 @@
         </script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
                 <a class="navbar-brand" href="index.html">Delphix MySQL Plugin</a>
@@ -43,7 +43,7 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="navitem active">
+                            <li class="navitem">
                                 <a href="index.html" class="nav-link">Overview</a>
                             </li>
                             <li class="dropdown">
@@ -66,7 +66,7 @@
                             <li class="navitem">
                                 <a href="PluginInstallation.html" class="nav-link">Plugin Installation</a>
                             </li>
-                            <li class="navitem">
+                            <li class="navitem active">
                                 <a href="Discovery.html" class="nav-link">Discovery</a>
                             </li>
                             <li class="dropdown">
@@ -124,12 +124,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href="PluginInstallation.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="Pre-Requisites/General.html" class="nav-link">
+                                <a rel="next" href="Linking/Replication_Mode.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -151,17 +151,21 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#overview" class="nav-link">Overview</a>
+            <li class="nav-item" data-level="1"><a href="#discovery" class="nav-link">Discovery</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#what-does-mysql-plugin-do" class="nav-link">What does MySQL plugin do?</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#where-to-start" class="nav-link">Where to Start?</a>
+            <li class="nav-item" data-level="2"><a href="#prerequisites" class="nav-link">Prerequisites</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#questions" class="nav-link">Questions?</a>
+            <li class="nav-item" data-level="2"><a href="#refreshing-an-environment" class="nav-link">Refreshing an Environment</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#add-source-config" class="nav-link">Add Source Config</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#whats-next" class="nav-link">What's Next?</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -172,45 +176,60 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p>MySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.</p>
-<h2 id="what-does-mysql-plugin-do">What does MySQL plugin do?<a class="headerlink" href="#what-does-mysql-plugin-do" title="Permanent link">&para;</a></h2>
-<p>The Delphix MySQL Plugin can virtualize a single instance MySQL database and create 
-multiple virtual copies as required. </p>
-<p>There are two modes of operation of the plugin based on how the MySQL dSource is created 
-and kept in-sync with source database.</p>
-<h3 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h3>
-<p>In the Replication mode, Delphix uses MySQL's built-in replication technology to keep 
-the Delphix dSource in-sync with the MySQL source databases.</p>
-<p>Creation of the dSource requires a full backup of the source database(s) and there are
-two options to providing this backup. </p>
+<h1 id="discovery">Discovery<a class="headerlink" href="#discovery" title="Permanent link">&para;</a></h1>
+<p>Environment discovery/refresh is a process that enables the MySQL Plugin to determine MySQL installation details on a host. 
+Database discovery/refresh is initiated during the environment set up process.</p>
+<p>Whenever there is any change (installing a new database home) to an already set up environment in the Delphix application, 
+we need to perform an environment discovery/refresh.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Installation of the MySQL Plugin is required before the Discovery.</li>
+</ul>
+<h2 id="refreshing-an-environment">Refreshing an Environment<a class="headerlink" href="#refreshing-an-environment" title="Permanent link">&para;</a></h2>
+<p>Environment refresh will update the metadata associated with that environment and push Delphix Toolkit on to the host.</p>
 <ol>
+<li>Login to the <strong>Delphix Management</strong> application.</li>
+<li>Click <strong>Manage</strong>.</li>
+<li>Select <strong>Environments</strong>.</li>
+<li>In the Environments panel, click the name of the environment you want to refresh.</li>
+<li>Select the <strong>Refresh</strong> icon.</li>
+<li>In the Refresh confirmation dialog select <strong>Refresh</strong>.</li>
+</ol>
+<p><img alt="Screenshot" src="image/image9.png" /></p>
+<p>Once an environment refresh completes successfully, Delphix will discover all MySQL installations on the environment. 
+These installations are referred to as "repositories"</p>
+<h2 id="add-source-config">Add Source Config<a class="headerlink" href="#add-source-config" title="Permanent link">&para;</a></h2>
+<p>As noted avove, environments contain <code>repositories</code>, that are MySQL installations in the environment. 
+Each environment may have any number of repositories associated with it.  </p>
+<p>The next step in the virtualization process is to add a <code>SourceConfig</code>. 
+A <code>SourceConfig</code> object defines the configuratino of the dSource and is required to create a dSource.
+You can create any number of <code>SourceConfig</code> objects using a repository, which represent known database instances. </p>
+<p>For the MySQL plugin, Source config is must be created manually.</p>
+<h3 id="how-to-create-source-config">How to create Source Config<a class="headerlink" href="#how-to-create-source-config" title="Permanent link">&para;</a></h3>
+<p><em>Source Config is created on the Staging Environment</em></p>
+<ol>
+<li>Login to the <strong>Delphix Management</strong> application.</li>
+<li>Click <strong>Manage</strong>.</li>
+<li>Select <strong>Environments</strong>.</li>
+<li>Select the repository.</li>
 <li>
-<p>Delphix Managed Backup </p>
-<p>In this option, Delphix is provided with the required information to take 
-a full backup of the source database.</p>
+<p>Click on <strong>+</strong> icon (Shown in next image).
+   <img alt="Screenshot" src="image/image10.png" /></p>
 </li>
 <li>
-<p>User Provided Backup </p>
-<p>In this option, user provides Delphix with an existing full backup. 
-Delphix initializes the staging database using the full backup and configures the 
-   staging database as a replicated slave of the source database. 
-MySQL Replication keeps the data in the staging database in-sync with the source. </p>
+<p>Add required details in the <code>Add database</code> section.</p>
+<ul>
+<li>Enter source data directory in section <strong>Data Directory</strong>.</li>
+<li>Enter source port number in <strong>Port</strong> section.</li>
+<li>Enter MySQL base directory on the source host in <strong>Base Directory</strong> section.</li>
+<li>Enter dsource name in <strong>MySQL dSource Name</strong> section.</li>
+</ul>
 </li>
 </ol>
-<h3 id="manual-ingestion">Manual Ingestion<a class="headerlink" href="#manual-ingestion" title="Permanent link">&para;</a></h3>
-<p>In the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.
-Delphix creates a seed MySQL staging database which can be managed via Delphix. 
-The end user assumes the responsibility of keeping the data in the staging 
-database in-sync with the source database. </p>
-<h2 id="where-to-start">Where to Start?<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
-<p>By now, you must have an overall idea of what is possible with the MySQL plugin. 
-Before you can get started with virtualizing your MySQL databases, 
-there are some pre-requisites you need to take care of. 
-Please visit the <a href="/Pre-Requisites/General/index.html">Pre-Requisites</a> page for more details. </p>
-<h2 id="questions">Questions?<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
-<p>If you have questions, bugs or feature requests reach out to us via the <a href="https://github.com/delphix/mysqllinux/">MySQL Github</a> or 
-at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p></div>
+<p><img alt="Screenshot" src="image/image11.png" /></p>
+<h2 id="whats-next">What's Next?<a class="headerlink" href="#whats-next" title="Permanent link">&para;</a></h2>
+<p>Now that your environments are all added and a Source Config has been created, 
+please proceed to <a href="/Linking/Replication_Mode/index.html">Linking</a> page to see how we can create the dSource.</p></div>
             </div>
         </div>
 
@@ -289,8 +308,3 @@ at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p>
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.4.2
-Build Date UTC : 2023-02-01 08:40:14.489420+00:00
--->

@@ -4,19 +4,19 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="https://delphix.github.io/mysqllinux/index.html">
-        <link rel="shortcut icon" href="img/favicon.ico">
-        <title>Delphix MySQL Plugin</title>
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/font-awesome.min.css" rel="stylesheet">
-        <link href="css/base.css" rel="stylesheet">
+        
+        <link rel="canonical" href="https://delphix.github.io/mysqllinux/Linking/Manual_Ingestion_Mode.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Manual Ingestion - Delphix MySQL Plugin</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
-        <link href="stylesheets/extra.css" rel="stylesheet">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
 
-        <script src="js/jquery-1.10.2.min.js" defer></script>
-        <script src="js/bootstrap.min.js" defer></script>
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
         <script>hljs.initHighlightingOnLoad();</script>
         <script>
@@ -30,10 +30,10 @@
         </script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="index.html">Delphix MySQL Plugin</a>
+                <a class="navbar-brand" href="../index.html">Delphix MySQL Plugin</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
@@ -43,62 +43,62 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="navitem active">
-                                <a href="index.html" class="nav-link">Overview</a>
+                            <li class="navitem">
+                                <a href="../index.html" class="nav-link">Overview</a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pre Requisites <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="Pre-Requisites/General.html" class="dropdown-item">General</a>
+    <a href="../Pre-Requisites/General.html" class="dropdown-item">General</a>
 </li>
                                     
 <li>
-    <a href="Pre-Requisites/Replication_Mode.html" class="dropdown-item">Replication</a>
+    <a href="../Pre-Requisites/Replication_Mode.html" class="dropdown-item">Replication</a>
 </li>
                                     
 <li>
-    <a href="Pre-Requisites/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+    <a href="../Pre-Requisites/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="PluginInstallation.html" class="nav-link">Plugin Installation</a>
+                                <a href="../PluginInstallation.html" class="nav-link">Plugin Installation</a>
                             </li>
                             <li class="navitem">
-                                <a href="Discovery.html" class="nav-link">Discovery</a>
+                                <a href="../Discovery.html" class="nav-link">Discovery</a>
                             </li>
-                            <li class="dropdown">
+                            <li class="dropdown active">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Linking <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="Linking/Replication_Mode.html" class="dropdown-item">Replication</a>
+    <a href="Replication_Mode.html" class="dropdown-item">Replication</a>
 </li>
                                     
 <li>
-    <a href="Linking/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+    <a href="Manual_Ingestion_Mode.html" class="dropdown-item active">Manual Ingestion</a>
 </li>
                                 </ul>
                             </li>
                             <li class="navitem">
-                                <a href="Provisioning.html" class="nav-link">Provisioning</a>
+                                <a href="../Provisioning.html" class="nav-link">Provisioning</a>
                             </li>
                             <li class="dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Release Notes <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="Release_Notes/MySQL_2.0.26.html" class="dropdown-item">MySQL Plugin 2.0.26</a>
+    <a href="../Release_Notes/MySQL_2.0.26.html" class="dropdown-item">MySQL Plugin 2.0.26</a>
 </li>
                                     
 <li>
-    <a href="Release_Notes/MySQL_1.0.0.html" class="dropdown-item">MySQL Plugin 1.0.0</a>
+    <a href="../Release_Notes/MySQL_1.0.0.html" class="dropdown-item">MySQL Plugin 1.0.0</a>
 </li>
                                     
 <li>
-    <a href="Release_Notes/MySQL_2.1.0.html" class="dropdown-item">MySQL Plugin 2.1.0</a>
+    <a href="../Release_Notes/MySQL_2.1.0.html" class="dropdown-item">MySQL Plugin 2.1.0</a>
 </li>
                                 </ul>
                             </li>
@@ -107,11 +107,11 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="References/ExitCodes.html" class="dropdown-item">Plugin Exit Codes</a>
+    <a href="../References/ExitCodes.html" class="dropdown-item">Plugin Exit Codes</a>
 </li>
                                     
 <li>
-    <a href="References/Troubleshooting.html" class="dropdown-item">Troubleshooting</a>
+    <a href="../References/Troubleshooting.html" class="dropdown-item">Troubleshooting</a>
 </li>
                                 </ul>
                             </li>
@@ -124,12 +124,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href="Replication_Mode.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="Pre-Requisites/General.html" class="nav-link">
+                                <a rel="next" href="../Provisioning.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -151,17 +151,9 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#overview" class="nav-link">Overview</a>
+            <li class="nav-item" data-level="1"><a href="#manual-ingestion" class="nav-link">Manual Ingestion</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#what-does-mysql-plugin-do" class="nav-link">What does MySQL plugin do?</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#where-to-start" class="nav-link">Where to Start?</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#questions" class="nav-link">Questions?</a>
+            <li class="nav-item" data-level="2"><a href="#done-whats-next" class="nav-link">Done, What's Next?</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -172,45 +164,83 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p>MySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.</p>
-<h2 id="what-does-mysql-plugin-do">What does MySQL plugin do?<a class="headerlink" href="#what-does-mysql-plugin-do" title="Permanent link">&para;</a></h2>
-<p>The Delphix MySQL Plugin can virtualize a single instance MySQL database and create 
-multiple virtual copies as required. </p>
-<p>There are two modes of operation of the plugin based on how the MySQL dSource is created 
-and kept in-sync with source database.</p>
-<h3 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h3>
-<p>In the Replication mode, Delphix uses MySQL's built-in replication technology to keep 
-the Delphix dSource in-sync with the MySQL source databases.</p>
-<p>Creation of the dSource requires a full backup of the source database(s) and there are
-two options to providing this backup. </p>
+<h1 id="manual-ingestion">Manual Ingestion<a class="headerlink" href="#manual-ingestion" title="Permanent link">&para;</a></h1>
+<p>In Manual Ingestion Mode, Delphix creates a seed (empty) staging database. 
+Customer users will be responsible to manually ingest data into this staging db. 
+All other management operations can be performed through Delphix. A snapshot can be taken either manually 
+or via a SnapSync policy once the data is restored into the seed staging database. </p>
+<h3 id="pre-requisites">Pre-Requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Staging environment must be added to Delphix.</li>
+<li>A Source Config must be created on the staging environment-MySQL repository.</li>
+<li><span class="code_title">[Recommended] </span>
+  As every  organization's MySQL configuration is different,
+  Delphix expects a starter <em>my.cnf</em> file to be present in Delphix Toolkit Directory when creating a staging database.
+  Delphix will use this <em>my.cnf</em> file and modify it as per the configuration provided during the the dsource creation process.</li>
+</ul>
+<p>This is recommended to reduce the possibility of errors while restoring the backup from the source database.</p>
+<p>!!! warning
+  It may take upto 5 minutes after successful dSource creation for the status to show as Active.</p>
+<h3 id="creating-dsource">Creating dSource<a class="headerlink" href="#creating-dsource" title="Permanent link">&para;</a></h3>
 <ol>
+<li>Login to <strong>Delphix Management</strong> application.</li>
+<li>Click <strong>Manage</strong> &gt;  <strong>Datasets</strong>.</li>
+<li>Select <strong>Add dSource</strong>.</li>
+</ol>
+<p><img alt="Screenshot" src="../image/add-dsource.png" /></p>
+<ol>
+<li>In the Add dSource wizard, select the MySQL source configuration which is created on the staging host.</li>
+<li>Select <em>Manual Ingestion</em> in the dSource Type dropdown.</li>
+<li>Provide the additional details required for dsource creation</li>
 <li>
-<p>Delphix Managed Backup </p>
-<p>In this option, Delphix is provided with the required information to take 
-a full backup of the source database.</p>
+<p>Staging DB Server ID</p>
+<p>Server ID for the dsource (stagind db. For Replication Mode,
+this server id must be greater than the source db server id.</p>
 </li>
 <li>
-<p>User Provided Backup </p>
-<p>In this option, user provides Delphix with an existing full backup. 
-Delphix initializes the staging database using the full backup and configures the 
-   staging database as a replicated slave of the source database. 
-MySQL Replication keeps the data in the staging database in-sync with the source. </p>
+<p>Staging DB Port</p>
+<p>Port for the dsource (staging db).</p>
+</li>
+<li>
+<p>Staging Initialization Password</p>
+<p>Password to use while initializing the dsource (staging db).
+This password will be assigned to the <em>'root'@'localhost'</em></p>
+</li>
+<li>
+<p>MySQL Base Directory</p>
+<p>MySQL installation directory. This is where the location of <em>/bin/mysql</em></p>
+</li>
+<li>
+<p>Mount Location on Staging Host</p>
+<p>This is the mount directory for Delphix on the staging host. 
+This location should be unique and empty.</p>
+</li>
+<li>
+<p>Source DB UserName</p>
+<p>Delphix db user on the source database. In Manual Ingestion mode, Delphix does not connect to the source db.
+Delphix will be using this db user to manage the dsource and other time travel operations.
+This user must be part of the source db backup that will be restored into the staging db.</p>
+</li>
+<li>
+<p>Source DB Password</p>
+<p>Password for the source db user.</p>
+</li>
+<li>
+<p>On dSource Configuration screen, select the dataset group where the dSource will be placed and click <em>Next</em>.</p>
+</li>
+<li>On the Data Management screen, select the staging environment and the environment user and click <em>Next</em>.</li>
+<li>On the Policies screen, select the Snapsync and Retention policies for the dSource and click <em>Next</em>.</li>
+<li>On the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click <em>Next</em>.</li>
+<li>
+<p>Review the dSource configuration on the Summary screen and Submit. The Linking process has commenced.</p>
+<p><img alt="Screenshot" src="../image/dsource-creation.png" /></p>
 </li>
 </ol>
-<h3 id="manual-ingestion">Manual Ingestion<a class="headerlink" href="#manual-ingestion" title="Permanent link">&para;</a></h3>
-<p>In the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.
-Delphix creates a seed MySQL staging database which can be managed via Delphix. 
-The end user assumes the responsibility of keeping the data in the staging 
-database in-sync with the source database. </p>
-<h2 id="where-to-start">Where to Start?<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
-<p>By now, you must have an overall idea of what is possible with the MySQL plugin. 
-Before you can get started with virtualizing your MySQL databases, 
-there are some pre-requisites you need to take care of. 
-Please visit the <a href="/Pre-Requisites/General/index.html">Pre-Requisites</a> page for more details. </p>
-<h2 id="questions">Questions?<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
-<p>If you have questions, bugs or feature requests reach out to us via the <a href="https://github.com/delphix/mysqllinux/">MySQL Github</a> or 
-at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p></div>
+<p>Once the dSource creation is successful, the <span class="code_title"><em>Timeflow</em></span> tab should show the initial snapshot.</p>
+<h3 id="info">Info<a class="headerlink" href="#info" title="Permanent link">&para;</a></h3>
+<p>While using Manual Backup Ingestion to create dsource, make sure to ingest the data on the MySQL instance which has been created as a part of dSource creation.</p>
+<h2 id="done-whats-next">Done, What's Next?<a class="headerlink" href="#done-whats-next" title="Permanent link">&para;</a></h2>
+<p>Alright, we have created a MySQL dSource. Next step - Provision a VDB.   </p></div>
             </div>
         </div>
 
@@ -220,11 +250,11 @@ at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script>
-            var base_url = ".",
+            var base_url = "..",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="js/base.js" defer></script>
-        <script src="search/main.js" defer></script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -289,8 +319,3 @@ at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p>
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.4.2
-Build Date UTC : 2023-02-01 08:40:14.489420+00:00
--->

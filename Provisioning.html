@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="https://delphix.github.io/mysqllinux/index.html">
+        
+        <link rel="canonical" href="https://delphix.github.io/mysqllinux/Provisioning.html">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <title>Delphix MySQL Plugin</title>
+        <title>Provisioning - Delphix MySQL Plugin</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/font-awesome.min.css" rel="stylesheet">
         <link href="css/base.css" rel="stylesheet">
@@ -30,7 +30,7 @@
         </script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
                 <a class="navbar-brand" href="index.html">Delphix MySQL Plugin</a>
@@ -43,7 +43,7 @@
                 <div id="navbar-collapse" class="navbar-collapse collapse">
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
-                            <li class="navitem active">
+                            <li class="navitem">
                                 <a href="index.html" class="nav-link">Overview</a>
                             </li>
                             <li class="dropdown">
@@ -82,7 +82,7 @@
 </li>
                                 </ul>
                             </li>
-                            <li class="navitem">
+                            <li class="navitem active">
                                 <a href="Provisioning.html" class="nav-link">Provisioning</a>
                             </li>
                             <li class="dropdown">
@@ -124,12 +124,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href="Linking/Manual_Ingestion_Mode.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="Pre-Requisites/General.html" class="nav-link">
+                                <a rel="next" href="Release_Notes/MySQL_2.0.26.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -151,17 +151,17 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-level="1"><a href="#overview" class="nav-link">Overview</a>
+            <li class="nav-item" data-level="1"><a href="#provisioning" class="nav-link">Provisioning</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-level="2"><a href="#what-does-mysql-plugin-do" class="nav-link">What does MySQL plugin do?</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-level="2"><a href="#where-to-start" class="nav-link">Where to Start?</a>
+            <li class="nav-item" data-level="2"><a href="#prerequisites" class="nav-link">Prerequisites</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-level="2"><a href="#questions" class="nav-link">Questions?</a>
+            <li class="nav-item" data-level="2"><a href="#provisioning-a-vdb" class="nav-link">Provisioning a VDB</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#and-were-done" class="nav-link">And we're done!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -172,45 +172,89 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
-<p>MySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.</p>
-<h2 id="what-does-mysql-plugin-do">What does MySQL plugin do?<a class="headerlink" href="#what-does-mysql-plugin-do" title="Permanent link">&para;</a></h2>
-<p>The Delphix MySQL Plugin can virtualize a single instance MySQL database and create 
-multiple virtual copies as required. </p>
-<p>There are two modes of operation of the plugin based on how the MySQL dSource is created 
-and kept in-sync with source database.</p>
-<h3 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h3>
-<p>In the Replication mode, Delphix uses MySQL's built-in replication technology to keep 
-the Delphix dSource in-sync with the MySQL source databases.</p>
-<p>Creation of the dSource requires a full backup of the source database(s) and there are
-two options to providing this backup. </p>
+<h1 id="provisioning">Provisioning<a class="headerlink" href="#provisioning" title="Permanent link">&para;</a></h1>
+<p>Virtual Databases (VDB) are a virtualized copies of dSource. 
+A VDB can be created using a snapshot on the dSource timeflow. </p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Require a linked dSource with at least 1 snapshot.</li>
+<li>Require a Target environment added to Delphix.</li>
+<li>
+<p>A MySQL binary with the same version as the source db must be installed on the Target enviornment.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It may take upto 5 minutes after successful dSource creation for the status to show as Active.</p>
+</div>
+</li>
+</ul>
+<h2 id="provisioning-a-vdb">Provisioning a VDB<a class="headerlink" href="#provisioning-a-vdb" title="Permanent link">&para;</a></h2>
 <ol>
 <li>
-<p>Delphix Managed Backup </p>
-<p>In this option, Delphix is provided with the required information to take 
-a full backup of the source database.</p>
+<p>On the dSource Timeflow, click on the <em>Provision</em> action 
+   on the snapshot that you want to use for the VDB (highlighted below) </p>
+<p><img alt="Screenshot" src="image/select-snap.png" /></p>
 </li>
 <li>
-<p>User Provided Backup </p>
-<p>In this option, user provides Delphix with an existing full backup. 
-Delphix initializes the staging database using the full backup and configures the 
-   staging database as a replicated slave of the source database. 
-MySQL Replication keeps the data in the staging database in-sync with the source. </p>
+<p>Select the target host from the dropdown on which VDB needs to be created.<br />
+   If there are multiple MySQL repositories on the host, 
+   select the one that matches the source db version.</p>
+<p>If there are multiple OS users on the host, select the user you want to use. </p>
+<p><img alt="Screenshot" src="image/select-target.png" /></p>
+</li>
+<li>
+<p>Enter the following values for the target configuration:</p>
+<ul>
+<li>
+<p>DB User
+     This is the database user for the VDB. Delphix will use this user to manage the VDB.
+     It is recommended that you use the same user account that was used by the staging db.</p>
+</li>
+<li>
+<p>DB Password
+     Password for the VDB db user. </p>
+</li>
+<li>
+<p>BaseDir
+     MySQL installation directory. This is where the location of <em>/bin/mysql</em></p>
+</li>
+<li>
+<p>VDB Port
+     MySQL database port for the VDB.</p>
+</li>
+<li>
+<p>VDB Server ID
+     MySQL server id for the VDB. This server id must be non-zero and greater than the dsource server id.</p>
+</li>
+<li>
+<p>Mount Location
+     This is the mount directory for Delphix VDB on the Target host.
+     This location should be unique and empty.</p>
+</li>
+</ul>
+<p><img alt="Screenshot" src="image/target-config.png" /></p>
+</li>
+<li>
+<p>On Configuration screen, add VDB name, select Target group,  check <em>Auto vFiles Restart</em> checkbox and select <strong>Next</strong>
+   <img alt="Screenshot" src="image/image27.png" /></p>
+</li>
+<li>
+<p>On Policies screen, add any required policies and select <strong>Next</strong>.</p>
+</li>
+<li>
+<p>If you want to Mask the VDB, select the required configuration this screen and select <strong>Next</strong>.</p>
+</li>
+<li>
+<p>On Hooks screen, add any required Hooks and select <strong>Next</strong>.</p>
+</li>
+<li>
+<p>Preview the summary and select <strong>Submit</strong>.</p>
+</li>
+<li>
+<p>Once the VDB is created successfully, you can review the datasets on <strong>Manage</strong> &gt; <strong>Datasets</strong> &gt; <strong>vdb Name</strong>.</p>
 </li>
 </ol>
-<h3 id="manual-ingestion">Manual Ingestion<a class="headerlink" href="#manual-ingestion" title="Permanent link">&para;</a></h3>
-<p>In the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.
-Delphix creates a seed MySQL staging database which can be managed via Delphix. 
-The end user assumes the responsibility of keeping the data in the staging 
-database in-sync with the source database. </p>
-<h2 id="where-to-start">Where to Start?<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
-<p>By now, you must have an overall idea of what is possible with the MySQL plugin. 
-Before you can get started with virtualizing your MySQL databases, 
-there are some pre-requisites you need to take care of. 
-Please visit the <a href="/Pre-Requisites/General/index.html">Pre-Requisites</a> page for more details. </p>
-<h2 id="questions">Questions?<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
-<p>If you have questions, bugs or feature requests reach out to us via the <a href="https://github.com/delphix/mysqllinux/">MySQL Github</a> or 
-at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p></div>
+<h2 id="and-were-done">And we're done!<a class="headerlink" href="#and-were-done" title="Permanent link">&para;</a></h2>
+<p>We have now successfully provisioned a MySQL VDB. </p></div>
             </div>
         </div>
 
@@ -289,8 +333,3 @@ at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p>
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.4.2
-Build Date UTC : 2023-02-01 08:40:14.489420+00:00
--->
