@@ -23,6 +23,7 @@ DT=`date '+%Y%m%d%H%M%S'`
 printParams
 
 TARGET_PORT=${PORT}
+log "Provisioning started"
 log "Target Port: ${TARGET_PORT}"
 log "Config Params: ${MYCONFIG}"
 # Customer Config File Parameters ...
