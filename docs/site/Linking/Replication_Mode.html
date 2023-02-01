@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://delphix.github.io/mysqllinux/Linking/Replication_Mode.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Replication - Delphix MySQL Plugin</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+        <link href="../stylesheets/extra.css" rel="stylesheet">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-35429885-3', 'auto');
+            ga('send', 'pageview');
+        </script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../index.html">Delphix MySQL Plugin</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../index.html" class="nav-link">Overview</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pre Requisites <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../Pre-Requisites/General.html" class="dropdown-item">General</a>
+</li>
+                                    
+<li>
+    <a href="../Pre-Requisites/Replication_Mode.html" class="dropdown-item">Replication</a>
+</li>
+                                    
+<li>
+    <a href="../Pre-Requisites/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="../PluginInstallation.html" class="nav-link">Plugin Installation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Discovery.html" class="nav-link">Discovery</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Linking <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="Replication_Mode.html" class="dropdown-item active">Replication</a>
+</li>
+                                    
+<li>
+    <a href="Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Provisioning.html" class="nav-link">Provisioning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Release Notes <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../Release_Notes/MySQL_2.0.26.html" class="dropdown-item">MySQL Plugin 2.0.26</a>
+</li>
+                                    
+<li>
+    <a href="../Release_Notes/MySQL_1.0.0.html" class="dropdown-item">MySQL Plugin 1.0.0</a>
+</li>
+                                    
+<li>
+    <a href="../Release_Notes/MySQL_2.1.0.html" class="dropdown-item">MySQL Plugin 2.1.0</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">References <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../References/ExitCodes.html" class="dropdown-item">Plugin Exit Codes</a>
+</li>
+                                    
+<li>
+    <a href="../References/Troubleshooting.html" class="dropdown-item">Troubleshooting</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../Discovery.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="Manual_Ingestion_Mode.html" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#replication" class="nav-link">Replication</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#done-whats-next" class="nav-link">Done, What's Next?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h1>
+<p>In Replication Mode, Delphix creates a staging database using an initial backup from the source database. 
+This initial backup can be taken by Delphix or can be provided by the end user. </p>
+<p>In order to ensure that the staging database remains in-sync with the source database, 
+Delphix can set up a MySQL native replication. from the source db to the staging db.</p>
+<h3 id="pre-requisites">Pre-Requisites<a class="headerlink" href="#pre-requisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Staging environment must be added to Delphix.</li>
+<li>A Source Config must be created on the staging environment-MySQL repository.</li>
+<li>
+<p><span class="code_title">[Recommended] </span>
+    As every  organization's MySQL configuration is different,
+    Delphix expects a starter <em>my.cnf</em> file to be present in Delphix Toolkit Directory when creating a staging database.
+    Delphix will use this <em>my.cnf</em> file and modify it as per the configuration provided during the the dsource creation process.</p>
+<p>This is recommended to reduce the possibility of errors while restoring the backup from the source database.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It may take upto 5 minutes after successful dSource creation for the status to show as Active.</p>
+</div>
+</li>
+</ul>
+<h3 id="creating-dsource">Creating dSource<a class="headerlink" href="#creating-dsource" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Login to <strong>Delphix Management</strong> application.</li>
+<li>Click <strong>Manage</strong> &gt;  <strong>Datasets</strong>.</li>
+<li>
+<p>Select <strong>Add dSource</strong>.</p>
+<p><img alt="Screenshot" src="../image/add-dsource.png" /></p>
+</li>
+<li>
+<p>In the Add dSource wizard, select the MySQL source configuration which is created on the staging host.</p>
+</li>
+<li>
+<p>Select <em>Replication</em> in the dSource Type dropdown.</p>
+<p><img alt="Screenshot" src="../image/dsource-type.png" />   </p>
+</li>
+<li>
+<p>Provide the additional details required for dsource creation</p>
+<ul>
+<li>
+<p>Staging DB Server ID</p>
+<p>Server ID for the dsource (stagind db. For Replication Mode, 
+this server id must be greater than the source db server id.</p>
+</li>
+<li>
+<p>Staging DB Port</p>
+<p>Port for the dsource (staging db).</p>
+</li>
+<li>
+<p>Staging Initialization Password</p>
+<p>Password to use while initializing the dsource (staging db). 
+This password will be assigned to the <em>'root'@'localhost'</em></p>
+</li>
+<li>
+<p>MySQL Base Directory</p>
+<p>MySQL installation directory. This is where the location of <em>/bin/mysql</em></p>
+</li>
+<li>
+<p>Mount Location on Staging Host</p>
+</li>
+</ul>
+<p>This is the mount directory for Delphix on the staging host.
+   This location should be unique and empty.</p>
+<ul>
+<li>
+<p>Source DB Host IP Address </p>
+<p>IP Address of the source db host.</p>
+</li>
+<li>
+<p>Source DB UserName</p>
+<p>Delphix db user on the source database. 
+This user will be created in the dsource when the initial backup is restored. 
+Delphix will be using this db user to manage the dsource and other time travel operations. </p>
+</li>
+<li>
+<p>Source DB Password</p>
+<p>Password for the source db user. </p>
+</li>
+<li>
+<p>Databases List</p>
+<p>Comma separated list of databases on the source MySQL instance that should be part of the dSource.
+Default value <em>ALL</em> indicates that all databases on the source instance will be brought in.</p>
+</li>
+<li>
+<p>MySQL Backup Path </p>
+<p>Full path, including the filename, of the full source db backup to use for the dsource creation.
+If this is provided, Delphix will not create a backup. </p>
+</li>
+<li>
+<p>LogSync</p>
+<p>Whether to enable replication or not. If checked, Delphix will set up the dsource (staging db) 
+as a replicated slave of the source database.</p>
+</li>
+<li>
+<p>Replication UserName</p>
+<p>Delphix DB user with replication privileges to set up replication from source to staging db. 
+Currently, Delphix uses the Source DB user for replication. </p>
+</li>
+<li>
+<p>Replication User Password</p>
+<p>Password for the replication db user. </p>
+</li>
+</ul>
+</li>
+<li>
+<p>On dSource Configuration screen, select the dataset group where the dSource will be placed and click <em>Next</em>.</p>
+</li>
+<li>On the Data Management screen, select the staging environment and the environment user and click <em>Next</em>.</li>
+<li>On the Policies screen, select the Snapsync and Retention policies for the dSource and click <em>Next</em>.</li>
+<li>On the Hooks screen, add any pre-sync and (or) post-sync hooks as required and click <em>Next</em>.</li>
+<li>
+<p>Review the dSource configuration on the Summary screen and Submit. The Linking process has commenced. </p>
+<p><img alt="Screenshot" src="../image/dsource-creation.png" /></p>
+</li>
+</ol>
+<p>Once the dSource creation is successful, the <span class="code_title"><em>Timeflow</em></span> tab should show the initial snapshot.</p>
+<h2 id="done-whats-next">Done, What's Next?<a class="headerlink" href="#done-whats-next" title="Permanent link">&para;</a></h2>
+<p>Alright, we have created a MySQL dSource. Next step - Provision a VDB.   </p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2021, 2023 Delphix Corp.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

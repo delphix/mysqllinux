@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="None">
+        
+        <link rel="canonical" href="https://delphix.github.io/mysqllinux/index.html">
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Delphix MySQL Plugin</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+        <link href="stylesheets/extra.css" rel="stylesheet">
+
+        <script src="js/jquery-1.10.2.min.js" defer></script>
+        <script src="js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-35429885-3', 'auto');
+            ga('send', 'pageview');
+        </script> 
+    </head>
+
+    <body class="homepage">
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Delphix MySQL Plugin</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem active">
+                                <a href="index.html" class="nav-link">Overview</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pre Requisites <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="Pre-Requisites/General.html" class="dropdown-item">General</a>
+</li>
+                                    
+<li>
+    <a href="Pre-Requisites/Replication_Mode.html" class="dropdown-item">Replication</a>
+</li>
+                                    
+<li>
+    <a href="Pre-Requisites/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="PluginInstallation.html" class="nav-link">Plugin Installation</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="Discovery.html" class="nav-link">Discovery</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Linking <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="Linking/Replication_Mode.html" class="dropdown-item">Replication</a>
+</li>
+                                    
+<li>
+    <a href="Linking/Manual_Ingestion_Mode.html" class="dropdown-item">Manual Ingestion</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="Provisioning.html" class="nav-link">Provisioning</a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Release Notes <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="Release_Notes/MySQL_2.0.26.html" class="dropdown-item">MySQL Plugin 2.0.26</a>
+</li>
+                                    
+<li>
+    <a href="Release_Notes/MySQL_1.0.0.html" class="dropdown-item">MySQL Plugin 1.0.0</a>
+</li>
+                                    
+<li>
+    <a href="Release_Notes/MySQL_2.1.0.html" class="dropdown-item">MySQL Plugin 2.1.0</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">References <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="References/ExitCodes.html" class="dropdown-item">Plugin Exit Codes</a>
+</li>
+                                    
+<li>
+    <a href="References/Troubleshooting.html" class="dropdown-item">Troubleshooting</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" class="nav-link disabled">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="Pre-Requisites/General.html" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#overview" class="nav-link">Overview</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#what-does-mysql-plugin-do" class="nav-link">What does MySQL plugin do?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#where-to-start" class="nav-link">Where to Start?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#questions" class="nav-link">Questions?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h1>
+<p>MySQL plugin has been developed to ingest and virtualize MySQL data sources using Delphix.</p>
+<h2 id="what-does-mysql-plugin-do">What does MySQL plugin do?<a class="headerlink" href="#what-does-mysql-plugin-do" title="Permanent link">&para;</a></h2>
+<p>The Delphix MySQL Plugin can virtualize a single instance MySQL database and create 
+multiple virtual copies as required. </p>
+<p>There are two modes of operation of the plugin based on how the MySQL dSource is created 
+and kept in-sync with source database.</p>
+<h3 id="replication">Replication<a class="headerlink" href="#replication" title="Permanent link">&para;</a></h3>
+<p>In the Replication mode, Delphix uses MySQL's built-in replication technology to keep 
+the Delphix dSource in-sync with the MySQL source databases.</p>
+<p>Creation of the dSource requires a full backup of the source database(s) and there are
+two options to providing this backup. </p>
+<ol>
+<li>
+<p>Delphix Managed Backup </p>
+<p>In this option, Delphix is provided with the required information to take 
+a full backup of the source database.</p>
+</li>
+<li>
+<p>User Provided Backup </p>
+<p>In this option, user provides Delphix with an existing full backup. 
+Delphix initializes the staging database using the full backup and configures the 
+   staging database as a replicated slave of the source database. 
+MySQL Replication keeps the data in the staging database in-sync with the source. </p>
+</li>
+</ol>
+<h3 id="manual-ingestion">Manual Ingestion<a class="headerlink" href="#manual-ingestion" title="Permanent link">&para;</a></h3>
+<p>In the Manual Ingestion mode, the data in Delphix dSource is managed manually by the end users.
+Delphix creates a seed MySQL staging database which can be managed via Delphix. 
+The end user assumes the responsibility of keeping the data in the staging 
+database in-sync with the source database. </p>
+<h2 id="where-to-start">Where to Start?<a class="headerlink" href="#where-to-start" title="Permanent link">&para;</a></h2>
+<p>By now, you must have an overall idea of what is possible with the MySQL plugin. 
+Before you can get started with virtualizing your MySQL databases, 
+there are some pre-requisites you need to take care of. 
+Please visit the <a href="/Pre-Requisites/General/index.html">Pre-Requisites</a> page for more details. </p>
+<h2 id="questions">Questions?<a class="headerlink" href="#questions" title="Permanent link">&para;</a></h2>
+<p>If you have questions, bugs or feature requests reach out to us via the <a href="https://github.com/delphix/mysqllinux/">MySQL Github</a> or 
+at <a href="https://community.delphix.com/home">Delphix Community Portal</a></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2021, 2023 Delphix Corp.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js" defer></script>
+        <script src="search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
+
+<!--
+MkDocs version : 1.4.2
+Build Date UTC : 2023-02-01 09:19:38.033970+00:00
+-->
