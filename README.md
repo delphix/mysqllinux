@@ -1,3 +1,7 @@
+# Delphix still offers a fully supported MySQL Select Connector. Contact your Delphix customer success team for more information.
+
+---
+
 # MySQLLinux 
 
 ## What Does a Delphix Plugin Do?
